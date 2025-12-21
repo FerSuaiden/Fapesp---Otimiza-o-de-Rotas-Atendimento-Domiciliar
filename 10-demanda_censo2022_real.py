@@ -5,12 +5,6 @@ DEMANDA DE IDOSOS POR SETOR CENSITÁRIO - CENSO 2022 (DADOS REAIS)
 Este script utiliza os dados REAIS do Censo Demográfico 2022 do IBGE
 para calcular a demanda de idosos por setor censitário.
 
-DIFERENÇA DOS SCRIPTS ANTERIORES:
-- Script 7: Usou proporção UNIFORME de 21.17% para todos os setores (INCORRETO)
-- Script 8: Tentou usar Censo 2010, mas arquivo errado (pessoa01 = alfabetização)  
-- Script 9: Usou Censo 2010 pessoa03 CORRETO, mas dados de 2010 são antigos
-- Script 10: USA DADOS REAIS DO CENSO 2022 - A FONTE MAIS PRECISA E ATUAL!
-
 VARIÁVEIS DO CENSO 2022 UTILIZADAS:
 - V01006: Quantidade de moradores (total)
 - V01040: 60 a 69 anos (total ambos sexos)
