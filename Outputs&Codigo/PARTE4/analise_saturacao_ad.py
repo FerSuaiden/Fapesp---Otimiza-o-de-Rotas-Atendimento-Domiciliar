@@ -608,6 +608,50 @@ def analisar_completude_equipes(df_equipes_ativas, df_prof_chs):
     return df_resultado
 
 
+def verificar_completude_equipe_individual(df_prof_equipe, tp_equipe):
+    """
+    Verifica se uma equipe individual está completa.
+    Retorna True se completa, False se incompleta.
+    """
+    if len(df_prof_equipe) == 0:
+        return False
+    
+    # Agregar CHS por categoria
+    chs_por_categoria = df_prof_equipe.groupby('CATEGORIA_CBO')['CHS_REAL'].sum()
+    
+    if tp_equipe == 22:  # EMAD I
+        chs_medico = chs_por_categoria.get('MEDICO', 0)
+        chs_enfermeiro = chs_por_categoria.get('ENFERMEIRO', 0)
+        chs_tecnico = chs_por_categoria.get('TECNICO_ENFERMAGEM', 0)
+        chs_fisio = chs_por_categoria.get('FISIOTERAPEUTA', 0)
+        chs_as = chs_por_categoria.get('ASSISTENTE_SOCIAL', 0)
+        return (chs_medico >= 40 and chs_enfermeiro >= 60 and 
+                chs_tecnico >= 120 and (chs_fisio + chs_as) >= 30)
+    
+    elif tp_equipe == 46:  # EMAD II
+        chs_medico = chs_por_categoria.get('MEDICO', 0)
+        chs_enfermeiro = chs_por_categoria.get('ENFERMEIRO', 0)
+        chs_tecnico = chs_por_categoria.get('TECNICO_ENFERMAGEM', 0)
+        chs_fisio = chs_por_categoria.get('FISIOTERAPEUTA', 0)
+        chs_as = chs_por_categoria.get('ASSISTENTE_SOCIAL', 0)
+        return (chs_medico >= 20 and chs_enfermeiro >= 30 and 
+                chs_tecnico >= 120 and (chs_fisio + chs_as) >= 30)
+    
+    elif tp_equipe == 23:  # EMAP
+        prof_ns = df_prof_equipe[df_prof_equipe['CATEGORIA_CBO'].isin(PROFISSIONAIS_NS_EMAP)]
+        n_prof_ns = prof_ns['CO_PROFISSIONAL_SUS'].nunique()
+        chs_total = prof_ns['CHS_REAL'].sum()
+        return n_prof_ns >= 3 and chs_total >= 90
+    
+    elif tp_equipe == 77:  # EMAP-R
+        prof_ns = df_prof_equipe[df_prof_equipe['CATEGORIA_CBO'].isin(PROFISSIONAIS_NS_EMAP_R)]
+        n_prof_ns = prof_ns['CO_PROFISSIONAL_SUS'].nunique()
+        chs_total = prof_ns['CHS_REAL'].sum()
+        return n_prof_ns >= 3 and chs_total >= 60
+    
+    return False
+
+
 def calcular_metricas_temporais(df_equipes, df_prof_chs):
     """
     Calcula métricas temporais de precariedade e cobertura.
@@ -616,16 +660,17 @@ def calcular_metricas_temporais(df_equipes, df_prof_chs):
     1. Índice de Precariedade Normativa: % equipes que não atendem Portaria 3.005/2024
     2. Razão de Cobertura Real: Minutos de CHS Real por Idoso por Mês
     
-    OTIMIZADO: Usa cálculo simplificado para série temporal (CHS agregada por mês).
-    Análise detalhada de completude apenas para snapshot atual.
-    """
-    print("\n⏳ Calculando métricas temporais (otimizado)...")
+    DADOS REAIS: Calcula completude REAL de cada equipe em cada mês,
+    verificando quais profissionais estavam ativos naquele período.
     
-    # Usar range de meses menor para performance
+    NOTA: A CHS dos profissionais é da competência atual (2025/08).
+    A variação temporal reflete mudanças na composição das equipes.
+    """
+    print("\n⏳ Calculando métricas temporais (dados reais)...")
+    
     meses = pd.date_range(start='2020-01-01', end='2025-08-01', freq='MS')
     resultados = []
     
-    # Pré-computar agregações para melhor performance
     df_prof_chs = df_prof_chs.copy()
     
     for i, mes in enumerate(meses):
@@ -640,36 +685,41 @@ def calcular_metricas_temporais(df_equipes, df_prof_chs):
         if len(equipes_ativas) == 0:
             continue
         
-        seq_equipes_ativas = set(equipes_ativas['SEQ_EQUIPE'])
-        
-        # Profissionais válidos neste mês (CHS >= 20h, ativos)
-        prof_ativos = df_prof_chs[
-            (df_prof_chs['SEQ_EQUIPE'].isin(seq_equipes_ativas)) &
+        # Profissionais válidos neste mês (CHS >= 20h, ativos neste período)
+        prof_ativos_mes = df_prof_chs[
             (df_prof_chs['DT_ENTRADA'] <= fim_mes) &
             ((df_prof_chs['DT_DESLIGAMENTO'].isna()) | (df_prof_chs['DT_DESLIGAMENTO'] > mes)) &
             (df_prof_chs['VALIDO_PORTARIA'] == True)
         ]
         
-        # Calcular CHS total
-        chs_total_mes = prof_ativos['CHS_REAL'].sum()
-        n_prof = prof_ativos['CO_PROFISSIONAL_SUS'].nunique()
+        # Calcular completude REAL de cada equipe
+        equipes_completas = 0
+        equipes_incompletas = 0
+        chs_total_mes = 0
         
-        # SIMPLIFICAÇÃO: Estimar precariedade baseada em CHS média por equipe
-        # Uma equipe precisa de ~180h CHS mínimo (EMAD I: 40+60+120+30=250h ideal, mínimo ~180h)
-        CHS_MINIMA_EQUIPE_EMAD = 180
-        chs_media_por_equipe = chs_total_mes / len(equipes_ativas) if len(equipes_ativas) > 0 else 0
-        
-        # Estimar % de equipes incompletas baseado na média
-        # Se média < mínimo, proporção maior de equipes incompletas
-        if chs_media_por_equipe >= CHS_MINIMA_EQUIPE_EMAD:
-            # Assumir distribuição normal, ~15% abaixo da média
-            pct_incompletas_estimado = max(10, 30 - (chs_media_por_equipe - CHS_MINIMA_EQUIPE_EMAD) * 0.5)
-        else:
-            # Quanto mais abaixo da média, maior % incompletas
-            deficit = (CHS_MINIMA_EQUIPE_EMAD - chs_media_por_equipe) / CHS_MINIMA_EQUIPE_EMAD
-            pct_incompletas_estimado = min(100, 50 + deficit * 100)
+        for _, equipe in equipes_ativas.iterrows():
+            seq_equipe = equipe['SEQ_EQUIPE']
+            tp_equipe = equipe['TP_EQUIPE']
+            
+            # Profissionais desta equipe neste mês
+            prof_equipe = prof_ativos_mes[prof_ativos_mes['SEQ_EQUIPE'] == seq_equipe]
+            
+            # Verificar completude real
+            if verificar_completude_equipe_individual(prof_equipe, tp_equipe):
+                equipes_completas += 1
+            else:
+                equipes_incompletas += 1
+            
+            chs_total_mes += prof_equipe['CHS_REAL'].sum()
         
         total_equipes = len(equipes_ativas)
+        n_prof = prof_ativos_mes['CO_PROFISSIONAL_SUS'].nunique()
+        
+        # Índice de precariedade REAL
+        pct_incompletas_real = (equipes_incompletas / total_equipes * 100) if total_equipes > 0 else 0
+        
+        # CHS média por equipe
+        chs_media_por_equipe = chs_total_mes / total_equipes if total_equipes > 0 else 0
         
         # CHS Real mensal (convertendo semanal para mensal: *4.33)
         chs_mensal = chs_total_mes * 4.33
@@ -680,9 +730,9 @@ def calcular_metricas_temporais(df_equipes, df_prof_chs):
         resultados.append({
             'DATA': mes,
             'TOTAL_EQUIPES': total_equipes,
-            'EQUIPES_COMPLETAS': int(total_equipes * (1 - pct_incompletas_estimado/100)),
-            'EQUIPES_INCOMPLETAS': int(total_equipes * pct_incompletas_estimado/100),
-            'INDICE_PRECARIEDADE': pct_incompletas_estimado,
+            'EQUIPES_COMPLETAS': equipes_completas,
+            'EQUIPES_INCOMPLETAS': equipes_incompletas,
+            'INDICE_PRECARIEDADE': pct_incompletas_real,
             'CHS_SEMANAL_TOTAL': chs_total_mes,
             'CHS_MENSAL_TOTAL': chs_mensal,
             'CHS_MEDIA_EQUIPE': chs_media_por_equipe,
@@ -697,8 +747,6 @@ def calcular_metricas_temporais(df_equipes, df_prof_chs):
     df_temporal = pd.DataFrame(resultados)
     
     print(f"   ✓ {len(df_temporal)} meses analisados (2020-2025)")
-    
-    return df_temporal
     
     return df_temporal
 
