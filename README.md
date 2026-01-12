@@ -25,7 +25,6 @@
 - [Principais Descobertas](#principais-descobertas)
 - [Visualizações Geradas](#visualizações-geradas)
 - [Como Executar](#como-executar)
-- [Controle de Versão (Git)](#controle-de-versão-git)
 - [Referências Legais](#referências-legais)
 - [Licença](#licença)
 
@@ -131,54 +130,73 @@ IC/
 
 > **Pergunta-guia:** *"Onde estão localizados os pontos de partida das equipes do programa 'Melhor em Casa' em São Paulo?"*
 
-#### Scripts
+#### 1-visuazacaoMapa.py
 
-| Script | Descrição | Output |
-|:---|:---|:---|
-| [1-visuazacaoMapa.py](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py) | Mapa interativo das equipes AD em SP | `mapa_Equipes_Atencao_Domiciliar_SP.html` |
-| [2-equipes_por_estado.py](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py) | Distribuição por estado (barras empilhadas) | `distribuicao_equipes_por_estado_empilhado.png` |
-| [3-pizza.py](Outputs%26Codigo/PARTE1/3-pizza.py) | Composição nacional (gráfico donut) | `composicao_nacional_pizza.png` |
+**Arquivo:** [Outputs&Codigo/PARTE1/1-visuazacaoMapa.py](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py)  
+**Output:** `mapa_Equipes_Atencao_Domiciliar_SP.html`
 
-#### Fluxo de Dados
+Este script gera um mapa interativo das equipes de Atenção Domiciliar no estado de São Paulo.
 
-```mermaid
-graph LR
-    A[tbEstabelecimento] -->|CO_UNIDADE| C{Merge}
-    B[tbEquipe] -->|CO_UNIDADE| C
-    C --> D[Filtro: TP_EQUIPE ∈ {22,46,23,77}]
-    D --> E[Filtro: CO_ESTADO_GESTOR = 35]
-    E --> F[Limpeza: LAT/LONG]
-    F --> G[Mapa Folium]
-```
+**Etapas do processamento:**
 
-#### Legenda de Marcadores do Mapa
+1. **Carregamento dos dados** ([linhas 9-13](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py#L9-L13)): Carrega as tabelas `tbEstabelecimento` e `tbEquipe` do CNES.
 
-| Cor | Significado |
-|:---:|:---|
-| Azul | Estabelecimento com apenas equipes de **Atendimento** (EMAD) |
-| Verde | Estabelecimento com apenas equipes de **Apoio** (EMAP) |
-| Roxo | Estabelecimento com **ambos** os tipos de equipe |
+2. **Identificação das equipes** ([linhas 16-27](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py#L16-L27)): Define os códigos de equipe relevantes e cria conjuntos de CNES únicos para cada categoria:
+   - Atendimento: EMAD I (22) e EMAD II (46)
+   - Apoio: EMAP (23) e EMAP-R (77)
 
-#### Detalhes Técnicos
+3. **Filtro geográfico para São Paulo** ([linhas 30-34](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py#L30-L34)): Aplica o filtro `CO_ESTADO_GESTOR = '35'` (código IBGE de SP).
 
-**[1-visuazacaoMapa.py](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py):**
-- Carrega as bases `tbEstabelecimento` e `tbEquipe`
-- Separa equipes de atendimento (EMAD I=22, EMAD II=46) e apoio (EMAP=23, EMAP-R=77)
-- Aplica filtro geográfico `CO_ESTADO_GESTOR = '35'` (São Paulo)
-- Trata coordenadas (conversão vírgula para ponto, remoção de nulos/zeros)
-- Classifica estabelecimentos: apenas atendimento, apenas apoio, ou ambos
-- Gera mapa Folium com MarkerCluster e legenda HTML
+4. **Tratamento de coordenadas** ([linhas 37-42](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py#L37-L42)): Converte vírgulas para pontos decimais e remove registros com coordenadas nulas ou zeradas.
 
-**[2-equipes_por_estado.py](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py):**
-- Otimiza leitura com `usecols`
-- Mapeia códigos de equipe para nomes legíveis
-- Converte códigos UF IBGE para siglas dos estados
-- Gera gráfico de barras empilhadas dos Top 15 estados
+5. **Classificação por categoria** ([linhas 45-55](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py#L45-L55)): Categoriza cada estabelecimento como:
+   - Apenas Atendimento (azul)
+   - Apenas Apoio (verde)
+   - Ambos (roxo)
 
-**[3-pizza.py](Outputs%26Codigo/PARTE1/3-pizza.py):**
-- Combina gráfico de barras + pizza donut
-- Calcula contagem nacional por tipo de equipe
-- Estilo "donut" com círculo central branco
+6. **Geração do mapa** ([linhas 64-90](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py#L64-L90)): Cria o mapa Folium com MarkerCluster e popups informativos.
+
+7. **Legenda HTML** ([linhas 93-112](Outputs%26Codigo/PARTE1/1-visuazacaoMapa.py#L93-L112)): Adiciona legenda fixa explicando a codificação de cores.
+
+---
+
+#### 2-equipes_por_estado.py
+
+**Arquivo:** [Outputs&Codigo/PARTE1/2-equipes_por_estado.py](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py)  
+**Output:** `distribuicao_equipes_por_estado_empilhado.png`
+
+Este script gera um gráfico de barras empilhadas mostrando a distribuição das equipes de Atenção Domiciliar por estado brasileiro.
+
+**Etapas do processamento:**
+
+1. **Dicionários de mapeamento** ([linhas 14-32](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L14-L32)): Define:
+   - `MAP_EQUIPES`: Traduz códigos (22, 46, 23, 77) para nomes (EMAD I, EMAD II, EMAP, EMAP-R)
+   - `IBGE_UF_MAP`: Converte códigos IBGE para siglas dos estados
+
+2. **Carregamento otimizado** ([linhas 36-54](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L36-L54)): Usa `usecols` para ler apenas colunas necessárias, reduzindo consumo de memória.
+
+3. **Merge e mapeamento** ([linhas 57-79](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L57-L79)): Junta as tabelas de equipes e estabelecimentos usando `CO_UNIDADE` como chave e aplica os mapeamentos.
+
+4. **Tabela de contingência** ([linhas 82-98](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L82-L98)): Usa `pd.crosstab` para criar uma matriz de contagem Estados x Tipos de Equipe, ordenada por total.
+
+5. **Visualização** ([linhas 101-145](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L101-L145)): Gera gráfico de barras empilhadas com formatação profissional, legenda detalhada e nota de fonte.
+
+---
+
+#### 3-pizza.py
+
+**Arquivo:** [Outputs&Codigo/PARTE1/3-pizza.py](Outputs%26Codigo/PARTE1/3-pizza.py)  
+**Output:** `composicao_nacional_pizza.png`
+
+Este script combina dois gráficos: barras empilhadas por estado e pizza donut da composição nacional.
+
+**Etapas do processamento:**
+
+1. **Gráfico de barras** ([linhas 72-124](Outputs%26Codigo/PARTE1/3-pizza.py#L72-L124)): Replica a lógica do script anterior para os Top 15 estados.
+
+2. **Contagem nacional** ([linhas 127-130](Outputs%26Codigo/PARTE1/3-pizza.py#L127-L130)): Usa `value_counts()` para calcular o total de cada tipo de equipe no Brasil.
+
+3. **Gráfico donut** ([linhas 133-150](Outputs%26Codigo/PARTE1/3-pizza.py#L133-L150)): Cria pizza com círculo branco central para efeito visual de rosquinha.
 
 ---
 
@@ -186,65 +204,75 @@ graph LR
 
 > **Pergunta-guia:** *"Qual a capacidade de trabalho e quais as habilidades de cada equipe?"*
 
-#### Scripts
+#### 4-capacidade.py
 
-| Script | Descrição | Output |
-|:---|:---|:---|
-| [4-capacidade.py](Outputs%26Codigo/PARTE2/4-capacidade.py) | Cálculo de $Q_k$ por equipe | `capacidade_total_chs_por_estado.png`, `distribuicao_capacidade_Qk_histograma.png` |
-| [5-heatMap.py](Outputs%26Codigo/PARTE2/5-heatMap.py) | Mapa de calor de capacidade (Brasil) | `mapa_calor_chs_brasil.html` |
-| [6-sunburst.py](Outputs%26Codigo/PARTE2/6-sunburst.py) | Decomposição hierárquica de habilidades | `habilidades_sunburst.html` |
+**Arquivo:** [Outputs&Codigo/PARTE2/4-capacidade.py](Outputs%26Codigo/PARTE2/4-capacidade.py)  
+**Outputs:** `capacidade_total_chs_por_estado.png`, `distribuicao_capacidade_Qk_histograma.png`
 
-#### Cálculo da Capacidade ($Q_k$)
+Este script calcula a capacidade de atendimento ($Q_k$) das equipes usando a Carga Horária Semanal (CHS).
 
-A capacidade de cada equipe é calculada através do cruzamento de 4 tabelas:
+**Etapas do processamento:**
 
-```mermaid
-graph TD
-    A[tbEquipe<br/>TP_EQUIPE ∈ {22,46,23,77}] -->|SEQ_EQUIPE, CO_UNIDADE| B[rlEstabEquipeProf]
-    B -->|CO_PROFISSIONAL_SUS, CO_UNIDADE, CO_CBO| C[tbCargaHorariaSus]
-    C --> D[Cálculo Individual]
-    D --> E[Agregação por Equipe]
-    E --> F[Qk = Capacidade Total]
-```
+1. **Carregamento de 4 bases** ([linhas 26-55](Outputs%26Codigo/PARTE2/4-capacidade.py#L26-L55)): 
+   - `tbEstabelecimento`: para obter UF
+   - `tbEquipe`: para filtrar equipes AD
+   - `rlEstabEquipeProf`: tabela-ponte equipe-profissional
+   - `tbCargaHorariaSus`: carga horária de cada profissional
 
-**Fórmula de Carga Horária Individual:**
-$$CHS_{individual} = QT\_CARGA\_HORARIA\_AMBULATORIAL + QT\_CARGA\_HORARIA\_OUTROS + QT\_CARGA\_HOR\_HOSP\_SUS$$
+2. **Merge encadeado Equipes → Profissionais** ([linhas 62-69](Outputs%26Codigo/PARTE2/4-capacidade.py#L62-L69)): Inner join para obter apenas profissionais que estão em equipes de AD.
 
-**Capacidade da Equipe:**
-$$Q_k = \sum_{i \in Equipe_k} CHS_{individual_i}$$
+3. **Merge Profissionais → Carga Horária** ([linhas 71-78](Outputs%26Codigo/PARTE2/4-capacidade.py#L71-L78)): Left join usando chave composta `(CO_UNIDADE, CO_PROFISSIONAL_SUS, CO_CBO)`.
 
-#### Cálculo das Habilidades ($S_k$)
+4. **Cálculo da CHS individual** ([linhas 81-91](Outputs%26Codigo/PARTE2/4-capacidade.py#L81-L91)):
+   ```
+   CHS_PROFISSIONAL_TOTAL = Ambulatorial + Hospitalar + Outros
+   ```
 
-As habilidades são obtidas através da tradução dos códigos CBO:
+5. **Agregação por equipe** ([linhas 93-96](Outputs%26Codigo/PARTE2/4-capacidade.py#L93-L96)): Agrupa por `SEQ_EQUIPE` e soma as CHS de todos os membros para obter $Q_k$.
 
-```mermaid
-graph LR
-    A[CO_CBO do Profissional] -->|Merge| B[CBO2002 - Ocupacao.csv]
-    B --> C[TITULO = Nome da Profissão]
-    C --> D[Agregação por Equipe]
-    D --> E[Sk = Médico, Enfermeiro, Fisio, ...]
-```
+6. **Gráfico de capacidade por estado** ([linhas 117-137](Outputs%26Codigo/PARTE2/4-capacidade.py#L117-L137)): Barras horizontais com Top 15 estados, valores formatados em milhares (k).
 
-#### Detalhes Técnicos
+7. **Histograma de distribuição** ([linhas 140-164](Outputs%26Codigo/PARTE2/4-capacidade.py#L140-L164)): Mostra a distribuição de $Q_k$ entre as equipes com linha de média.
 
-**[4-capacidade.py](Outputs%26Codigo/PARTE2/4-capacidade.py):**
-- Carrega 4 bases: estabelecimentos, equipes, profissionais por equipe, carga horária
-- Merge encadeado: Equipes → Profissionais → Carga Horária (chave tripla)
-- Chave composta: `(CO_UNIDADE, CO_PROFISSIONAL_SUS, CO_CBO)`
-- Trata valores nulos com `fillna(0)`
-- Gera histograma para visualizar distribuição de capacidades
+---
 
-**[5-heatMap.py](Outputs%26Codigo/PARTE2/5-heatMap.py):**
-- Agregação por estabelecimento (não por equipe)
-- Carrega coordenadas geográficas
-- Usa plugin `HeatMap` do Folium
-- Parâmetros ajustados: radius, blur, min_opacity
+#### 5-heatMap.py
 
-**[6-sunburst.py](Outputs%26Codigo/PARTE2/6-sunburst.py):**
-- Adiciona 5ª fonte: `CBO2002 - Ocupacao.csv`
-- Traduz códigos CBO para profissões legíveis
-- Agrega profissões minoritárias (<0.5%) em "Outras Profissões"
-- Gráfico Sunburst (Plotly): anel interno = tipo equipe, anel externo = profissões
+**Arquivo:** [Outputs&Codigo/PARTE2/5-heatMap.py](Outputs%26Codigo/PARTE2/5-heatMap.py)  
+**Output:** `mapa_calor_chs_brasil.html`
+
+Este script gera um mapa de calor interativo do Brasil mostrando a intensidade da capacidade de Atenção Domiciliar.
+
+**Etapas do processamento:**
+
+1. **Carregamento com coordenadas** ([linhas 20-45](Outputs%26Codigo/PARTE2/5-heatMap.py#L20-L45)): Carrega `NU_LATITUDE` e `NU_LONGITUDE` da tabela de estabelecimentos.
+
+2. **Agregação por estabelecimento** ([linhas 74-79](Outputs%26Codigo/PARTE2/5-heatMap.py#L74-L79)): Agrupa por `CO_UNIDADE` (não por equipe) e soma a CHS total.
+
+3. **Preparação de dados** ([linhas 85-92](Outputs%26Codigo/PARTE2/5-heatMap.py#L85-L92)): Limpa coordenadas e formata como lista de triplas `[lat, long, peso]`.
+
+4. **Mapa de calor** ([linhas 95-107](Outputs%26Codigo/PARTE2/5-heatMap.py#L95-L107)): Centraliza no Brasil e adiciona camada HeatMap com parâmetros otimizados.
+
+---
+
+#### 6-sunburst.py
+
+**Arquivo:** [Outputs&Codigo/PARTE2/6-sunburst.py](Outputs%26Codigo/PARTE2/6-sunburst.py)  
+**Output:** `habilidades_sunburst.html`
+
+Este script gera um gráfico Sunburst interativo que decompõe a composição da força de trabalho ($S_k$) por tipo de equipe.
+
+**Etapas do processamento:**
+
+1. **Carregamento de 5 bases** ([linhas 26-51](Outputs%26Codigo/PARTE2/6-sunburst.py#L26-L51)): Adiciona `CBO2002 - Ocupacao.csv` como dicionário de profissões.
+
+2. **Merge com tradução CBO** ([linhas 60-69](Outputs%26Codigo/PARTE2/6-sunburst.py#L60-L69)): Conecta códigos CBO aos nomes legíveis das profissões.
+
+3. **Agregação de profissões minoritárias** ([linhas 86-95](Outputs%26Codigo/PARTE2/6-sunburst.py#L86-L95)): Profissões com menos de 0.5% do total são agrupadas como "Outras Profissões".
+
+4. **Gráfico Sunburst** ([linhas 98-130](Outputs%26Codigo/PARTE2/6-sunburst.py#L98-L130)): Hierarquia de dois níveis:
+   - Anel interno: Tipo de equipe (EMAD I, EMAD II, EMAP, EMAP-R)
+   - Anel externo: Profissões que compõem cada tipo
 
 ---
 
@@ -252,30 +280,35 @@ graph LR
 
 > **Pergunta-guia:** *"Onde estão os pacientes que necessitam de atenção domiciliar?"*
 
-#### Scripts
+#### 10-demanda_censo2022_real.py
 
-| Script | Descrição | Output |
-|:---|:---|:---|
-| [10-demanda_censo2022_real.py](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py) | Demanda de idosos por setor censitário | `mapa_demanda_idosos_sp_censo2022.html` |
+**Arquivo:** [Outputs&Codigo/PARTE3/10-demanda_censo2022_real.py](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py)  
+**Output:** `mapa_demanda_idosos_sp_censo2022.html`
 
-#### Variáveis do Censo Utilizadas
+Este script utiliza dados reais do Censo 2022 para calcular a demanda de idosos por setor censitário.
 
-| Código | Descrição |
-|:---|:---|
-| V01006 | Quantidade de moradores (total) |
-| V01040 | Moradores com 60 a 69 anos |
-| V01041 | Moradores com 70 anos ou mais |
+**Variáveis do Censo utilizadas** ([linhas 8-11](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L8-L11)):
+- V01006: Quantidade de moradores (total)
+- V01040: 60 a 69 anos
+- V01041: 70 anos ou mais
 
-**Demanda por setor censitário:**
-$$D_i = V01040_i + V01041_i$$
+**Etapas do processamento:**
 
-#### Detalhes Técnicos
+1. **Download automático** ([linhas 37-65](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L37-L65)): Baixa e extrai arquivos ZIP do FTP do IBGE se não existirem localmente.
 
-**[10-demanda_censo2022_real.py](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py):**
-- Baixa automaticamente dados do FTP do IBGE (se necessário)
-- Usa agregados por setores censitários
-- Carrega malha shapefile de setores de SP
-- Gera mapa de calor da população idosa (60+)
+2. **Carregamento de dados demográficos** ([linhas 68-84](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L68-L84)): Lê o CSV de agregados por setores censitários do Brasil.
+
+3. **Carregamento da malha de SP** ([linhas 87-118](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L87-L118)): Lê o shapefile com as geometrias dos setores censitários de São Paulo.
+
+4. **Filtro para SP Capital** ([linhas 123-150](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L123-L150)): Usa código do município 3550308 para filtrar apenas a capital.
+
+5. **Cálculo da demanda** ([linhas 153-210](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L153-L210)):
+   ```
+   Demanda = pop_60_69 + pop_70_mais
+   ```
+   Trata valores sigilosos ("X") do IBGE como zero.
+
+6. **Mapa de calor** ([linhas 213-250](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L213-L250)): Gera visualização da concentração de idosos por setor.
 
 ---
 
@@ -283,45 +316,37 @@ $$D_i = V01040_i + V01041_i$$
 
 > **Pergunta-guia:** *"Quantas equipes realmente cumprem os requisitos legais de composição?"*
 
-#### Scripts
+#### 8-analise_saturacao_ad.py
 
-| Script | Descrição | Output |
-|:---|:---|:---|
-| [8-analise_saturacao_ad.py](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py) | Análise de completude normativa | Dashboards de conformidade |
+**Arquivo:** [Outputs&Codigo/PARTE4/8-analise_saturacao_ad.py](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py)  
+**Outputs:** Dashboards de conformidade
 
-#### Base Legal
+Este script analisa se as equipes atendem aos requisitos normativos da Portaria GM/MS 3.005/2024.
 
-- **Portaria de Consolidação GM/MS nº 5/2017**
-- **Portaria GM/MS nº 3.005 de 02/05/2024** (atualização)
+**Base legal** ([linhas 5-42](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py#L5-L42)): 
+- Portaria de Consolidação GM/MS nº 5/2017
+- Portaria GM/MS nº 3.005 de 02/05/2024
 
-#### Requisitos de Composição por Tipo de Equipe
+**Regras de completude** ([linhas 85-124](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py#L85-L124)):
 
 | Tipo | Médico | Enfermeiro | Téc. Enfermagem | Fisio/AS |
 |:---:|:---:|:---:|:---:|:---:|
-| **EMAD I** | ≥40h | ≥60h | ≥120h | ≥30h |
-| **EMAD II** | ≥20h | ≥30h | ≥120h | ≥30h |
-| **EMAP** | - | - | - | 3+ prof. NS, ≥90h total |
-| **EMAP-R** | - | ≥30h | - | 3+ prof. NS, ≥60h total |
+| EMAD I | ≥40h | ≥60h | ≥120h | ≥30h |
+| EMAD II | ≥20h | ≥30h | ≥120h | ≥30h |
+| EMAP | - | - | - | 3+ prof. NS, ≥90h |
+| EMAP-R | - | ≥30h | - | 3+ prof. NS, ≥60h |
 
-> **Nota:** Profissionais com CHS < 20h são descartados do cálculo de completude (Art. 547, §1º)
+**Categorização de CBOs** ([linhas 159-199](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py#L159-L199)): Função que categoriza códigos CBO em classes profissionais:
+- Prefixo 2251/2252/2253 → MEDICO
+- Prefixo 2235 → ENFERMEIRO
+- Prefixo 3222 → TECNICO_ENFERMAGEM
+- E assim por diante...
 
-#### Categorização de CBOs
-
-O script implementa uma função de categorização baseada nas famílias CBO:
-
-| Prefixo CBO | Categoria |
-|:---|:---|
-| 2251, 2252, 2253 | MEDICO |
-| 2235 | ENFERMEIRO |
-| 3222 | TECNICO_ENFERMAGEM |
-| 2236 | FISIOTERAPEUTA |
-| 2516 | ASSISTENTE_SOCIAL |
-| 2238 | FONOAUDIOLOGO |
-| 2237 | NUTRICIONISTA |
-| 2515 | PSICOLOGO |
-| 2239 | TERAPEUTA_OCUPACIONAL |
-| 2232 | ODONTOLOGO |
-| 2234 | FARMACEUTICO |
+**Cálculo da CHS Real** ([linhas 203-280](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py#L203-L280)):
+```
+CHS_REAL = Ambulatorial + Hospitalar + Outros
+```
+Profissionais com CHS < 20h são descartados (Art. 547, §1º).
 
 ---
 
@@ -427,60 +452,6 @@ folium>=0.14.0
 plotly>=5.11.0
 geopandas>=0.12.0
 requests>=2.28.0
-```
-
----
-
-## Controle de Versão (Git)
-
-### Baixar atualizações do repositório remoto
-
-```bash
-# Atualizar o repositório local com as mudanças do remoto
-git pull origin main
-```
-
-### Enviar alterações para o repositório remoto
-
-```bash
-# Adicionar todas as alterações
-git add .
-
-# Criar commit com mensagem descritiva
-git commit -m "Descrição das alterações"
-
-# Enviar para o repositório remoto
-git push origin main
-```
-
-### Forçar envio (sobrescrever repositório remoto)
-
-> **Atenção:** Use apenas quando tiver certeza de que deseja sobrescrever o histórico remoto.
-
-```bash
-# Forçar push - SOBRESCREVE o repositório remoto
-git push --force origin main
-
-# Alternativa mais segura (falha se houver commits novos no remoto)
-git push --force-with-lease origin main
-```
-
-### Resolver conflitos (pull com rebase)
-
-```bash
-# Baixar e reaplicar commits locais sobre os remotos
-git pull --rebase origin main
-
-# Se houver conflitos, resolver e continuar
-git rebase --continue
-```
-
-### Descartar alterações locais e sincronizar com remoto
-
-```bash
-# Descartar tudo e usar a versão do remoto
-git fetch origin
-git reset --hard origin/main
 ```
 
 ---
