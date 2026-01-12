@@ -19,14 +19,13 @@
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Metodologia](#metodologia)
   - [PARTE 1: Identificação e Mapeamento das Equipes](#parte-1-identificação-e-mapeamento-das-equipes)
-  - [PARTE 2: Quantificação de Capacidade e Habilidades](#parte-2-quantificação-de-capacidade-qk-e-habilidades-sk)
+  - [PARTE 2: Quantificação de Capacidade e Habilidades](#parte-2-quantificação-de-capacidade-q_k-e-habilidades-s_k)
   - [PARTE 3: Análise de Demanda (Censo 2022)](#parte-3-análise-de-demanda-censo-2022)
   - [PARTE 4: Análise de Saturação e Conformidade Legal](#parte-4-análise-de-saturação-e-conformidade-legal)
 - [Principais Descobertas](#principais-descobertas)
 - [Visualizações Geradas](#visualizações-geradas)
 - [Como Executar](#como-executar)
-- [Referências Legais](#referências-legais)
-- [Licença](#licença)
+- [Referências](#referências)
 
 ---
 
@@ -63,6 +62,9 @@ O problema de **Roteamento e Agendamento de Cuidados Domiciliares (HHC-RSP)** bu
 
 Os dados foram extraídos do CNES (competência **08/2025**) via DATASUS.
 
+- **Download das bases:** [Arquivos de Base de Dados](https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp)
+- **Documentação (Leia-me):** [Documentação CNES](https://cnes.datasus.gov.br/pages/downloads/documentacao.jsp) - Contém o dicionário de dados com os códigos de equipes (22, 46, 23, 77)
+
 | Arquivo | Descrição | Chaves Principais |
 |:---|:---|:---|
 | `tbEstabelecimento202508.csv` | Cadastro de clínicas, hospitais e unidades de saúde | `CO_UNIDADE`, `NU_LATITUDE`, `NU_LONGITUDE`, `CO_ESTADO_GESTOR` |
@@ -71,6 +73,8 @@ Os dados foram extraídos do CNES (competência **08/2025**) via DATASUS.
 | `tbCargaHorariaSus202508.csv` | Carga horária de cada profissional | `CO_PROFISSIONAL_SUS`, `CO_CBO`, `QT_CARGA_HORARIA_*` |
 
 ### CBO - Classificação Brasileira de Ocupações
+
+- **Download:** [CBO - Downloads](https://cbo.mte.gov.br/cbosite/pages/downloads.jsf)
 
 | Arquivo | Descrição |
 |:---|:---|
@@ -87,7 +91,7 @@ Os dados foram extraídos do CNES (competência **08/2025**) via DATASUS.
 
 ## Filtros de Equipes (Programa Melhor em Casa)
 
-A filtragem foi realizada com base na documentação oficial e **Portaria GM/MS nº 3.005/2024** para garantir rastreabilidade:
+A filtragem foi realizada com base na [documentação oficial do CNES](https://cnes.datasus.gov.br/pages/downloads/documentacao.jsp) (arquivo Leia-me) e **Portaria GM/MS nº 3.005/2024** para garantir rastreabilidade:
 
 | Código | Sigla | Descrição Completa | Categoria |
 |:---:|:---|:---|:---:|
@@ -128,7 +132,7 @@ IC/
 
 ### PARTE 1: Identificação e Mapeamento das Equipes
 
-> **Pergunta-guia:** *"Onde estão localizados os pontos de partida das equipes do programa 'Melhor em Casa' em São Paulo?"*
+Esta fase identifica a localização geográfica das equipes do programa "Melhor em Casa" no estado de São Paulo, permitindo visualizar a distribuição espacial dos depots (bases de partida) e a cobertura por tipo de equipe.
 
 #### 1-visuazacaoMapa.py
 
@@ -202,7 +206,7 @@ Este script combina dois gráficos: barras empilhadas por estado e pizza donut d
 
 ### PARTE 2: Quantificação de Capacidade ($Q_k$) e Habilidades ($S_k$)
 
-> **Pergunta-guia:** *"Qual a capacidade de trabalho e quais as habilidades de cada equipe?"*
+Esta fase extrai os parâmetros de capacidade (carga horária semanal disponível) e habilidades (composição profissional) de cada equipe, informações essenciais para a modelagem do problema de otimização de rotas.
 
 #### 4-capacidade.py
 
@@ -278,7 +282,7 @@ Este script gera um gráfico Sunburst interativo que decompõe a composição da
 
 ### PARTE 3: Análise de Demanda (Censo 2022)
 
-> **Pergunta-guia:** *"Onde estão os pacientes que necessitam de atenção domiciliar?"*
+Esta fase utiliza dados do Censo Demográfico 2022 para mapear a demanda potencial por atenção domiciliar, identificando a concentração de população idosa (60+) por setor censitário em São Paulo.
 
 #### 10-demanda_censo2022_real.py
 
@@ -314,7 +318,7 @@ Este script utiliza dados reais do Censo 2022 para calcular a demanda de idosos 
 
 ### PARTE 4: Análise de Saturação e Conformidade Legal
 
-> **Pergunta-guia:** *"Quantas equipes realmente cumprem os requisitos legais de composição?"*
+Esta fase avalia se as equipes atendem aos requisitos mínimos de composição definidos pela legislação vigente, identificando o índice de conformidade e possíveis gargalos operacionais.
 
 #### 8-analise_saturacao_ad.py
 
@@ -456,39 +460,30 @@ requests>=2.28.0
 
 ---
 
-## Referências Legais
+## Referências
+
+### Fontes de Dados
+
+| Fonte | Link |
+|:---|:---|
+| CNES - Bases de Dados | [Download](https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp) |
+| CNES - Documentação (Leia-me) | [Download](https://cnes.datasus.gov.br/pages/downloads/documentacao.jsp) |
+| CBO - Classificação Brasileira de Ocupações | [Download](https://cbo.mte.gov.br/cbosite/pages/downloads.jsf) |
+| IBGE - Censo 2022 | [Portal](https://censo2022.ibge.gov.br/) |
+
+### Legislação
 
 | Documento | Descrição |
 |:---|:---|
-| **Portaria GM/MS nº 825/2016** | Redefine a Atenção Domiciliar no âmbito do SUS |
-| **Portaria de Consolidação nº 5/2017** | Consolidação das normas sobre ações e serviços de saúde |
-| **Portaria GM/MS nº 3.005/2024** | Atualização dos requisitos de composição das equipes AD |
-
----
-
-## Referências Técnicas
-
-- **CNES/DATASUS:** [https://cnes.datasus.gov.br/](https://cnes.datasus.gov.br/)
-- **CBO - Ministério do Trabalho:** [http://www.mtecbo.gov.br/](http://www.mtecbo.gov.br/)
-- **IBGE Censo 2022:** [https://censo2022.ibge.gov.br/](https://censo2022.ibge.gov.br/)
+| Portaria GM/MS nº 825/2016 | Redefine a Atenção Domiciliar no âmbito do SUS |
+| Portaria de Consolidação nº 5/2017 | Consolidação das normas sobre ações e serviços de saúde |
+| Portaria GM/MS nº 3.005/2024 | Atualização dos requisitos de composição das equipes AD |
 
 ---
 
 ## Autores
 
-- **Orientando:** [Seu Nome]
-- **Orientador:** [Nome do Orientador]
-- **Instituição:** [Sua Universidade]
+- **Orientando:** Fernando Alee Suaiden
+- **Orientador:** Maristela Oliveira dos Santos
+- **Instituição:** Universidade de São Paulo (USP)
 - **Financiamento:** FAPESP
-
----
-
-## Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-
-<p align="center">
-  <i>Desenvolvido como parte de Iniciação Científica para otimização de rotas do Programa Melhor em Casa</i>
-</p>
