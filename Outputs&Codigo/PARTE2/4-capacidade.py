@@ -77,15 +77,15 @@ try:
     # CHS por profissional
     df_completo['CHS_PROFISSIONAL_TOTAL'] = df_completo[cols_chs].sum(axis=1)
 
-    # Agregação por equipe
-    df_capacidade_equipe = df_completo.groupby('SEQ_EQUIPE')['CHS_PROFISSIONAL_TOTAL'].sum().reset_index()
+    # Agregação por equipe (CO_UNIDADE + SEQ_EQUIPE identificam uma equipe única)
+    df_capacidade_equipe = df_completo.groupby(['CO_UNIDADE', 'SEQ_EQUIPE'])['CHS_PROFISSIONAL_TOTAL'].sum().reset_index()
     df_capacidade_equipe = df_capacidade_equipe.rename(columns={'CHS_PROFISSIONAL_TOTAL': 'Qk_CHS_Equipe'})
 
-    # Junta de volta com df_equipes para saber o CO_UNIDADE de cada equipe
+    # Junta de volta com df_equipes para saber o TP_EQUIPE de cada equipe
     df_capacidade_final = pd.merge(
         df_capacidade_equipe,
         df_equipes_filtradas,
-        on='SEQ_EQUIPE',
+        on=['CO_UNIDADE', 'SEQ_EQUIPE'],
         how='left'
     )
 

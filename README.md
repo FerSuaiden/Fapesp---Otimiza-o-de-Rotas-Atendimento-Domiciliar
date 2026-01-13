@@ -155,26 +155,41 @@ Este script gera um mapa interativo das equipes de Atenção Domiciliar no estad
 
 ---
 
-#### 3-pizza.py
+#### 2-equipes_por_estado.py
 
-**Arquivo:** [Outputs&Codigo/PARTE1/3-pizza.py](Outputs%26Codigo/PARTE1/3-pizza.py)  
-**Outputs:** `distribuicao_equipes_por_estado_empilhado.png`, `composicao_nacional_pizza.png`
+**Arquivo:** [Outputs&Codigo/PARTE1/2-equipes_por_estado.py](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py)  
+**Output:** `distribuicao_equipes_por_estado_empilhado.png`
 
-Este script gera dois gráficos: barras empilhadas por estado e pizza donut da composição nacional.
+Este script gera um gráfico de barras empilhadas mostrando a distribuição de equipes de Atenção Domiciliar por estado.
 
 **Etapas do processamento:**
 
-1. **Dicionários de mapeamento** ([linhas 11-27](Outputs%26Codigo/PARTE1/3-pizza.py#L11-L27)): Define:
+1. **Dicionários de mapeamento** ([linhas 11-24](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L11-L24)): Define:
    - `MAP_EQUIPES`: Traduz códigos (22, 46, 23, 77) para nomes (EMAD I, EMAD II, EMAP, EMAP-R)
    - `IBGE_UF_MAP`: Converte códigos IBGE para siglas dos estados
 
-2. **Carregamento e merge** ([linhas 28-59](Outputs%26Codigo/PARTE1/3-pizza.py#L28-L59)): Carrega dados CNES, filtra equipes relevantes e junta com estabelecimentos.
+2. **Carregamento e merge** ([linhas 27-55](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L27-L55)): Carrega dados CNES, filtra equipes relevantes e junta com estabelecimentos.
 
-3. **Tabela de contingência** ([linhas 61-70](Outputs%26Codigo/PARTE1/3-pizza.py#L61-L70)): Usa `pd.crosstab` para criar matriz Estados x Tipos de Equipe, ordenada por total.
+3. **Tabela de contingência** ([linhas 57-68](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L57-L68)): Usa `pd.crosstab` para criar matriz Estados x Tipos de Equipe, ordenada por total.
 
-4. **Gráfico de barras** ([linhas 72-110](Outputs%26Codigo/PARTE1/3-pizza.py#L72-L110)): Gera barras empilhadas do Top 15 estados.
+4. **Gráfico de barras** ([linhas 70-102](Outputs%26Codigo/PARTE1/2-equipes_por_estado.py#L70-L102)): Gera barras empilhadas do Top 15 estados com legenda detalhada.
 
-5. **Gráfico donut** ([linhas 112-155](Outputs%26Codigo/PARTE1/3-pizza.py#L112-L155)): Cria pizza com círculo branco central para efeito visual de rosquinha.
+---
+
+#### 3-pizza.py
+
+**Arquivo:** [Outputs&Codigo/PARTE1/3-pizza.py](Outputs%26Codigo/PARTE1/3-pizza.py)  
+**Output:** `composicao_nacional_pizza.png`
+
+Este script gera um gráfico de pizza (donut) mostrando a composição nacional das equipes de Atenção Domiciliar.
+
+**Etapas do processamento:**
+
+1. **Dicionários de mapeamento** ([linhas 10-16](Outputs%26Codigo/PARTE1/3-pizza.py#L10-L16)): Define `MAP_EQUIPES` para tradução dos códigos.
+
+2. **Carregamento e filtragem** ([linhas 19-30](Outputs%26Codigo/PARTE1/3-pizza.py#L19-L30)): Carrega dados CNES e filtra equipes relevantes.
+
+3. **Gráfico donut** ([linhas 32-73](Outputs%26Codigo/PARTE1/3-pizza.py#L32-L73)): Cria pizza com círculo branco central para efeito visual de rosquinha.
 
 ---
 
@@ -204,7 +219,7 @@ Este script calcula a capacidade de atendimento ($Q_k$) das equipes usando a Car
    CHS_PROFISSIONAL_TOTAL = Ambulatorial + Hospitalar + Outros
    ```
 
-4. **Agregação por equipe** ([linhas 80-83](Outputs%26Codigo/PARTE2/4-capacidade.py#L80-L83)): Agrupa por `SEQ_EQUIPE` e soma as CHS de todos os membros para obter $Q_k$.
+4. **Agregação por equipe** ([linhas 80-84](Outputs%26Codigo/PARTE2/4-capacidade.py#L80-L84)): Agrupa por `CO_UNIDADE` + `SEQ_EQUIPE` (identificador único de equipe) e soma as CHS de todos os membros para obter $Q_k$.
 
 5. **Gráfico de capacidade por estado** ([linhas 103-123](Outputs%26Codigo/PARTE2/4-capacidade.py#L103-L123)): Barras horizontais com Top 15 estados, valores formatados em milhares (k).
 
@@ -451,13 +466,13 @@ requests>=2.28.0
 |:---|:---|:---|
 | Portaria GM/MS nº 825/2016 | Redefine a Atenção Domiciliar no âmbito do SUS | [Texto](https://bvsms.saude.gov.br/bvs/saudelegis/gm/2016/prt0825_25_04_2016.html) |
 | Portaria de Consolidação nº 5/2017 | Consolidação das normas sobre ações e serviços de saúde | [Texto](https://bvsms.saude.gov.br/bvs/saudelegis/gm/2017/prc0005_03_10_2017.html) |
-| Portaria GM/MS nº 3.005/2024 | Atualização dos requisitos de composição das equipes AD | [Texto](https://www.in.gov.br/en/web/dou/-/portaria-gm/ms-n-3.005-de-2-de-maio-de-2024-556832237) |
+| Portaria GM/MS nº 3.005/2024 | Atualização dos requisitos de composição das equipes AD | [Texto](https://www.gov.br/saude/pt-br/composicao/saes/melhor-em-casa/legislacao/portaria-gm-ms-no-3-005-de-2-de-janeiro-de-2024) |
 
 ---
 
 ## Autores
 
 - **Orientando:** Fernando Alee Suaiden
-- **Orientador:** Maristela Oliveira dos Santos
+- **Orientadora:** Maristela Oliveira dos Santos
 - **Instituição:** Universidade de São Paulo (USP)
 - **Financiamento:** FAPESP
