@@ -3,12 +3,6 @@
 > **Projeto de Iniciação Científica (FAPESP)**  
 > Análise Exploratória de Dados (AED) aplicada ao programa "Melhor em Casa" usando dados do CNES/DATASUS.
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![Libraries](https://img.shields.io/badge/Lib-Pandas%20%7C%20Folium%20%7C%20Matplotlib%20%7C%20Plotly%20%7C%20GeoPandas-orange)
-![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-green)
-![CNES](https://img.shields.io/badge/CNES-08%2F2025-purple)
-![Censo](https://img.shields.io/badge/Censo-2022-red)
-
 ---
 
 ## Sumário
@@ -106,17 +100,17 @@ A filtragem foi realizada com base na [documentação oficial do CNES](https://c
 
 ```
 IC/
-├── CNES_DATA/                       # Dados brutos do CNES/DATASUS
+├── CNES_DATA/                       # Dados brutos do CNES/DATASUS (não rastreado)
 │   ├── tbEstabelecimento202508.csv
 │   ├── tbEquipe202508.csv
 │   ├── rlEstabEquipeProf202508.csv
 │   ├── tbCargaHorariaSus202508.csv
 │   └── ...
-├── CBO_DATA/                        # Classificação Brasileira de Ocupações
+├── CBO_DATA/                        # Classificação Brasileira de Ocupações (não rastreado)
 │   ├── CBO2002 - Ocupacao.csv
 │   ├── CBO2002 - Familia.csv
 │   └── ...
-├── IBGE_DATA/                       # Dados do Censo 2022
+├── IBGE_DATA/                       # Dados do Censo 2022 (não rastreado)
 │   └── ...
 ├── Outputs&Codigo/                  # Scripts e visualizações
 │   ├── PARTE1/                      # Mapeamento de Equipes
@@ -125,6 +119,8 @@ IC/
 │   └── PARTE4/                      # Análise de Saturação
 └── README.md
 ```
+
+> **Nota:** As pastas de dados (`CNES_DATA/`, `CBO_DATA/`, `IBGE_DATA/`) não estão rastreadas no repositório devido ao tamanho dos arquivos. Para reproduzir as análises, faça o download das bases nas fontes indicadas na seção [Fontes de Dados](#fontes-de-dados).
 
 ---
 

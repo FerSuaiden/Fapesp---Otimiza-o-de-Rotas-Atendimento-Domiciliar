@@ -2,69 +2,33 @@ import pandas as pd
 import folium
 from folium.plugins import MarkerCluster
 
-print("Iniciando o mapeamento completo: EMAD (I/II), EMAP e EMAP-R...")
-
 try:
-    # --- ETAPA 1: CARREGAR AS BASES DE DADOS ---
-    print("\n--- ETAPA 1: Carregando Arquivos ---")
-    # Fonte: CNES/DataSUS - tbEstabelecimento (competência 2025/08)
+    # Carregamento das bases de dados
+    # Fonte: CNES/DataSUS (competência 2025/08)
     df_estabelecimentos = pd.read_csv('../../CNES_DATA/tbEstabelecimento202508.csv', sep=';', encoding='latin-1', dtype=str)    
     df_equipes = pd.read_csv('../../CNES_DATA/tbEquipe202508.csv', sep=';', encoding='latin-1', dtype=str)
 
-    # --- ETAPA 2: IDENTIFICAR EQUIPES ---    
-    codigos_atendimento = ['22', '46'] # EMAD I e EMAD II
-    codigos_apoio = ['23', '77']       # EMAP e EMAP-R
+    # Identificação das equipes AD por categoria
+    codigos_atendimento = ['22', '46']  # EMAD I e EMAD II
+    codigos_apoio = ['23', '77']        # EMAP e EMAP-R
 
-    # Cria os conjuntos de CNES para cada categoria
     cnes_com_atendimento = set(df_equipes[df_equipes['TP_EQUIPE'].isin(codigos_atendimento)]['CO_UNIDADE'].unique())
-    print(f"  - Total de estabelecimentos com equipes de ATENDIMENTO (EMAD): {len(cnes_com_atendimento)}")
-
     cnes_com_apoio = set(df_equipes[df_equipes['TP_EQUIPE'].isin(codigos_apoio)]['CO_UNIDADE'].unique())
-    print(f"  - Total de estabelecimentos com equipes de APOIO (EMAP/EMAP-R): {len(cnes_com_apoio)}")
-
-    # Lista total de CNES relevantes (união dos dois conjuntos)
     lista_cnes_total = list(cnes_com_atendimento.union(cnes_com_apoio))
-    print(f"  - Total de estabelecimentos únicos com pelo menos uma das equipes: {len(lista_cnes_total)}")
 
-    # --- ETAPA 3: FILTRAR PARA SÃO PAULO ---
-    print("\n--- ETAPA 3: Filtrando para São Paulo ---")
+    # Filtro geográfico para São Paulo (CO_ESTADO_GESTOR = '35')
     df_estabelecimentos_filtrados = df_estabelecimentos[df_estabelecimentos['CO_UNIDADE'].isin(lista_cnes_total)].copy()
-    # CO_ESTADO_GESTOR = Código IBGE da UF (35 = São Paulo)
     df_sp = df_estabelecimentos_filtrados[df_estabelecimentos_filtrados['CO_ESTADO_GESTOR'] == '35'].copy()
-    print(f"  - Total de estabelecimentos relevantes encontrados em SP: {len(df_sp)}")
 
-    # --- ETAPA 4: PREPARAR COORDENADAS ---
-    print("\n--- ETAPA 4: Preparando Coordenadas ---")
+    # Tratamento de coordenadas
     df_sp['NU_LATITUDE'] = pd.to_numeric(df_sp['NU_LATITUDE'].str.replace(',', '.'), errors='coerce')
     df_sp['NU_LONGITUDE'] = pd.to_numeric(df_sp['NU_LONGITUDE'].str.replace(',', '.'), errors='coerce')
-
     df_mapeamento = df_sp.dropna(subset=['NU_LATITUDE', 'NU_LONGITUDE'])
     df_mapeamento = df_mapeamento[df_mapeamento['NU_LATITUDE'] != 0]
-    print(f"  - Total de estabelecimentos com coordenadas válidas para o mapa: {len(df_mapeamento)}")
 
-    # --- ETAPA 5: DIAGNÓSTICO DAS CATEGORIAS EM SP ---
-    print("\n--- ETAPA 5: DIAGNÓSTICO FINAL DAS CATEGORias EM SP ---")
-    contador = {'Apenas Atendimento': 0, 'Apenas Apoio': 0, 'Ambos': 0}
-    
-    for index, row in df_mapeamento.iterrows():
-        cnes_atual = row['CO_UNIDADE']
-        tem_atendimento = cnes_atual in cnes_com_atendimento
-        tem_apoio = cnes_atual in cnes_com_apoio
-        
-        if tem_atendimento and tem_apoio:
-            contador['Ambos'] += 1
-        elif tem_atendimento:
-            contador['Apenas Atendimento'] += 1
-        elif tem_apoio:
-            contador['Apenas Apoio'] += 1
-            
-    print(f"  - RESULTADO: Estabelecimentos com AMBOS (Roxo): {contador['Ambos']}")
-    print(f"  - RESULTADO: Estabelecimentos com APENAS ATENDIMENTO (Azul): {contador['Apenas Atendimento']}")
-    print(f"  - RESULTADO: Estabelecimentos com APENAS APOIO (Verde): {contador['Apenas Apoio']}")
-    print("---------------------------------------------------------")
+    # Classificação por categoria para visualização
 
-    # --- ETAPA 6: GERAR O MAPA ---
-    print("\n--- ETAPA 6: Gerando o mapa... ---")
+    # Geração do mapa interativo
     mapa_final = folium.Map(location=[-22.5647, -48.6351], zoom_start=7)
     marker_cluster = MarkerCluster(options={'disableClusteringAtZoom': 17, 'maxClusterRadius': 40}).add_to(mapa_final)
 
@@ -94,7 +58,7 @@ try:
             icon=folium.Icon(color=cor, icon='plus-sign')
         ).add_to(marker_cluster)
 
-    # --- ETAPA 7: ADICIONAR LEGENDA AO MAPA ---
+    # Legenda HTML
     legend_html = """
     <div style="position: fixed; 
                 bottom: 50px; left: 50px; width: 380px; height: auto; 
@@ -119,8 +83,7 @@ try:
 
     nome_arquivo = 'mapa_Equipes_Atencao_Domiciliar_SP.html'
     mapa_final.save(nome_arquivo)
-
-    print(f"\nSUCESSO! O mapa atualizado foi salvo no arquivo: '{nome_arquivo}'")
+    print(f"Mapa salvo: {nome_arquivo}")
 
 except FileNotFoundError as e:
     print(f"ERRO: O arquivo {e.filename} não foi encontrado.")

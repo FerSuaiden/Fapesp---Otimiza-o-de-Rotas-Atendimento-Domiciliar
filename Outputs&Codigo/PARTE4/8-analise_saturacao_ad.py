@@ -209,14 +209,14 @@ def carregar_carga_horaria_sus(profissionais_interesse: set = None):
     
     OTIMIZAÇÃO: Usa arquivo pré-filtrado se disponível, senão processa em chunks.
     """
-    print("📂 Carregando dados de Carga Horária SUS...")
+    print("Carregando dados de Carga Horária SUS...")
     
     # Tentar usar arquivo pré-filtrado primeiro
     filepath_cache = os.path.join(CNES_DIR, "chs_ad_sp.csv")
     filepath_full = os.path.join(CNES_DIR, "tbCargaHorariaSus202508.csv")
     
     if os.path.exists(filepath_cache):
-        print(f"   ✓ Usando arquivo cache: chs_ad_sp.csv")
+        print(f"   - Usando arquivo cache: chs_ad_sp.csv")
         df_chs = pd.read_csv(filepath_cache, sep=';', encoding='latin-1', low_memory=False)
     else:
         print(f"   ⏳ Cache não encontrado. Processando arquivo completo em chunks...")
@@ -244,7 +244,7 @@ def carregar_carga_horaria_sus(profissionais_interesse: set = None):
                 print(f"      ... {n_processados:,} linhas processadas")
         
         if not chunks:
-            print("   ⚠️ Nenhum registro encontrado")
+            print("   - Nenhum registro encontrado")
             return pd.DataFrame()
         
         df_chs = pd.concat(chunks, ignore_index=True)
@@ -252,14 +252,14 @@ def carregar_carga_horaria_sus(profissionais_interesse: set = None):
         # Salvar cache para próximas execuções
         if profissionais_interesse is not None:
             df_chs.to_csv(filepath_cache, sep=';', index=False)
-            print(f"   ✓ Cache salvo: chs_ad_sp.csv")
+            print(f"   - Cache salvo: chs_ad_sp.csv")
     
     # Filtrar pelos profissionais de interesse
     if profissionais_interesse is not None and len(df_chs) > 0:
         df_chs = df_chs[df_chs['CO_PROFISSIONAL_SUS'].isin(profissionais_interesse)]
     
     if len(df_chs) == 0:
-        print("   ⚠️ Nenhum registro de CHS encontrado para os profissionais AD")
+        print("   - Nenhum registro de CHS encontrado para os profissionais AD")
         return pd.DataFrame()
     
     # Converter para numérico
@@ -279,16 +279,16 @@ def carregar_carga_horaria_sus(profissionais_interesse: set = None):
         'CHS_REAL': 'sum'
     }).reset_index()
     
-    print(f"   ✓ {len(df_chs_agg):,} profissionais com CHS encontrados")
+    print(f"   - {len(df_chs_agg):,} profissionais com CHS encontrados")
     if len(df_chs_agg) > 0:
-        print(f"   ✓ CHS média: {df_chs_agg['CHS_REAL'].mean():.1f}h | Mediana: {df_chs_agg['CHS_REAL'].median():.1f}h")
+        print(f"   - CHS média: {df_chs_agg['CHS_REAL'].mean():.1f}h | Mediana: {df_chs_agg['CHS_REAL'].median():.1f}h")
     
     return df_chs_agg
 
 
 def carregar_dados_equipes():
     """Carrega dados de equipes AD de SP Capital."""
-    print("\n📂 Carregando dados de Equipes AD...")
+    print("\nCarregando dados de Equipes AD...")
     
     df_equipes = pd.read_csv(
         os.path.join(CNES_DIR, "tbEquipe202508.csv"),
@@ -309,15 +309,15 @@ def carregar_dados_equipes():
     # Equipes ativas atualmente
     df_ativas = df_equipes[df_equipes['DT_DESATIVACAO'].isna()]
     
-    print(f"   ✓ {len(df_equipes)} equipes AD no total em SP Capital")
-    print(f"   ✓ {len(df_ativas)} equipes AD ativas atualmente")
+    print(f"   - {len(df_equipes)} equipes AD no total em SP Capital")
+    print(f"   - {len(df_ativas)} equipes AD ativas atualmente")
     
     return df_equipes, df_ativas
 
 
 def carregar_profissionais_equipes():
     """Carrega profissionais vinculados às equipes AD."""
-    print("\n📂 Carregando profissionais das equipes...")
+    print("\nCarregando profissionais das equipes...")
     
     filepath = os.path.join(CNES_DIR, "rlEstabEquipeProf202508.csv")
     
@@ -333,7 +333,7 @@ def carregar_profissionais_equipes():
     df_prof['DT_ENTRADA'] = pd.to_datetime(df_prof['DT_ENTRADA'], format='%d/%m/%Y', errors='coerce')
     df_prof['DT_DESLIGAMENTO'] = pd.to_datetime(df_prof['DT_DESLIGAMENTO'], format='%d/%m/%Y', errors='coerce')
     
-    print(f"   ✓ {len(df_prof):,} vínculos profissional-equipe carregados")
+    print(f"   - {len(df_prof):,} vínculos profissional-equipe carregados")
     
     return df_prof
 
@@ -345,7 +345,7 @@ def enriquecer_profissionais_com_chs(df_prof, df_chs):
     Aplica filtro da Portaria 3.005/2024:
     - Profissionais com CHS < 20h são descartados para cálculo de completude
     """
-    print("\n⚙️ Enriquecendo profissionais com CHS real...")
+    print("\nEnriquecendo profissionais com CHS real...")
     
     # Merge com CHS
     df_prof_chs = df_prof.merge(
@@ -368,9 +368,9 @@ def enriquecer_profissionais_com_chs(df_prof, df_chs):
     validos = df_prof_chs['VALIDO_PORTARIA'].sum()
     invalidos = total - validos
     
-    print(f"   ✓ Total de vínculos: {total:,}")
-    print(f"   ✓ Válidos (CHS >= 20h): {validos:,} ({validos/total*100:.1f}%)")
-    print(f"   ⚠️ Descartados (CHS < 20h): {invalidos:,} ({invalidos/total*100:.1f}%)")
+    print(f"   - Total de vínculos: {total:,}")
+    print(f"   - Válidos (CHS >= 20h): {validos:,} ({validos/total*100:.1f}%)")
+    print(f"   - Descartados (CHS < 20h): {invalidos:,} ({invalidos/total*100:.1f}%)")
     
     return df_prof_chs
 
@@ -601,8 +601,8 @@ def analisar_completude_equipes(df_equipes_ativas, df_prof_chs):
     completas = df_resultado['COMPLETA'].sum()
     incompletas = len(df_resultado) - completas
     
-    print(f"\n📊 RESULTADO DA ANÁLISE DE COMPLETUDE:")
-    print(f"   ✅ Equipes Completas: {completas} ({completas/len(df_resultado)*100:.1f}%)")
+    print(f"\nRESULTADO DA ANÁLISE DE COMPLETUDE:")
+    print(f"   - Equipes Completas: {completas} ({completas/len(df_resultado)*100:.1f}%)")
     print(f"   ❌ Equipes Incompletas: {incompletas} ({incompletas/len(df_resultado)*100:.1f}%)")
     
     return df_resultado
@@ -696,7 +696,7 @@ def calcular_metricas_temporais(df_equipes, df_prof_chs):
     
     df_temporal = pd.DataFrame(resultados)
     
-    print(f"   ✓ {len(df_temporal)} meses analisados (2020-2025)")
+    print(f"   - {len(df_temporal)} meses analisados (2020-2025)")
     
     return df_temporal
     
@@ -706,7 +706,7 @@ def calcular_metricas_temporais(df_equipes, df_prof_chs):
 def gerar_graficos(df_analise, df_temporal):
     """Gera gráficos de alto impacto."""
     
-    print("\n📊 Gerando gráficos...")
+    print("\nGerando gráficos...")
     
     # ========================================================================
     # GRÁFICO 1: Razão de Cobertura Real (Minutos CHS por Idoso)
@@ -723,7 +723,7 @@ def gerar_graficos(df_analise, df_temporal):
     ax.axhline(y=media, color='#e74c3c', linestyle='--', linewidth=2,
                label=f'Média: {media:.2f} min/idoso/mês')
     
-    ax.set_title('📊 Razão de Cobertura Real: Minutos de CHS por Idoso por Mês\n'
+    ax.set_title('Razão de Cobertura Real: Minutos de CHS por Idoso por Mês\n'
                  'SP Capital - Oferta Real (CNES) vs Demanda (Censo 2022: 2.020.436 idosos)',
                  fontsize=14, fontweight='bold')
     ax.set_xlabel('Período', fontsize=12)
@@ -742,7 +742,7 @@ def gerar_graficos(df_analise, df_temporal):
     
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, 'v2_razao_cobertura_real.png'), dpi=150, bbox_inches='tight')
-    print(f"   ✓ Salvo: v2_razao_cobertura_real.png")
+    print(f"   - Salvo: v2_razao_cobertura_real.png")
     plt.close()
     
     # ========================================================================
@@ -775,7 +775,7 @@ def gerar_graficos(df_analise, df_temporal):
                 fontsize=11, fontweight='bold',
                 arrowprops=dict(arrowstyle='->', color='black'))
     
-    ax.set_title('📊 Índice de Precariedade Normativa (Portaria GM/MS Nº 3.005/2024)\n'
+    ax.set_title('Índice de Precariedade Normativa (Portaria GM/MS Nº 3.005/2024)\n'
                  'SP Capital - % de Equipes que NÃO Atendem os Requisitos Mínimos de CHS',
                  fontsize=14, fontweight='bold')
     ax.set_xlabel('Período', fontsize=12)
@@ -796,7 +796,7 @@ def gerar_graficos(df_analise, df_temporal):
     
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, 'v2_indice_precariedade_normativa.png'), dpi=150, bbox_inches='tight')
-    print(f"   ✓ Salvo: v2_indice_precariedade_normativa.png")
+    print(f"   - Salvo: v2_indice_precariedade_normativa.png")
     plt.close()
     
     # ========================================================================
@@ -861,7 +861,7 @@ def gerar_graficos(df_analise, df_temporal):
     
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, 'v2_dashboard_saturacao_oferta.png'), dpi=150, bbox_inches='tight')
-    print(f"   ✓ Salvo: v2_dashboard_saturacao_oferta.png")
+    print(f"   - Salvo: v2_dashboard_saturacao_oferta.png")
     plt.close()
     
     # ========================================================================
@@ -901,7 +901,7 @@ def gerar_graficos(df_analise, df_temporal):
     
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, 'v2_composicao_equipes.png'), dpi=150, bbox_inches='tight')
-    print(f"   ✓ Salvo: v2_composicao_equipes.png")
+    print(f"   - Salvo: v2_composicao_equipes.png")
     plt.close()
 
 
@@ -922,11 +922,11 @@ def main():
     # 3. Filtrar profissionais das equipes AD
     seq_equipes_ad = df_equipes['SEQ_EQUIPE'].unique()
     df_prof_ad = df_prof[df_prof['SEQ_EQUIPE'].isin(seq_equipes_ad)]
-    print(f"\n   ✓ {len(df_prof_ad):,} vínculos em equipes AD")
+    print(f"\n   - {len(df_prof_ad):,} vínculos em equipes AD")
     
     # 4. Extrair códigos de profissionais para otimizar busca de CHS
     profissionais_ad = set(df_prof_ad['CO_PROFISSIONAL_SUS'].unique())
-    print(f"   ✓ {len(profissionais_ad):,} profissionais únicos em equipes AD")
+    print(f"   - {len(profissionais_ad):,} profissionais únicos em equipes AD")
     
     # 5. Carregar CHS Real (OTIMIZADO - apenas profissionais AD)
     df_chs = carregar_carga_horaria_sus(profissionais_interesse=profissionais_ad)
@@ -949,20 +949,20 @@ def main():
     
     # 10. Resumo Final
     print("\n" + "=" * 80)
-    print("📊 RESUMO FINAL - PORTARIA GM/MS Nº 3.005/2024")
+    print("RESUMO FINAL - PORTARIA GM/MS Nº 3.005/2024")
     print("=" * 80)
     
     print(f"\n🏥 SITUAÇÃO ATUAL (Agosto 2025):")
     print(f"   Total de equipes AD ativas: {len(df_analise)}")
-    print(f"   ✅ Equipes Completas: {df_analise['COMPLETA'].sum()} ({df_analise['COMPLETA'].mean()*100:.1f}%)")
+    print(f"   - Equipes Completas: {df_analise['COMPLETA'].sum()} ({df_analise['COMPLETA'].mean()*100:.1f}%)")
     print(f"   ❌ Equipes Incompletas: {(~df_analise['COMPLETA']).sum()} ({(~df_analise['COMPLETA']).mean()*100:.1f}%)")
     
-    print(f"\n📈 MÉTRICAS TEMPORAIS:")
+    print(f"\nMÉTRICAS TEMPORAIS:")
     print(f"   Média do Índice de Precariedade: {df_temporal['INDICE_PRECARIEDADE'].mean():.1f}%")
     print(f"   Pico de Precariedade: {df_temporal['INDICE_PRECARIEDADE'].max():.1f}%")
     print(f"   Precariedade Atual: {df_temporal['INDICE_PRECARIEDADE'].iloc[-1]:.1f}%")
     
-    print(f"\n📊 RAZÃO DE COBERTURA:")
+    print(f"\nRAZÃO DE COBERTURA:")
     print(f"   Média: {df_temporal['MINUTOS_CHS_POR_IDOSO'].mean():.2f} minutos CHS/idoso/mês")
     print(f"   Atual: {df_temporal['MINUTOS_CHS_POR_IDOSO'].iloc[-1]:.2f} minutos CHS/idoso/mês")
     
@@ -974,7 +974,7 @@ def main():
     print(f"   → Cada hora de CHS deve ser maximizada com rotas eficientes!")
     
     print("\n" + "=" * 80)
-    print("✅ ANÁLISE CONCLUÍDA!")
+    print("ANÁLISE CONCLUÍDA!")
     print(f"   Gráficos salvos em: {BASE_DIR}/")
     print("=" * 80)
 

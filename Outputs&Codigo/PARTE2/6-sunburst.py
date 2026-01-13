@@ -2,10 +2,7 @@ import pandas as pd
 import plotly.express as px
 import sys
 
-print("Iniciando análise de HABILIDADES (CBO) por Tipo de Equipe...")
-
-# --- Nomes dos arquivos ---
-# Fonte: CNES/DataSUS (competência 2025/08)
+# Caminhos dos arquivos (Fonte: CNES/DataSUS - competência 2025/08)
 arquivo_estabelecimentos = '../../CNES_DATA/tbEstabelecimento202508.csv'
 arquivo_equipes = '../../CNES_DATA/tbEquipe202508.csv'
 arquivo_profissionais_equipe = '../../CNES_DATA/rlEstabEquipeProf202508.csv'
@@ -22,9 +19,7 @@ MAP_EQUIPES = {
 CODIGOS_RELEVANTES = ['22', '46', '23', '77']
 
 try:
-    # --- ETAPA 1: CARREGAR AS 4 BASES DE DADOS ---
-    print("Carregando bases de dados (Equipes, Profissionais, CHS e CBO)...")
-    
+    # Carregamento das bases de dados
     df_equipes = pd.read_csv(
         arquivo_equipes, sep=';', encoding='latin-1', dtype=str,
         usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'TP_EQUIPE']
@@ -47,71 +42,47 @@ try:
         usecols=['CODIGO', 'TITULO']
     )
     df_cbo = df_cbo.rename(columns={'CODIGO': 'CO_CBO', 'TITULO': 'Profissao'})
-    
-    print("Bases de dados carregadas com sucesso.")
 
-    # --- ETAPA 2: FILTRAR E FAZER MERGE (CRUZAMENTO) ---
-    print("Filtrando equipes de Atenção Domiciliar...")
+    # Filtragem e merge
     df_equipes_filtradas = df_equipes[df_equipes['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)]
 
-    print("Cruzando Equipes -> Profissionais...")
     df_merge1 = pd.merge(
         df_equipes_filtradas, df_prof_equipe,
         on=['CO_UNIDADE', 'SEQ_EQUIPE'], how='inner'
     )
     
-    print("Cruzando Profissionais -> Cargas Horárias...")
     df_merge2 = pd.merge(
         df_merge1, df_chs,
         on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO'], how='left'
     )
     
-    print("Cruzando Dados -> Nomes das Profissões (CBO)...")
     df_final = pd.merge(
         df_merge2, df_cbo,
         on='CO_CBO', how='left'
     )
 
-    # --- ETAPA 3: CALCULAR A CAPACIDADE (CHS) E LIMPAR DADOS ---
-    print("Limpando e somando Cargas Horárias (CHS)...")
+    # Cálculo da CHS e limpeza de dados
     cols_chs = ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
     
     for col in cols_chs:
         df_final[col] = pd.to_numeric(df_final[col], errors='coerce').fillna(0)
         
     df_final['CHS_Profissional'] = df_final[cols_chs].sum(axis=1)
-    
-    # Mapeia códigos de equipe para nomes
     df_final['Tipo_Equipe'] = df_final['TP_EQUIPE'].map(MAP_EQUIPES)
     
-    # Remove dados onde não encontramos CHS ou nome da profissão
     df_final = df_final.dropna(subset=['CHS_Profissional', 'Profissao', 'Tipo_Equipe'])
     df_final = df_final[df_final['CHS_Profissional'] > 0]
 
-    # --- ETAPA 4: PREPARAR DADOS PARA O SUNBURST ---
-    print("Agregando dados para o gráfico...")
-    
-    # Agrupa por Tipo de Equipe e Profissão, somando a CHS
+    # Preparação dos dados para o Sunburst
     df_plot_data = df_final.groupby(['Tipo_Equipe', 'Profissao'])['CHS_Profissional'].sum().reset_index()
     
-    # Para "beleza" e "utilidade": Agrega profissões menores em "Outros"
-    # Calcula a CHS total para encontrar o limite de 1%
+    # Agrupa profissões minoritárias (<0.5%)
     total_chs = df_plot_data['CHS_Profissional'].sum()
-    limite = total_chs * 0.005 # 0.5%
-    
-    # Marca profissões com menos que o limite como "Outros"
+    limite = total_chs * 0.005
     df_plot_data.loc[df_plot_data['CHS_Profissional'] < limite, 'Profissao'] = 'Outras Profissões (<0.5%)'
-    
-    # Agrupa novamente para somar as "Outras Profissões"
     df_plot_data = df_plot_data.groupby(['Tipo_Equipe', 'Profissao'])['CHS_Profissional'].sum().reset_index()
 
-    print(f"Dados prontos para plotagem:\n{df_plot_data.head()}")
-
-    # --- ETAPA 5: GERAR O GRÁFICO SUNBURST INTERATIVO ---
-    print("Gerando o gráfico Sunburst (habilidades_sunburst.html)...")
-    
-    # Define um "caminho" (path) hierárquico: 1º Nível = Tipo_Equipe, 2º Nível = Profissao
-    # O "tamanho" (values) de cada fatia é a soma da CHS
+    # Geração do gráfico Sunburst
     fig = px.sunburst(
         df_plot_data,
         path=['Tipo_Equipe', 'Profissao'],
@@ -153,12 +124,9 @@ try:
         insidetextorientation='radial'
     )
     
-    # Salva como um arquivo HTML interativo
     nome_grafico_sunburst = 'habilidades_sunburst.html'
     fig.write_html(nome_grafico_sunburst)
-
-    print(f"\nSUCESSO! Gráfico Sunburst salvo como '{nome_grafico_sunburst}'")
-    print("Abra este arquivo HTML no seu navegador para ver o gráfico interativo.")
+    print(f"Gráfico salvo: {nome_grafico_sunburst}")
 
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")

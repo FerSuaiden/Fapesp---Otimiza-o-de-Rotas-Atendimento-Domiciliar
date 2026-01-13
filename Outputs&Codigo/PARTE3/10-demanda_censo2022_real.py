@@ -38,7 +38,7 @@ URL_MALHA_SP = "https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_
 def baixar_arquivo(url, destino_zip, destino_extracao):
     """Baixa e extrai arquivo ZIP do IBGE."""
     if os.path.exists(destino_extracao) and os.listdir(destino_extracao):
-        print(f"  ✓ Dados já existem em: {destino_extracao}")
+        print(f"  Dados já existem: {destino_extracao}")
         return True
     
     os.makedirs(destino_extracao, exist_ok=True)
@@ -217,7 +217,7 @@ def calcular_demanda_idosos(df_demografia, gdf_malha):
     total_idosos = gdf_resultado['populacao_idosa'].sum()
     prop_media = total_idosos / total_pop * 100 if total_pop > 0 else 0
     
-    print(f"\n  📊 ESTATÍSTICAS SP CAPITAL (CENSO 2022 REAL):")
+    print(f"\n  ESTATÍSTICAS SP CAPITAL (CENSO 2022):")
     print(f"     - População total: {total_pop:,.0f}")
     print(f"     - População 60-69 anos: {gdf_resultado['pop_60_69'].sum():,.0f}")
     print(f"     - População 70+ anos: {gdf_resultado['pop_70_mais'].sum():,.0f}")
@@ -227,7 +227,7 @@ def calcular_demanda_idosos(df_demografia, gdf_malha):
     
     # Estatísticas por setor
     setores_com_idosos = gdf_resultado[gdf_resultado['populacao_idosa'] > 0]
-    print(f"\n  📈 DISTRIBUIÇÃO POR SETOR:")
+    print(f"\n  DISTRIBUIÇÃO POR SETOR:")
     print(f"     - Setores com idosos: {len(setores_com_idosos):,}")
     print(f"     - Média de idosos/setor: {setores_com_idosos['populacao_idosa'].mean():.1f}")
     print(f"     - Máximo idosos/setor: {setores_com_idosos['populacao_idosa'].max():.0f}")
@@ -263,7 +263,7 @@ def gerar_mapa_calor(gdf, output_file):
         except:
             continue
     
-    print(f"  ✓ Pontos para heatmap: {len(heat_data):,}")
+    print(f"  Pontos para heatmap: {len(heat_data):,}")
     
     # Adicionar heatmap
     HeatMap(
@@ -282,12 +282,12 @@ def gerar_mapa_calor(gdf, output_file):
                 border:2px solid grey; z-index:9999; 
                 font-size:14px; padding: 10px;
                 border-radius: 5px;">
-        <b>🗺️ Mapa de Calor - Demanda de Idosos (60+)</b><br>
+        <b>Mapa de Calor - Demanda de Idosos (60+)</b><br>
         <span style="font-size:12px;">
-            São Paulo Capital - <b>Censo 2022 (Dados Reais)</b><br>
+            São Paulo Capital - <b>Censo 2022</b><br>
             Fonte: IBGE - Agregados por Setores Censitários 2022<br>
-            <span style="color: red;">🔴 Vermelho</span> = Alta concentração de idosos<br>
-            <span style="color: blue;">🔵 Azul</span> = Baixa concentração de idosos
+            <span style="color: red;">Vermelho</span> = Alta concentração de idosos<br>
+            <span style="color: blue;">Azul</span> = Baixa concentração de idosos
         </span>
     </div>
     '''
@@ -295,7 +295,7 @@ def gerar_mapa_calor(gdf, output_file):
     
     # Salvar
     m.save(output_file)
-    print(f"  ✓ Mapa salvo em: {output_file}")
+    print(f"  Mapa salvo: {output_file}")
     
     return m
 
@@ -323,12 +323,12 @@ def salvar_dados(gdf, output_csv, output_geojson):
     # Salvar CSV
     df_export = gdf[[c for c in cols_export if c in gdf.columns]].copy()
     df_export.to_csv(output_csv, index=False, encoding='utf-8-sig')
-    print(f"  ✓ CSV salvo: {output_csv}")
+    print(f"  CSV salvo: {output_csv}")
     
     # Salvar GeoJSON
     gdf_export = gdf[[c for c in cols_export + ['geometry'] if c in gdf.columns]].copy()
     gdf_export.to_file(output_geojson, driver='GeoJSON')
-    print(f"  ✓ GeoJSON salvo: {output_geojson}")
+    print(f"  GeoJSON salvo: {output_geojson}")
 
 
 def main():
@@ -361,7 +361,7 @@ def main():
     salvar_dados(gdf_resultado, output_csv, output_geojson)
     
     print("\n" + "="*70)
-    print("   ✅ PROCESSAMENTO CONCLUÍDO COM SUCESSO!")
+    print("   PROCESSAMENTO CONCLUÍDO")
     print("="*70)
     print(f"\n   Arquivos gerados:")
     print(f"   - {output_map}")

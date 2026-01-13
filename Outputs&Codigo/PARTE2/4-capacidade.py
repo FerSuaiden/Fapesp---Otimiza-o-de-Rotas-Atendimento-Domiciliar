@@ -23,76 +23,61 @@ IBGE_UF_MAP = {
 }
 
 try:
-    # --- ETAPA 1: CARREGAR AS BASES DE DADOS ---
-    print("Carregando bases de dados...")
-    
-    # Base de Estabelecimentos (para UF)
-    # CO_ESTADO_GESTOR = Código IBGE da UF (equivalente ao CO_UF)
+    # Carregamento das bases de dados
+    # Fonte: CNES/DataSUS (competência 2025/08)
     df_estab = pd.read_csv(
         arquivo_estabelecimentos, sep=';', encoding='latin-1', dtype=str,
         usecols=['CO_UNIDADE', 'CO_ESTADO_GESTOR']
     )
     df_estab = df_estab.rename(columns={'CO_ESTADO_GESTOR': 'CO_UF'})
     
-    # Base de Equipes (para filtrar EMAD/EMAP)
     df_equipes = pd.read_csv(
         arquivo_equipes, sep=';', encoding='latin-1', dtype=str,
         usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'TP_EQUIPE']
     )
     
-    # Base de Profissionais por Equipe (a "cola" principal)
     df_prof_equipe = pd.read_csv(
         arquivo_profissionais_equipe, sep=';', encoding='latin-1', dtype=str,
         usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'CO_PROFISSIONAL_SUS', 'CO_CBO']
     )
     
-    # Base de Carga Horária (a métrica de capacidade)
     df_chs = pd.read_csv(
         arquivo_cargas_horarias, sep=';', encoding='latin-1', dtype=str,
         usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 
                  'QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
     )
-    
-    print("Bases de dados carregadas com sucesso.")
 
-    # --- ETAPA 2: FILTRAR E FAZER MERGE (CRUZAMENTO) ---
-    print("Filtrando equipes de Atenção Domiciliar...")
+    # Filtragem e merge
     df_equipes_filtradas = df_equipes[df_equipes['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)]
 
-    print("Cruzando Equipes -> Profissionais...")
-    # Junta as equipes (EMAD/EMAP) com os profissionais que as compõem
+    # Equipes -> Profissionais
     df_merge1 = pd.merge(
         df_equipes_filtradas,
         df_prof_equipe,
         on=['CO_UNIDADE', 'SEQ_EQUIPE'],
-        how='inner' # Queremos apenas profissionais que estão de fato em equipes de AD
+        how='inner'
     )
     
-    print("Cruzando Profissionais -> Cargas Horárias...")
-    # Junta os profissionais da equipe com suas respectivas cargas horárias
-    # Usamos CO_UNIDADE, CO_PROFISSIONAL_SUS e CO_CBO para a ligação mais precisa possível
+    # Profissionais -> Cargas horárias
     df_completo = pd.merge(
         df_merge1,
         df_chs,
         on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO'],
-        how='left' # Usamos 'left' para manter o profissional mesmo se a CHS não for encontrada
+        how='left'
     )
 
-    # --- ETAPA 3: CALCULAR A CAPACIDADE (Qk) ---
-    print("Limpando e somando Cargas Horárias (CHS)...")
-    
-    # Colunas de CHS para somar
+    # Cálculo da Capacidade (Qk)
+    # CHS = Ambulatorial + Hospitalar + Outros
     cols_chs = ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
     
     # Converte todas para numérico, preenchendo N/A ou erros com 0
     for col in cols_chs:
         df_completo[col] = pd.to_numeric(df_completo[col], errors='coerce').fillna(0)
         
-    # Soma as colunas para obter a capacidade total de CADA PROFISSIONAL
+    # CHS por profissional
     df_completo['CHS_PROFISSIONAL_TOTAL'] = df_completo[cols_chs].sum(axis=1)
 
-    print("Calculando a Capacidade Total (Qk) de CADA EQUIPE...")
-    # Agrupa por equipe (SEQ_EQUIPE) e soma a CHS de todos os seus membros
+    # Agregação por equipe
     df_capacidade_equipe = df_completo.groupby('SEQ_EQUIPE')['CHS_PROFISSIONAL_TOTAL'].sum().reset_index()
     df_capacidade_equipe = df_capacidade_equipe.rename(columns={'CHS_PROFISSIONAL_TOTAL': 'Qk_CHS_Equipe'})
 
@@ -113,14 +98,8 @@ try:
     )
     df_dados_plot['Estado_UF'] = df_dados_plot['CO_UF'].map(IBGE_UF_MAP)
     df_dados_plot = df_dados_plot.dropna(subset=['Estado_UF'])
-    
-    print(f"\nAnálise de Capacidade concluída. Total de equipes analisadas: {len(df_dados_plot)}")
-    print(df_dados_plot[['SEQ_EQUIPE', 'Qk_CHS_Equipe', 'Estado_UF']].head())
 
-    # --- ETAPA 4: GRÁFICO 1 - CAPACIDADE TOTAL POR ESTADO ---
-    print("\nGerando Gráfico 1: Capacidade Total (Soma de CHS) por Estado...")
-    
-    # Soma a capacidade (Qk) de todas as equipes de um estado
+    # Gráfico 1: Capacidade total por estado
     df_plot_chs_estado = df_dados_plot.groupby('Estado_UF')['Qk_CHS_Equipe'].sum().sort_values(ascending=False).head(15)
     
     fig, ax1 = plt.subplots(figsize=(18, 10))
@@ -142,12 +121,8 @@ try:
     
     nome_grafico_chs_estado = 'capacidade_total_chs_por_estado.png'
     plt.savefig(nome_grafico_chs_estado)
-    print(f"SUCESSO! Gráfico 1 salvo como '{nome_grafico_chs_estado}'")
 
-    # --- ETAPA 5: GRÁFICO 2 - DISTRIBUIÇÃO DA CAPACIDADE DAS EQUIPES (Qk) ---
-    print("\nGerando Gráfico 2: Histograma da Capacidade (Qk) das Equipes...")
-    
-    # Filtra equipes com capacidade > 0 para um gráfico mais limpo
+    # Gráfico 2: Histograma de distribuição de Qk
     Qk_valores = df_dados_plot[df_dados_plot['Qk_CHS_Equipe'] > 0]['Qk_CHS_Equipe']
     
     fig, ax2 = plt.subplots(figsize=(12, 7))
@@ -169,7 +144,7 @@ try:
     
     nome_grafico_histograma = 'distribuicao_capacidade_Qk_histograma.png'
     plt.savefig(nome_grafico_histograma)
-    print(f"SUCESSO! Gráfico 2 salvo como '{nome_grafico_histograma}'")
+    print(f"Gráficos salvos: {nome_grafico_chs_estado}, {nome_grafico_histograma}")
 
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")

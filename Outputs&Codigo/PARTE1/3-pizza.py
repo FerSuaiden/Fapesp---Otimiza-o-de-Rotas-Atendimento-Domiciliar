@@ -4,10 +4,7 @@ import matplotlib.ticker as mticker
 import os
 import sys
 
-print("Iniciando a geração de gráficos de Atenção Domiciliar...")
-
-# --- Nomes dos arquivos ---
-# Fonte: CNES/DataSUS - tbEstabelecimento (competência 2025/08)
+# Caminhos dos arquivos (Fonte: CNES/DataSUS - competência 2025/08)
 arquivo_estabelecimentos = '../../CNES_DATA/tbEstabelecimento202508.csv'
 arquivo_equipes = '../../CNES_DATA/tbEquipe202508.csv' 
 
@@ -28,9 +25,7 @@ IBGE_UF_MAP = {
 }
 
 try:
-    # --- ETAPA 1: CARREGAR AS BASES DE DADOS ---
-    print(f"Carregando base de estabelecimentos ({arquivo_estabelecimentos})...")
-    # CO_ESTADO_GESTOR = Código IBGE da UF (equivalente ao CO_UF)
+    # Carregamento das bases de dados
     df_estabelecimentos = pd.read_csv(
         arquivo_estabelecimentos, 
         sep=';', 
@@ -38,10 +33,8 @@ try:
         dtype=str, 
         usecols=['CO_UNIDADE', 'CO_ESTADO_GESTOR']
     )
-    # Renomear para manter compatibilidade com o restante do código
     df_estabelecimentos = df_estabelecimentos.rename(columns={'CO_ESTADO_GESTOR': 'CO_UF'})
 
-    print(f"Carregando base de equipes ({arquivo_equipes})...")
     df_equipes = pd.read_csv(
         arquivo_equipes, 
         sep=';', 
@@ -49,15 +42,11 @@ try:
         dtype=str, 
         usecols=['CO_UNIDADE', 'TP_EQUIPE']
     )
-    print("Bases de dados carregadas com sucesso.")
 
-    # --- ETAPA 2: FILTRAR, MAPEAR E JUNTAR ---
-    print("Filtrando equipes relevantes (EMAD, EMAP, EMAP-R)...")
+    # Filtragem e mapeamento
     df_equipes_filtradas = df_equipes[df_equipes['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)].copy()
-    
     df_equipes_filtradas['Tipo_Equipe'] = df_equipes_filtradas['TP_EQUIPE'].map(MAP_EQUIPES)
     
-    print("Cruzando dados de equipes com estabelecimentos para identificar o estado (UF)...")
     df_merged = pd.merge(
         df_equipes_filtradas,
         df_estabelecimentos,
@@ -68,8 +57,7 @@ try:
     df_merged['Estado_UF'] = df_merged['CO_UF'].map(IBGE_UF_MAP)
     df_merged = df_merged.dropna(subset=['Estado_UF', 'Tipo_Equipe'])
 
-    # --- ETAPA 3: GRÁFICO 1 - BARRAS EMPILHADAS (POR ESTADO) ---
-    print("\n--- GRÁFICO 1: Preparando dados (Top 15 Estados)... ---")
+    # Preparação dos dados (Top 15 estados)
     df_plot_data = pd.crosstab(df_merged['Estado_UF'], df_merged['Tipo_Equipe'])
     
     for col in MAP_EQUIPES.values():
@@ -80,10 +68,8 @@ try:
     df_plot_data['Total'] = df_plot_data.sum(axis=1)
     df_plot_data = df_plot_data.sort_values(by='Total', ascending=False)
     df_plot_data_top15 = df_plot_data.head(15)
-    
-    print(f"Dados prontos. Top 5 estados:\n{df_plot_data_top15.head()}")
 
-    print("Gerando Gráfico 1 (Barras Empilhadas)...")
+    # Gráfico 1: Barras empilhadas por estado
     fig, ax_bar = plt.subplots(figsize=(18, 10))
     plot_cols = ['EMAD I', 'EMAD II', 'EMAP', 'EMAP-R']
     
@@ -122,16 +108,9 @@ try:
     plt.tight_layout()
     nome_grafico_barras = 'distribuicao_equipes_por_estado_empilhado.png'
     plt.savefig(nome_grafico_barras, bbox_inches='tight')
-    print(f"SUCESSO! Gráfico de barras salvo como '{nome_grafico_barras}'")
 
-    # --- ETAPA 4: GRÁFICO 2 - PIZZA (COMPOSIÇÃO NACIONAL) ---
-    print("\n--- GRÁFICO 2: Preparando dados (Composição Nacional)... ---")
-    
-    # Contagem nacional de cada tipo de equipe (usando o df_equipes_filtradas)
+    # Gráfico 2: Pizza (composição nacional)
     df_composicao_nacional = df_equipes_filtradas['Tipo_Equipe'].value_counts()
-    print(f"Composição nacional:\n{df_composicao_nacional}")
-
-    print("Gerando Gráfico 2 (Pizza)...")
     fig_pie, ax_pie = plt.subplots(figsize=(10, 8))
     
     # Define cores para consistência
@@ -180,7 +159,7 @@ try:
     plt.tight_layout()
     nome_grafico_pizza = 'composicao_nacional_pizza.png'
     plt.savefig(nome_grafico_pizza, bbox_inches='tight')
-    print(f"SUCESSO! Gráfico de pizza salvo como '{nome_grafico_pizza}'")
+    print(f"Gráficos salvos: {nome_grafico_barras}, {nome_grafico_pizza}")
 
 
 except FileNotFoundError as e:
