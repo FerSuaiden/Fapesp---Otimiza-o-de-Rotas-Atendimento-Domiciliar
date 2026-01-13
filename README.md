@@ -273,6 +273,8 @@ Este script gera um gráfico Sunburst interativo que decompõe a composição da
 
 Esta fase utiliza dados do Censo Demográfico 2022 para mapear a demanda potencial por atenção domiciliar, identificando a concentração de população idosa (60+) por setor censitário em São Paulo.
 
+> ⚠️ **ANÁLISE CRÍTICA**: A população idosa (60+) é um **proxy** para demanda de AD, **não a demanda real**. Veja seção [Limitações Metodológicas](#limitações-metodológicas-da-estimativa-de-demanda) abaixo.
+
 #### 10-demanda_censo2022_real.py
 
 **Arquivo:** [Outputs&Codigo/PARTE3/10-demanda_censo2022_real.py](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py)  
@@ -302,6 +304,61 @@ Este script utiliza dados reais do Censo 2022 para calcular a demanda de idosos 
    Trata valores sigilosos ("X") do IBGE como zero.
 
 6. **Mapa de calor** ([função gerar_mapa_calor, linhas 239-300](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L239-L300)): Gera visualização da concentração de idosos por setor.
+
+#### 11-demanda_corrigida.py
+
+**Arquivo:** [Outputs&Codigo/PARTE3/11-demanda_corrigida.py](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py)  
+**Outputs:** `comparacao_metodologias_demanda.png`, `mapa_demanda_corrigida_moderado.html`
+
+Este script aplica uma **metodologia corrigida** para estimar a demanda real de Atenção Domiciliar, considerando:
+
+1. **Taxa de Elegibilidade** ([linhas 50-55](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py#L50-L55)):
+   - Conservador: 2% dos idosos
+   - Moderado: 3.5% dos idosos  
+   - Otimista: 5% dos idosos
+
+2. **Ponderação por Idade** ([linhas 61-64](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py#L61-L64)):
+   - 60-69 anos: peso 1.0
+   - 70+ anos: peso 2.5 (maior probabilidade de necessitar AD)
+
+**Fórmula:**
+```
+Demanda_Corrigida = (pop_60_69 × 1.0 + pop_70_mais × 2.5) × taxa_elegibilidade
+```
+
+**Resultados para SP Capital:**
+| Cenário | Taxa | Demanda Estimada |
+|---------|------|------------------|
+| Original (script 10) | 100% | 2.020.436 |
+| Conservador | 2% | 68.126 |
+| **Moderado** | 3.5% | **119.221** |
+| Otimista | 5% | 170.316 |
+
+> O método original **superestima a demanda em ~17x** em relação ao cenário moderado.
+
+---
+
+### Limitações Metodológicas da Estimativa de Demanda
+
+A estimativa de demanda baseada em população idosa possui **limitações importantes** que devem ser consideradas:
+
+| Suposição | Problema | Impacto |
+|-----------|----------|---------|
+| Todo idoso 60+ precisa de AD | **FALSO** - Apenas 2-5% necessitam | Superestimação em 20-50x |
+| Idade é único preditor | **INCOMPLETO** - Ignora condições crônicas e dependência funcional | Distorce distribuição geográfica |
+| Peso igual 60-69 e 70+ | **FALSO** - Necessidade aumenta exponencialmente após 80 anos | Subestima áreas com idosos muito velhos |
+| Valores "X" = 0 | **VIÉS** - Setores pequenos perdem dados | Introduz viés sistemático |
+
+**Critérios reais de elegibilidade para AD** (Portaria GM/MS 825/2016):
+- Condição clínica que demanda cuidados contínuos
+- Dependência funcional (AVDs)
+- Estabilidade clínica
+- Presença de cuidador
+
+**Fontes de dados ideais** (não disponíveis neste projeto):
+- SIA (Sistema de Informação Ambulatorial) - Produção real de procedimentos AD
+- SISAB (e-SUS Atenção Básica) - Atendimentos na atenção primária
+- SIH (Sistema de Internações Hospitalares) - Altas hospitalares elegíveis
 
 ---
 
