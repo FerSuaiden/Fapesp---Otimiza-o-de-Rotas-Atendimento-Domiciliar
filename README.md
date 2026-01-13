@@ -308,46 +308,48 @@ Este script utiliza dados reais do Censo 2022 para calcular a demanda de idosos 
 #### 11-demanda_corrigida.py
 
 **Arquivo:** [Outputs&Codigo/PARTE3/11-demanda_corrigida.py](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py)  
-**Outputs:** `comparacao_metodologias_demanda.png`, `mapa_demanda_corrigida_moderado.html`
+**Outputs:** `comparacao_metodologias_demanda.png`, `mapa_demanda_corrigida_cenario_3pct.html`
 
-Este script aplica uma **metodologia corrigida** para estimar a demanda real de Atenção Domiciliar, considerando:
+Este script aplica **cenários de sensibilidade** para ilustrar que a demanda REAL de AD é uma fração da população idosa total.
 
-1. **Taxa de Elegibilidade** ([linhas 50-55](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py#L50-L55)):
-   - Conservador: 2% dos idosos
-   - Moderado: 3.5% dos idosos  
-   - Otimista: 5% dos idosos
+> ⚠️ **NOTA**: As taxas usadas são **cenários hipotéticos**, não baseados em estudos epidemiológicos específicos. Para demanda real, seria necessário dados do SIA/SUS (produção ambulatorial de AD).
 
-2. **Ponderação por Idade** ([linhas 61-64](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py#L61-L64)):
+1. **Cenários de Sensibilidade** ([linhas 50-66](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py#L50-L66)):
+   - Cenário 1%: Taxa de 1% dos idosos
+   - Cenário 3%: Taxa de 3% dos idosos  
+   - Cenário 5%: Taxa de 5% dos idosos
+
+2. **Ponderação por Idade** ([linhas 68-71](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py#L68-L71)):
    - 60-69 anos: peso 1.0
-   - 70+ anos: peso 2.5 (maior probabilidade de necessitar AD)
+   - 70+ anos: peso 2.5 (reflete maior dependência funcional)
 
 **Fórmula:**
 ```
-Demanda_Corrigida = (pop_60_69 × 1.0 + pop_70_mais × 2.5) × taxa_elegibilidade
+Demanda_Cenário = (pop_60_69 × 1.0 + pop_70_mais × 2.5) × taxa_cenário
 ```
 
 **Resultados para SP Capital:**
 | Cenário | Taxa | Demanda Estimada |
 |---------|------|------------------|
 | Original (script 10) | 100% | 2.020.436 |
-| Conservador | 2% | 68.126 |
-| **Moderado** | 3.5% | **119.221** |
-| Otimista | 5% | 170.316 |
+| Cenário 1% | 1% | 34.063 |
+| **Cenário 3%** | 3% | **102.190** |
+| Cenário 5% | 5% | 170.316 |
 
-> O método original **superestima a demanda em ~17x** em relação ao cenário moderado.
+> O método original considera 100% dos idosos como demanda. A análise de sensibilidade mostra que se apenas 1-5% dos idosos necessitam de AD, a demanda real seria **20 a 60 vezes menor**.
 
 ---
 
 ### Limitações Metodológicas da Estimativa de Demanda
 
-A estimativa de demanda baseada em população idosa possui **limitações importantes** que devem ser consideradas:
+A estimativa de demanda baseada em população idosa possui **limitações importantes**:
 
-| Suposição | Problema | Impacto |
-|-----------|----------|---------|
-| Todo idoso 60+ precisa de AD | **FALSO** - Apenas 2-5% necessitam | Superestimação em 20-50x |
-| Idade é único preditor | **INCOMPLETO** - Ignora condições crônicas e dependência funcional | Distorce distribuição geográfica |
-| Peso igual 60-69 e 70+ | **FALSO** - Necessidade aumenta exponencialmente após 80 anos | Subestima áreas com idosos muito velhos |
-| Valores "X" = 0 | **VIÉS** - Setores pequenos perdem dados | Introduz viés sistemático |
+| Suposição do Script 10 | Problema | Consequência |
+|------------------------|----------|--------------|
+| Todo idoso 60+ precisa de AD | **Incorreto** - A maioria dos idosos é independente | Superestimação significativa |
+| Idade é único preditor | **Incompleto** - Ignora condições clínicas e dependência funcional | Distorce priorização geográfica |
+| Peso igual 60-69 e 70+ | **Simplificado** - Necessidade aumenta com a idade | Subestima áreas com idosos muito velhos |
+| Valores "X" = 0 | **Viés** - Setores com sigilo estatístico são zerados | Perde dados de setores pequenos |
 
 **Critérios reais de elegibilidade para AD** (Portaria GM/MS 825/2016):
 - Condição clínica que demanda cuidados contínuos
@@ -355,10 +357,12 @@ A estimativa de demanda baseada em população idosa possui **limitações impor
 - Estabilidade clínica
 - Presença de cuidador
 
-**Fontes de dados ideais** (não disponíveis neste projeto):
-- SIA (Sistema de Informação Ambulatorial) - Produção real de procedimentos AD
-- SISAB (e-SUS Atenção Básica) - Atendimentos na atenção primária
-- SIH (Sistema de Internações Hospitalares) - Altas hospitalares elegíveis
+**Fontes de dados para demanda REAL** (para trabalhos futuros):
+- **SIA/SUS** - Produção ambulatorial de procedimentos AD (grupo 03.01.05)
+- **SISAB** - Atendimentos na atenção primária
+- **SIH** - Internações e altas hospitalares
+
+> O script [13-demanda_real_sia.py](Outputs%26Codigo/PARTE3/13-demanda_real_sia.py) é uma tentativa de acessar dados reais do SIA, mas depende de conectividade com o FTP do DATASUS.
 
 ---
 

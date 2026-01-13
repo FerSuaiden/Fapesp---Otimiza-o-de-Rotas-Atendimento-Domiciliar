@@ -13,7 +13,7 @@ CORREÇÕES METODOLÓGICAS:
 2. PONDERAÇÃO POR IDADE: Idosos mais velhos (70+) têm peso maior
    que idosos mais jovens (60-69)
 
-3. CENÁRIOS: Gera 3 cenários (conservador, moderado, otimista)
+3. CENÁRIOS: Gera 3 cenários (cenario_1pct, cenario_3pct, cenario_5pct)
    para análise de sensibilidade
 
 LIMITAÇÕES RECONHECIDAS:
@@ -45,15 +45,25 @@ IBGE_DIR = "../../IBGE_DATA"
 OUTPUT_DIR = "."
 
 # =============================================================================
-# PARÂMETROS METODOLÓGICOS
+# PARÂMETROS METODOLÓGICOS - CENÁRIOS DE SENSIBILIDADE
 # =============================================================================
 
 # Taxa de elegibilidade para AD (% dos idosos que precisam de cuidados domiciliares)
-# Baseado em literatura internacional e brasileira
+# 
+# NOTA IMPORTANTE: Estas taxas são CENÁRIOS HIPOTÉTICOS para análise de sensibilidade,
+# NÃO são baseadas em estudos epidemiológicos específicos.
+#
+# Para obter a taxa real de demanda, seria necessário:
+# 1. Dados do SIA/SUS (produção ambulatorial de AD)
+# 2. Estudos populacionais de dependência funcional
+# 3. Dados do SISAB (atenção básica)
+#
+# Os cenários abaixo servem para ilustrar que a demanda REAL é uma FRAÇÃO
+# da população idosa, não a totalidade.
 TAXAS_ELEGIBILIDADE = {
-    'conservador': 0.02,   # 2% - limite inferior
-    'moderado': 0.035,     # 3.5% - estimativa central
-    'otimista': 0.05       # 5% - limite superior (maior demanda)
+    'cenario_1pct': 0.01,    # 1% - cenário cenario_1pct
+    'cenario_3pct': 0.03,    # 3% - cenário 3%
+    'cenario_5pct': 0.05     # 5% - cenário 5%
 }
 
 # Pesos por faixa etária (reflete maior necessidade de AD com a idade)
@@ -134,7 +144,7 @@ def calcular_demanda_ponderada(df):
     print(f"  {'-'*56}")
     
     # Fator de correção
-    demanda_moderada = df['demanda_moderado'].sum()
+    demanda_moderada = df['demanda_cenario_3pct'].sum()
     fator = demanda_original / demanda_moderada
     print(f"\n  ⚠ O método original SUPERESTIMA em {fator:.1f}x")
     
@@ -155,9 +165,9 @@ def gerar_grafico_comparativo(df):
     metodos = ['Original\n(100%)', 'Conservador\n(2%)', 'Moderado\n(3.5%)', 'Otimista\n(5%)']
     valores = [
         df['populacao_idosa'].sum(),
-        df['demanda_conservador'].sum(),
-        df['demanda_moderado'].sum(),
-        df['demanda_otimista'].sum()
+        df['demanda_cenario_1pct'].sum(),
+        df['demanda_cenario_3pct'].sum(),
+        df['demanda_cenario_5pct'].sum()
     ]
     cores = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4']
     
@@ -183,9 +193,9 @@ def gerar_grafico_comparativo(df):
     # Gráfico 2: Composição da demanda ponderada
     ax2 = axes[1]
     
-    # Contribuição por faixa etária (cenário moderado)
-    contrib_60_69 = df['pop_60_69'].sum() * PESOS_IDADE['60_69'] * TAXAS_ELEGIBILIDADE['moderado']
-    contrib_70_mais = df['pop_70_mais'].sum() * PESOS_IDADE['70_mais'] * TAXAS_ELEGIBILIDADE['moderado']
+    # Contribuição por faixa etária (cenário cenario_3pct)
+    contrib_60_69 = df['pop_60_69'].sum() * PESOS_IDADE['60_69'] * TAXAS_ELEGIBILIDADE['cenario_3pct']
+    contrib_70_mais = df['pop_70_mais'].sum() * PESOS_IDADE['70_mais'] * TAXAS_ELEGIBILIDADE['cenario_3pct']
     
     labels = ['60-69 anos\n(peso 1.0)', '70+ anos\n(peso 2.5)']
     sizes = [contrib_60_69, contrib_70_mais]
@@ -217,7 +227,7 @@ def gerar_grafico_comparativo(df):
     return output_file
 
 
-def gerar_mapa_calor_corrigido(gdf, df, cenario='moderado'):
+def gerar_mapa_calor_corrigido(gdf, df, cenario='cenario_3pct'):
     """Gera mapa de calor com demanda corrigida."""
     
     print("\n[4/4] GERANDO MAPA DE CALOR (METODOLOGIA CORRIGIDA)")
@@ -245,7 +255,7 @@ def gerar_mapa_calor_corrigido(gdf, df, cenario='moderado'):
     
     # Fazer merge
     gdf_merged = gdf.merge(
-        df[['CD_setor', 'demanda_conservador', 'demanda_moderado', 'demanda_otimista']],
+        df[['CD_setor', 'demanda_cenario_1pct', 'demanda_cenario_3pct', 'demanda_cenario_5pct']],
         left_on=col_setor_gdf,
         right_on='CD_setor',
         how='left',
@@ -253,7 +263,7 @@ def gerar_mapa_calor_corrigido(gdf, df, cenario='moderado'):
     )
     
     # Preencher NaN com 0
-    for col in ['demanda_conservador', 'demanda_moderado', 'demanda_otimista']:
+    for col in ['demanda_cenario_1pct', 'demanda_cenario_3pct', 'demanda_cenario_5pct']:
         if col in gdf_merged.columns:
             gdf_merged[col] = gdf_merged[col].fillna(0)
     
@@ -339,9 +349,9 @@ def salvar_dados_corrigidos(df):
         'pop_70_mais', 
         'populacao_idosa',
         'demanda_bruta_ponderada',
-        'demanda_conservador',
-        'demanda_moderado',
-        'demanda_otimista'
+        'demanda_cenario_1pct',
+        'demanda_cenario_3pct',
+        'demanda_cenario_5pct'
     ]
     
     output_csv = os.path.join(IBGE_DIR, "demanda_ad_corrigida_sp.csv")
@@ -404,8 +414,8 @@ def main():
     # 3. Gerar visualização comparativa
     gerar_grafico_comparativo(df)
     
-    # 4. Gerar mapa de calor corrigido (cenário moderado)
-    gerar_mapa_calor_corrigido(gdf, df, cenario='moderado')
+    # 4. Gerar mapa de calor corrigido (cenário cenario_3pct)
+    gerar_mapa_calor_corrigido(gdf, df, cenario='cenario_3pct')
     
     # 5. Salvar dados
     salvar_dados_corrigidos(df)
@@ -415,7 +425,7 @@ def main():
     
     print(f"\n   Arquivos gerados:")
     print(f"   - comparacao_metodologias_demanda.png")
-    print(f"   - mapa_demanda_corrigida_moderado.html")
+    print(f"   - mapa_demanda_corrigida_cenario_3pct.html")
     print(f"   - ../../IBGE_DATA/demanda_ad_corrigida_sp.csv")
     print()
 
