@@ -36,8 +36,27 @@ As equipes não-conformes têm exatamente **40h de enfermeiro** - estavam confor
 |---------|-----------|
 | `analise_conformidade_sp_estado.py` | Análise de conformidade Estado SP (412 equipes) |
 | `visualizacao_temporal.py` | Visualização da evolução temporal das equipes |
+| `visualizacao_conformidade_temporal.py` | Evolução da conformidade ao longo do tempo |
 | `conformidade_legal_sp_estado.csv` | Resultado detalhado por equipe |
 | `evolucao_temporal_ad_sp.png` | Gráfico de evolução 2011-2025 |
+| `evolucao_conformidade_temporal.png` | Gráfico de conformidade ao longo do tempo |
+
+---
+
+## Evolução da Conformidade Legal
+
+Dos **155 municípios** com equipes AD ativas, **129 municípios (83%)** possuem pelo menos uma equipe conforme com a Portaria 3.005/2024.
+
+| Ano | Equipes | Conformes | Taxa | Mun. AD | Mun. Conformes |
+|:---:|:-------:|:---------:|:----:|:-------:|:--------------:|
+| 2015 | 167 | 131 | 78.4% | 71 | 62 |
+| 2020 | 277 | 205 | 74.0% | 104 | 86 |
+| 2024 | 391 | 275 | 70.3% | 139 | 114 |
+| 2025 | 412 | 292 | 70.9% | 155 | 129 |
+
+> **Nota**: A conformidade é calculada usando a composição atual de profissionais (Ago/2025).
+
+![Evolução Conformidade](evolucao_conformidade_temporal.png)
 
 ---
 
