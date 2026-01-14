@@ -328,14 +328,14 @@ Esta fase avalia se as equipes EMAD/EMAP atendem aos requisitos mínimos de comp
 
 #### verificacao_conformidade_legal.py
 
-**Arquivo:** [Outputs&Codigo/PARTE4/verificacao_conformidade_legal.py](Outputs%26Codigo/PARTE4/verificacao_conformidade_legal.py)  
+**Arquivo:** [Outputs%26Codigo/PARTE4/verificacao_conformidade_legal.py](Outputs%26Codigo/PARTE4/verificacao_conformidade_legal.py)  
 **Output:** `conformidade_legal_equipes.csv`
 
 Análise detalhada das equipes de **São Paulo Capital** (82 equipes AD ativas).
 
 #### analise_conformidade_sp_estado.py
 
-**Arquivo:** [Outputs&Codigo/PARTE4/analise_conformidade_sp_estado.py](Outputs%26Codigo/PARTE4/analise_conformidade_sp_estado.py)  
+**Arquivo:** [Outputs%26Codigo/PARTE4/analise_conformidade_sp_estado.py](Outputs%26Codigo/PARTE4/analise_conformidade_sp_estado.py)  
 **Output:** `conformidade_legal_sp_estado.csv`
 
 Análise completa de todas as equipes AD do **Estado de São Paulo** (412 equipes AD ativas).
