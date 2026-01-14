@@ -269,119 +269,49 @@ Este script gera um gráfico Sunburst interativo que decompõe a composição da
 
 ---
 
-### PARTE 3: Análise de Demanda (Censo 2022)
+### PARTE 3: Geração de Instâncias para Otimização
 
-Esta fase utiliza dados do Censo Demográfico 2022 para mapear a demanda potencial por atenção domiciliar, identificando a concentração de população idosa (60+) por setor censitário em São Paulo.
+Esta fase gera as instâncias de entrada para o modelo de otimização de rotas e programação (BRKGA - Biased Random-Key Genetic Algorithm).
 
-> ⚠️ **ANÁLISE CRÍTICA**: A população idosa (60+) é um **proxy** para demanda de AD, **não a demanda real**. Veja seção [Limitações Metodológicas](#limitações-metodológicas-da-estimativa-de-demanda) abaixo.
+#### 15-gerador_instancias.py
 
-#### 10-demanda_censo2022_real.py
+**Arquivo:** [Outputs&Codigo/PARTE3/15-gerador_instancias.py](Outputs%26Codigo/PARTE3/15-gerador_instancias.py)  
+**Outputs:** Instâncias em JSON e CSV no diretório `instancias/`
 
-**Arquivo:** [Outputs&Codigo/PARTE3/10-demanda_censo2022_real.py](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py)  
-**Output:** `mapa_demanda_idosos_sp_censo2022.html`
+Este script gera as instâncias de entrada para o modelo de otimização de rotas de atenção domiciliar, integrando dados do CNES com informações geográficas.
 
-Este script utiliza dados reais do Censo 2022 para calcular a demanda de idosos por setor censitário.
+**Dados de entrada:**
+- CNES: Equipes AD, profissionais, carga horária
+- IBGE: Coordenadas geográficas dos estabelecimentos de saúde
 
-**Variáveis do Censo utilizadas** ([linhas 8-13](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L8-L13)):
-- V01006: Quantidade de moradores (total)
-- V01040: 60 a 69 anos
-- V01041: 70 anos ou mais
+**Estrutura das instâncias geradas:**
+- Pacientes com janelas de tempo e requisitos de habilidades
+- Equipes com capacidade $Q_k$ e conjuntos de habilidades $S_k$
+- Matriz de distâncias/tempos entre localizações
 
-**Etapas do processamento:**
-
-1. **Download automático** ([função baixar_arquivo, linhas 38-66](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L38-L66)): Baixa e extrai arquivos ZIP do FTP do IBGE se não existirem localmente.
-
-2. **Carregamento de dados demográficos** ([função carregar_dados_demografia, linhas 68-86](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L68-L86)): Lê o CSV de agregados por setores censitários do Brasil.
-
-3. **Carregamento da malha de SP** ([função carregar_malha_sp, linhas 89-123](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L89-L123)): Lê o shapefile com as geometrias dos setores censitários de São Paulo.
-
-4. **Filtro para SP Capital** ([função filtrar_sp_capital, linhas 125-157](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L125-L157)): Usa código do município 3550308 para filtrar apenas a capital.
-
-5. **Cálculo da demanda** ([função calcular_demanda_idosos, linhas 159-237](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L159-L237)):
-   ```
-   Demanda = pop_60_69 + pop_70_mais
-   ```
-   Trata valores sigilosos ("X") do IBGE como zero.
-
-6. **Mapa de calor** ([função gerar_mapa_calor, linhas 239-300](Outputs%26Codigo/PARTE3/10-demanda_censo2022_real.py#L239-L300)): Gera visualização da concentração de idosos por setor.
-
-#### 11-demanda_corrigida.py
-
-**Arquivo:** [Outputs&Codigo/PARTE3/11-demanda_corrigida.py](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py)  
-**Outputs:** `comparacao_metodologias_demanda.png`, `mapa_demanda_corrigida_cenario_3pct.html`
-
-Este script aplica **cenários de sensibilidade** para ilustrar que a demanda REAL de AD é uma fração da população idosa total.
-
-> ⚠️ **NOTA**: As taxas usadas são **cenários hipotéticos**, não baseados em estudos epidemiológicos específicos. Para demanda real, seria necessário dados do SIA/SUS (produção ambulatorial de AD).
-
-1. **Cenários de Sensibilidade** ([linhas 50-66](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py#L50-L66)):
-   - Cenário 1%: Taxa de 1% dos idosos
-   - Cenário 3%: Taxa de 3% dos idosos  
-   - Cenário 5%: Taxa de 5% dos idosos
-
-2. **Ponderação por Idade** ([linhas 68-71](Outputs%26Codigo/PARTE3/11-demanda_corrigida.py#L68-L71)):
-   - 60-69 anos: peso 1.0
-   - 70+ anos: peso 2.5 (reflete maior dependência funcional)
-
-**Fórmula:**
-```
-Demanda_Cenário = (pop_60_69 × 1.0 + pop_70_mais × 2.5) × taxa_cenário
-```
-
-**Resultados para SP Capital:**
-| Cenário | Taxa | Demanda Estimada |
-|---------|------|------------------|
-| Original (script 10) | 100% | 2.020.436 |
-| Cenário 1% | 1% | 34.063 |
-| **Cenário 3%** | 3% | **102.190** |
-| Cenário 5% | 5% | 170.316 |
-
-> O método original considera 100% dos idosos como demanda. A análise de sensibilidade mostra que se apenas 1-5% dos idosos necessitam de AD, a demanda real seria **20 a 60 vezes menor**.
+**Instâncias disponíveis:**
+| Arquivo | Descrição |
+|---------|-----------|
+| `SP_Capital_Pequena.json` | Instância reduzida para testes |
+| `SP_Capital_Completa.json` | Instância completa de SP Capital |
+| `equipes_sp_capital.csv` | Dados tabulares das equipes |
 
 ---
 
-### Limitações Metodológicas da Estimativa de Demanda
+### PARTE 4: Análise de Conformidade Legal
 
-A estimativa de demanda baseada em população idosa possui **limitações importantes**:
+Esta fase avalia se as equipes EMAD/EMAP atendem aos requisitos mínimos de composição definidos pela **Portaria GM/MS nº 3.005/2024**, identificando o índice de conformidade e gargalos operacionais.
 
-| Suposição do Script 10 | Problema | Consequência |
-|------------------------|----------|--------------|
-| Todo idoso 60+ precisa de AD | **Incorreto** - A maioria dos idosos é independente | Superestimação significativa |
-| Idade é único preditor | **Incompleto** - Ignora condições clínicas e dependência funcional | Distorce priorização geográfica |
-| Peso igual 60-69 e 70+ | **Simplificado** - Necessidade aumenta com a idade | Subestima áreas com idosos muito velhos |
-| Valores "X" = 0 | **Viés** - Setores com sigilo estatístico são zerados | Perde dados de setores pequenos |
+#### Códigos de Tipo de Equipe AD (tbTipoEquipe)
 
-**Critérios reais de elegibilidade para AD** (Portaria GM/MS 825/2016):
-- Condição clínica que demanda cuidados contínuos
-- Dependência funcional (AVDs)
-- Estabilidade clínica
-- Presença de cuidador
+| Código | Tipo | Descrição |
+|:------:|:----:|:----------|
+| 22 | EMAD I | Equipe Multiprofissional de Atenção Domiciliar Tipo I |
+| 46 | EMAD II | Equipe Multiprofissional de Atenção Domiciliar Tipo II |
+| 23 | EMAP | Equipe Multiprofissional de Apoio |
+| 77 | EMAP-R | Equipe Multiprofissional de Apoio - Rural |
 
-**Fontes de dados para demanda REAL** (para trabalhos futuros):
-- **SIA/SUS** - Produção ambulatorial de procedimentos AD (grupo 03.01.05)
-- **SISAB** - Atendimentos na atenção primária
-- **SIH** - Internações e altas hospitalares
-
-> O script [13-demanda_real_sia.py](Outputs%26Codigo/PARTE3/13-demanda_real_sia.py) é uma tentativa de acessar dados reais do SIA, mas depende de conectividade com o FTP do DATASUS.
-
----
-
-### PARTE 4: Análise de Saturação e Conformidade Legal
-
-Esta fase avalia se as equipes atendem aos requisitos mínimos de composição definidos pela legislação vigente, identificando o índice de conformidade e possíveis gargalos operacionais.
-
-#### 8-analise_saturacao_ad.py
-
-**Arquivo:** [Outputs&Codigo/PARTE4/8-analise_saturacao_ad.py](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py)  
-**Outputs:** Dashboards de conformidade
-
-Este script analisa se as equipes atendem aos requisitos normativos da Portaria GM/MS 3.005/2024.
-
-**Base legal** ([linhas 8-45](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py#L8-L45)): 
-- Portaria de Consolidação GM/MS nº 5/2017
-- Portaria GM/MS nº 3.005 de 02/05/2024
-
-**Regras de completude** ([linhas 85-126](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py#L85-L126)):
+#### Regras de Composição Mínima (Portaria 3.005/2024)
 
 | Tipo | Médico | Enfermeiro | Téc. Enfermagem | Fisio/AS |
 |:---:|:---:|:---:|:---:|:---:|
@@ -390,13 +320,30 @@ Este script analisa se as equipes atendem aos requisitos normativos da Portaria 
 | EMAP | - | - | - | 3+ prof. NS, ≥90h |
 | EMAP-R | - | ≥30h | - | 3+ prof. NS, ≥60h |
 
-**Categorização de CBOs** ([função categorizar_cbo, linhas 153-199](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py#L153-L199)): Função que categoriza códigos CBO em classes profissionais:
+> **Art. 547, §1º:** Nenhum profissional componente de EMAD poderá ter CHS inferior a **20 horas**.
+
+#### verificacao_conformidade_legal.py
+
+**Arquivo:** [Outputs&Codigo/PARTE4/verificacao_conformidade_legal.py](Outputs%26Codigo/PARTE4/verificacao_conformidade_legal.py)  
+**Output:** `conformidade_legal_equipes.csv`
+
+Análise detalhada das equipes de **São Paulo Capital** (82 equipes AD ativas).
+
+#### analise_conformidade_sp_estado_v2.py
+
+**Arquivo:** [Outputs&Codigo/PARTE4/analise_conformidade_sp_estado_v2.py](Outputs%26Codigo/PARTE4/analise_conformidade_sp_estado_v2.py)  
+**Output:** `conformidade_legal_sp_estado.csv`
+
+Análise completa de todas as equipes AD do **Estado de São Paulo** (412 equipes AD ativas).
+
+**Categorização de CBOs:**
 - Prefixo 2251/2252/2253 → MEDICO
 - Prefixo 2235 → ENFERMEIRO
 - Prefixo 3222 → TECNICO_ENFERMAGEM
-- E assim por diante...
+- Prefixo 2236 → FISIOTERAPEUTA
+- Prefixo 2516 → ASSISTENTE_SOCIAL
 
-**Cálculo da CHS Real** ([linhas 270-285](Outputs%26Codigo/PARTE4/8-analise_saturacao_ad.py#L270-L285)):
+**Cálculo da CHS Real:**
 ```
 CHS_REAL = Ambulatorial + Hospitalar + Outros
 ```
@@ -406,16 +353,36 @@ Profissionais com CHS < 20h são descartados (Art. 547, §1º).
 
 ## Principais Descobertas
 
-### Descoberta Crítica (Dezembro 2025)
+### Conformidade Legal - Estado de São Paulo (Janeiro 2025)
 
-A análise revelou que aproximadamente **53% das equipes EMAD I em SP Capital** estão **subdimensionadas em enfermeiros** segundo os parâmetros legais:
+A análise de conformidade com a **Portaria GM/MS nº 3.005/2024** revelou os seguintes resultados para o Estado de São Paulo:
 
-| Parâmetro | Exigido | Encontrado |
-|:---|:---:|:---:|
-| CHS Enfermeiro | ≥ 60h | 40h (97% dos casos) |
-| Interpretação | 1.5 FTE | 1 enfermeiro |
+#### Resultados por Tipo de Equipe
 
-Esta é uma **evidência de subdimensionamento operacional real**, não um erro de código.
+| Tipo | Total SP | Conformes | Não-Conformes | Taxa Conformidade |
+|:----:|:--------:|:---------:|:-------------:|:-----------------:|
+| EMAD I | 251 | 150 | 101 | **59.8%** |
+| EMAD II | 26 | 20 | 6 | **76.9%** |
+| EMAP | 124 | 113 | 11 | **91.1%** |
+| EMAP-R | 11 | 9 | 2 | **81.8%** |
+| **TOTAL** | **412** | **292** | **120** | **70.9%** |
+
+> **70.9% das equipes AD do Estado de São Paulo estão em conformidade** com os requisitos mínimos de composição da nova legislação.
+
+#### Análise das Não-Conformidades
+
+O principal gargalo identificado é a **carga horária de enfermeiros nas equipes EMAD I**:
+- A Portaria 3.005/2024 **aumentou** o requisito de enfermeiro de 40h para 60h
+- Muitas equipes têm exatamente 40h (1 enfermeiro), estavam conformes com a lei antiga (825/2016)
+- Isso explica a maior taxa de não-conformidade nas EMAD I (40.2%)
+
+#### São Paulo Capital
+
+| Métrica | Valor |
+|---------|-------|
+| Total de equipes AD | 82 |
+| Equipes conformes | 50 |
+| Taxa de conformidade | **61%** |
 
 ### Outras Descobertas
 
@@ -445,20 +412,21 @@ Esta é uma **evidência de subdimensionamento operacional real**, não um erro 
 | [mapa_calor_chs_brasil.html](Outputs%26Codigo/PARTE2/mapa_calor_chs_brasil.html) | Heatmap de intensidade de CHS no Brasil |
 | [habilidades_sunburst.html](Outputs%26Codigo/PARTE2/habilidades_sunburst.html) | Gráfico Sunburst interativo de composição profissional |
 
-### PARTE 3 - Demanda
+### PARTE 3 - Instâncias para Otimização
+
+| Arquivo | Descrição |
+|:---|:---|
+| `instancias/SP_Capital_Pequena.json` | Instância reduzida para testes |
+| `instancias/SP_Capital_Completa.json` | Instância completa de SP Capital |
+| `instancias/equipes_sp_capital.csv` | Dados tabulares das equipes |
+
+### PARTE 4 - Conformidade Legal
 
 | Visualização | Descrição |
 |:---|:---|
-| [mapa_demanda_idosos_sp_censo2022.html](Outputs%26Codigo/PARTE3/mapa_demanda_idosos_sp_censo2022.html) | Mapa de calor da população idosa por setor censitário |
-
-### PARTE 4 - Saturação
-
-| Visualização | Descrição |
-|:---|:---|
-| [v2_composicao_equipes.png](Outputs%26Codigo/PARTE4/v2_composicao_equipes.png) | Composição real das equipes |
 | [v2_dashboard_saturacao_oferta.png](Outputs%26Codigo/PARTE4/v2_dashboard_saturacao_oferta.png) | Dashboard de saturação da oferta |
-| [v2_indice_precariedade_normativa.png](Outputs%26Codigo/PARTE4/v2_indice_precariedade_normativa.png) | Índice de precariedade por região |
-| [v2_razao_cobertura_real.png](Outputs%26Codigo/PARTE4/v2_razao_cobertura_real.png) | Razão de cobertura efetiva |
+| `conformidade_legal_equipes.csv` | Resultado SP Capital (82 equipes) |
+| `conformidade_legal_sp_estado.csv` | Resultado Estado SP (412 equipes) |
 
 ---
 
@@ -475,8 +443,8 @@ pip install pandas numpy matplotlib folium plotly geopandas requests
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/IC-HHC-RSP.git
-cd IC-HHC-RSP
+git clone https://github.com/FernandoAle);Suaiden/IC.git
+cd IC
 
 # Execute os scripts na ordem
 cd "Outputs&Codigo/PARTE1"
@@ -489,10 +457,11 @@ python 5-heatMap.py
 python 6-sunburst.py
 
 cd "../PARTE3"
-python 10-demanda_censo2022_real.py
+python 15-gerador_instancias.py
 
 cd "../PARTE4"
-python 8-analise_saturacao_ad.py
+python verificacao_conformidade_legal.py        # SP Capital
+python analise_conformidade_sp_estado_v2.py     # Estado SP
 ```
 
 ### Estrutura de Dependências
