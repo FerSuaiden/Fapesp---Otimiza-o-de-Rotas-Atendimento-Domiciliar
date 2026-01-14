@@ -301,42 +301,106 @@ def gerar_tempo_servico(modalidade):
 # FUNÇÕES PRINCIPAIS
 # ==============================================================================
 
+# Códigos CORRETOS das equipes de Atenção Domiciliar (tbTipoEquipe)
+# Verificados em tbTipoEquipe202508.csv
+CODIGOS_EQUIPE_AD = {
+    22: 'EMAD I',    # Equipe Multiprofissional de Atenção Domiciliar Tipo I
+    46: 'EMAD II',   # Equipe Multiprofissional de Atenção Domiciliar Tipo II  
+    23: 'EMAP',      # Equipe Multiprofissional de Apoio
+    77: 'EMAP-R'     # Equipe Multiprofissional de Apoio - Rural
+}
+
+
 def carregar_equipes_emad(municipio_codigo=None):
     """
-    Carrega equipes EMAD/EMAP com coordenadas.
+    Carrega equipes EMAD/EMAP com coordenadas diretamente do CNES.
     
     Os dados vêm do CNES (Cadastro Nacional de Estabelecimentos de Saúde),
-    cruzando tbEquipe (cadastro de equipes) com tbEstabelecimento (coordenadas).
+    cruzando tbEquipe202508.csv (cadastro de equipes) com 
+    tbEstabelecimento202508.csv (coordenadas).
     
-    Tipos de equipe:
-    - 76: EMAD Tipo 1 (maior)
-    - 77: EMAD Tipo 2 (menor)
-    - 78: EMAP (apoio)
+    Códigos CORRETOS de tipo de equipe AD (tbTipoEquipe):
+    - 22: EMAD I (maior)
+    - 46: EMAD II (menor)
+    - 23: EMAP (apoio)
+    - 77: EMAP-R (apoio rural)
     
     Parâmetros:
-    - municipio_codigo: str, código IBGE do município (ex: '3550308' para SP capital)
-                       Se None, carrega todas de SP
+    - municipio_codigo: str, código IBGE do município (ex: '355030' para SP capital)
+                       Se None, carrega todas de SP (códigos começando com 35)
     
     Retorna:
     - DataFrame com equipes e coordenadas
     """
-    arquivo = CNES_DIR / "emad_emap_sp_coords.csv"
+    print("    Lendo tabela de equipes...")
     
-    if not arquivo.exists():
-        raise FileNotFoundError(
-            f"Arquivo {arquivo} não encontrado. "
-            "Execute primeiro o script de preparação de dados."
-        )
+    # Carregar tabela de equipes (apenas colunas necessárias para performance)
+    arquivo_equipes = CNES_DIR / "tbEquipe202508.csv"
+    if not arquivo_equipes.exists():
+        raise FileNotFoundError(f"Arquivo {arquivo_equipes} não encontrado.")
     
-    df = pd.read_csv(arquivo)
+    colunas_equipe = ['CO_MUNICIPIO', 'CO_UNIDADE', 'TP_EQUIPE', 'CO_EQUIPE', 
+                      'DT_ATIVACAO', 'DT_DESATIVACAO', 'SEQ_EQUIPE']
+    df_equipes = pd.read_csv(arquivo_equipes, sep=';', dtype=str, low_memory=False, 
+                             encoding='latin-1', usecols=colunas_equipe)
     
+    # Filtrar apenas equipes AD ativas (códigos 22, 23, 46, 77)
+    df_equipes['TP_EQUIPE'] = pd.to_numeric(df_equipes['TP_EQUIPE'], errors='coerce')
+    df_equipes = df_equipes[df_equipes['TP_EQUIPE'].isin(CODIGOS_EQUIPE_AD.keys())]
+    df_equipes = df_equipes[df_equipes['DT_DESATIVACAO'].isna()]  # Apenas ativas
+    
+    # Filtrar por município/estado
     if municipio_codigo:
-        df = df[df['CO_MUNICIPIO'].astype(str).str.startswith(str(municipio_codigo))]
+        df_equipes = df_equipes[df_equipes['CO_MUNICIPIO'].str.startswith(str(municipio_codigo))]
+    else:
+        # Filtrar SP (códigos começando com 35)
+        df_equipes = df_equipes[df_equipes['CO_MUNICIPIO'].str.startswith('35')]
+    
+    print(f"    Equipes AD filtradas: {len(df_equipes)}")
+    
+    # Obter lista de CO_UNIDADE que precisamos
+    unidades_necessarias = set(df_equipes['CO_UNIDADE'].unique())
+    
+    # Carregar tabela de estabelecimentos em chunks (arquivo muito grande: 263MB)
+    print("    Lendo coordenadas dos estabelecimentos (pode demorar)...")
+    arquivo_estab = CNES_DIR / "tbEstabelecimento202508.csv"
+    if not arquivo_estab.exists():
+        raise FileNotFoundError(f"Arquivo {arquivo_estab} não encontrado.")
+    
+    # Ler em chunks e filtrar apenas estabelecimentos necessários
+    chunks = []
+    colunas_estab = ['CO_UNIDADE', 'CO_CNES', 'NU_LATITUDE', 'NU_LONGITUDE', 
+                     'CO_MUNICIPIO_GESTOR', 'NO_FANTASIA']
+    
+    for chunk in pd.read_csv(arquivo_estab, sep=';', dtype=str, low_memory=False,
+                             encoding='latin-1', usecols=colunas_estab, chunksize=50000):
+        # Filtrar apenas estabelecimentos que precisamos
+        chunk_filtrado = chunk[chunk['CO_UNIDADE'].isin(unidades_necessarias)]
+        if len(chunk_filtrado) > 0:
+            chunks.append(chunk_filtrado)
+    
+    df_estab = pd.concat(chunks, ignore_index=True) if chunks else pd.DataFrame()
+    print(f"    Estabelecimentos com coordenadas: {len(df_estab)}")
+    
+    # Merge para obter coordenadas
+    df = df_equipes.merge(df_estab, on='CO_UNIDADE', how='left', suffixes=('', '_estab'))
+    
+    # Converter coordenadas para float
+    df['lat'] = pd.to_numeric(df['NU_LATITUDE'].str.replace(',', '.'), errors='coerce')
+    df['lon'] = pd.to_numeric(df['NU_LONGITUDE'].str.replace(',', '.'), errors='coerce')
+    
+    # Remover equipes sem coordenadas válidas
+    df = df.dropna(subset=['lat', 'lon'])
+    df = df[(df['lat'] != 0) & (df['lon'] != 0)]
+    
+    # Mapear tipo de equipe para nome legível
+    df['TIPO_EQUIPE_NOME'] = df['TP_EQUIPE'].map(CODIGOS_EQUIPE_AD)
     
     print(f"  Equipes carregadas: {len(df)}")
-    print(f"  - EMAD Tipo 1: {len(df[df['TP_EQUIPE'].astype(str) == '76'])}")
-    print(f"  - EMAD Tipo 2: {len(df[df['TP_EQUIPE'].astype(str) == '77'])}")
-    print(f"  - EMAP: {len(df[df['TP_EQUIPE'].astype(str) == '78'])}")
+    for codigo, nome in CODIGOS_EQUIPE_AD.items():
+        qtd = len(df[df['TP_EQUIPE'] == codigo])
+        if qtd > 0:
+            print(f"  - {nome}: {qtd}")
     
     return df
 
@@ -556,15 +620,17 @@ def gerar_instancia(nome, n_pacientes, n_equipes=1, municipio=None, seed=None):
             'n_equipes': n_equipes,
             'municipio': municipio,
             'seed': seed,
-            'fonte_equipes': 'CNES/DATASUS 2025',
+            'fonte_equipes': 'CNES/DATASUS Ago/2025 (tbEquipe202508)',
             'fonte_demografia': 'IBGE Censo 2022',
-            'fonte_demanda': 'SIA/DATASUS Nov/2025'
+            'codigos_equipe_ad': CODIGOS_EQUIPE_AD
         },
         'equipes': [
             {
                 'id': i + 1,
                 'codigo_unidade': eq['CO_UNIDADE'],
-                'tipo': 'EMAD1' if str(eq['TP_EQUIPE']) == '76' else ('EMAD2' if str(eq['TP_EQUIPE']) == '77' else 'EMAP'),
+                'codigo_equipe': eq.get('CO_EQUIPE', ''),
+                'tipo_codigo': int(eq['TP_EQUIPE']),
+                'tipo': CODIGOS_EQUIPE_AD.get(int(eq['TP_EQUIPE']), 'DESCONHECIDO'),
                 'lat': eq['lat'],
                 'lon': eq['lon'],
                 'capacidade_diaria': capacidades[i]  # minutos
