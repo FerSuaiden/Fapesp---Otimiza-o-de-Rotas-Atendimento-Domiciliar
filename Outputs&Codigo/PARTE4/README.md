@@ -34,9 +34,25 @@ As equipes não-conformes têm exatamente **40h de enfermeiro** - estavam confor
 
 | Arquivo | Descrição |
 |---------|-----------|
-| `analise_conformidade_sp_estado.py` | Análise Estado SP (412 equipes) |
+| `analise_conformidade_sp_estado.py` | Análise de conformidade Estado SP (412 equipes) |
+| `visualizacao_temporal.py` | Visualização da evolução temporal das equipes |
 | `conformidade_legal_sp_estado.csv` | Resultado detalhado por equipe |
-| `dashboard_saturacao_oferta.png` | Dashboard de saturação da oferta |
+| `evolucao_temporal_ad_sp.png` | Gráfico de evolução 2003-2025 |
+
+---
+
+## Evolução Temporal (2003-2025)
+
+| Ano | Equipes Ativas | Municípios |
+|:---:|:--------------:|:----------:|
+| 2015 | 167 | 71 |
+| 2020 | 277 | 104 |
+| 2024 | 391 | 139 |
+| 2025 | 412 | 155 |
+
+**Crescimento 2020-2025: 64.8%**
+
+![Evolução Temporal](evolucao_temporal_ad_sp.png)
 
 ---
 
@@ -44,7 +60,13 @@ As equipes não-conformes têm exatamente **40h de enfermeiro** - estavam confor
 
 ```bash
 cd Outputs&Codigo/PARTE4
+source ../../venv/bin/activate
+
+# Análise de conformidade
 python analise_conformidade_sp_estado.py
+
+# Visualização temporal
+python visualizacao_temporal.py
 ```
 
 ---
