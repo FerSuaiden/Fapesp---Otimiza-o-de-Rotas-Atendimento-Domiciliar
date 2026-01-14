@@ -76,10 +76,13 @@ Os dados foram extraídos do CNES (competência **08/2025**) via DATASUS.
 
 ### IBGE - Censo Demográfico 2022
 
-| Arquivo | Descrição |
+- **Agregados por Setores Censitários:** [Download](https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios/)
+- **Malha de Setores Censitários SP:** [Download](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_de_setores_censitarios__divisoes_intramunicipais/2022/Malha_de_setores_(shp)_SP/)
+
+| Arquivo Local | Descrição |
 |:---|:---|
-| Agregados por Setores Censitários | Dados demográficos por setor (população idosa 60+) |
-| Malha de Setores SP | Shapefile com geometrias dos setores censitários |
+| `demanda_idosos_sp_censo2022.csv` | População idosa (60+) por setor censitário de SP Capital |
+| `SP_Setores_CD2022/` | Shapefile com geometrias dos setores censitários |
 
 ---
 
