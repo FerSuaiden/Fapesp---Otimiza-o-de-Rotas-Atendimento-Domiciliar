@@ -333,9 +333,9 @@ Esta fase avalia se as equipes EMAD/EMAP atendem aos requisitos mínimos de comp
 
 Análise detalhada das equipes de **São Paulo Capital** (82 equipes AD ativas).
 
-#### analise_conformidade_sp_estado_v2.py
+#### analise_conformidade_sp_estado.py
 
-**Arquivo:** [Outputs&Codigo/PARTE4/analise_conformidade_sp_estado_v2.py](Outputs%26Codigo/PARTE4/analise_conformidade_sp_estado_v2.py)  
+**Arquivo:** [Outputs&Codigo/PARTE4/analise_conformidade_sp_estado.py](Outputs%26Codigo/PARTE4/analise_conformidade_sp_estado.py)  
 **Output:** `conformidade_legal_sp_estado.csv`
 
 Análise completa de todas as equipes AD do **Estado de São Paulo** (412 equipes AD ativas).
@@ -379,21 +379,6 @@ O principal gargalo identificado é a **carga horária de enfermeiros nas equipe
 - A Portaria 3.005/2024 **aumentou** o requisito de enfermeiro de 40h para 60h
 - Muitas equipes têm exatamente 40h (1 enfermeiro), estavam conformes com a lei antiga (825/2016)
 - Isso explica a maior taxa de não-conformidade nas EMAD I (40.2%)
-
-#### São Paulo Capital
-
-| Métrica | Valor |
-|---------|-------|
-| Total de equipes AD | 82 |
-| Equipes conformes | 50 |
-| Taxa de conformidade | **61%** |
-
-### Outras Descobertas
-
-- **São Paulo** é o estado com maior capacidade instalada de Atenção Domiciliar
-- A distribuição de capacidade entre equipes é **heterogênea** (não uniforme)
-- Hotspots de atendimento concentrados em regiões metropolitanas
-- Necessidade crítica de otimização de rotas para maximizar eficiência
 
 ---
 
@@ -439,7 +424,6 @@ O principal gargalo identificado é a **carga horária de enfermeiros nas equipe
 ### Pré-requisitos
 
 ```bash
-# Python 3.10+
 pip install pandas numpy matplotlib folium plotly geopandas requests
 ```
 
@@ -465,7 +449,7 @@ python 15-gerador_instancias.py
 
 cd "../PARTE4"
 python verificacao_conformidade_legal.py        # SP Capital
-python analise_conformidade_sp_estado_v2.py     # Estado SP
+python analise_conformidade_sp_estado.py        # Estado SP
 ```
 
 ### Estrutura de Dependências

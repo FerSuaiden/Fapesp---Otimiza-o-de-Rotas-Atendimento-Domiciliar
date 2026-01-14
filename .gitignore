@@ -1,6 +1,7 @@
 CNES_DATA/
 LEIA_ME_COMPLETO.pdf
 venv
+venv/
 IBGE_DATA/
 __pycache__
 CBO_DATA/
