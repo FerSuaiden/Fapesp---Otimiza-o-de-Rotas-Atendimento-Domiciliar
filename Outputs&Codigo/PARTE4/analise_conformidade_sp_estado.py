@@ -264,8 +264,8 @@ def main():
         
         print(f"\n{nome}:")
         print(f"    Total: {total}")
-        print(f"    ✅ Em conformidade: {conformes} ({100*conformes/total:.1f}%)")
-        print(f"    ❌ Fora de conformidade: {nao_conformes} ({100*nao_conformes/total:.1f}%)")
+        print(f"    Em conformidade: {conformes} ({100*conformes/total:.1f}%)")
+        print(f"    Fora de conformidade: {nao_conformes} ({100*nao_conformes/total:.1f}%)")
         
         if problemas_por_tipo[tp]:
             print(f"    Problemas mais frequentes:")
@@ -281,8 +281,8 @@ def main():
     conformes_geral = df_resultados['CONFORME'].sum()
     
     print(f"\nTotal de equipes ativas: {total_geral}")
-    print(f"✅ Em conformidade com Portaria 3.005/2024: {conformes_geral} ({100*conformes_geral/total_geral:.1f}%)")
-    print(f"❌ Fora de conformidade: {total_geral - conformes_geral} ({100*(total_geral-conformes_geral)/total_geral:.1f}%)")
+    print(f"Em conformidade com Portaria 3.005/2024: {conformes_geral} ({100*conformes_geral/total_geral:.1f}%)")
+    print(f"Fora de conformidade: {total_geral - conformes_geral} ({100*(total_geral-conformes_geral)/total_geral:.1f}%)")
     
     # 8. Análise por município (top 10 com mais equipes)
     print("\n" + "=" * 70)

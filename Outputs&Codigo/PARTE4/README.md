@@ -1,12 +1,12 @@
 # PARTE 4 - Conformidade Legal das Equipes AD
 
-## 🎯 Resumo
+## Resumo
 
-Verifica se as equipes EMAD/EMAP de São Paulo estão em **conformidade com a Portaria GM/MS nº 3.005/2024**.
+Verifica se as equipes EMAD/EMAP do Estado de São Paulo estão em **conformidade com a Portaria GM/MS nº 3.005/2024**.
 
 ---
 
-## 📊 RESULTADOS PRINCIPAIS (Janeiro 2025)
+## Resultados Principais (Janeiro 2025)
 
 ### Estado de São Paulo - 412 equipes AD ativas
 
@@ -20,11 +20,6 @@ Verifica se as equipes EMAD/EMAP de São Paulo estão em **conformidade com a Po
 
 > **70.9% das equipes estão em conformidade** com a nova legislação.
 
-### São Paulo Capital - 82 equipes AD ativas
-
-- **61% em conformidade** (50 equipes)
-- Principal problema: Enfermeiros em EMAD I
-
 ### Por que algumas equipes não estão conformes?
 
 A **Portaria 3.005/2024** (janeiro de 2024) **aumentou** o requisito de enfermeiro:
@@ -35,33 +30,26 @@ As equipes não-conformes têm exatamente **40h de enfermeiro** - estavam confor
 
 ---
 
-## 📁 Arquivos
+## Arquivos
 
 | Arquivo | Descrição |
 |---------|-----------|
-| `verificacao_conformidade_legal.py` | Análise SP Capital (82 equipes) |
-| `analise_conformidade_sp_estado_v2.py` | Análise Estado SP (412 equipes) |
-| `conformidade_legal_equipes.csv` | Resultado detalhado SP Capital |
-| `conformidade_legal_sp_estado.csv` | Resultado detalhado Estado SP |
-| `v2_dashboard_saturacao_oferta.png` | Dashboard de saturação |
+| `analise_conformidade_sp_estado.py` | Análise Estado SP (412 equipes) |
+| `conformidade_legal_sp_estado.csv` | Resultado detalhado por equipe |
+| `dashboard_saturacao_oferta.png` | Dashboard de saturação da oferta |
 
 ---
 
-## ▶️ Como rodar
+## Como rodar
 
 ```bash
 cd Outputs&Codigo/PARTE4
-
-# SP Capital
-python verificacao_conformidade_legal.py
-
-# Estado SP (completo)
-python analise_conformidade_sp_estado_v2.py
+python analise_conformidade_sp_estado.py
 ```
 
 ---
 
-## 🔢 Códigos de Tipo de Equipe AD
+## Códigos de Tipo de Equipe AD
 
 | Código | Tipo | Descrição |
 |:------:|:----:|:----------|
@@ -72,7 +60,7 @@ python analise_conformidade_sp_estado_v2.py
 
 ---
 
-## 📚 Base Legal
+## Base Legal
 
 **Portaria GM/MS nº 3.005, de 2 de janeiro de 2024**
 

@@ -4,6 +4,8 @@ PARTE 3 - Script 15: Gerador de Instâncias Sintéticas para HHC-RSP
 
 IC FAPESP: Otimização de Rotas e Agendamento para Atenção Domiciliar
 
+ESCOPO: Estado de São Paulo (todos os municípios com código IBGE iniciado em 35)
+
 OBJETIVO:
 Gerar instâncias sintéticas realísticas para testar o modelo de otimização
 de rotas e agendamento de equipes de Atenção Domiciliar (BRKGA).
@@ -25,6 +27,10 @@ PARÂMETROS DO MODELO (Kummer et al., 2024):
 - [a_i, b_i]: janela de tempo de cada paciente
 - f_i: frequência de visitas por semana
 - q_i: qualificação necessária (AD2 ou AD3)
+
+NOTA: Este gerador NÃO utiliza as habilidades específicas ou composição
+real das equipes. Assume-se que qualquer equipe pode atender qualquer
+paciente dentro de sua capacidade horária.
 
 FONTES DE DADOS:
 - CNES/DATASUS: tbEquipe202508.csv + tbEstabelecimento202508.csv
@@ -325,7 +331,7 @@ def gerar_instancia(nome, n_pacientes, n_equipes=1, municipio=None, seed=None):
     equipes_df = carregar_equipes_emad(municipio)
     
     if len(equipes_df) < n_equipes:
-        print(f"  ⚠ Apenas {len(equipes_df)} equipes disponíveis")
+        print(f"  AVISO: Apenas {len(equipes_df)} equipes disponíveis")
         n_equipes = len(equipes_df)
     
     equipes = equipes_df.head(n_equipes).copy()
@@ -335,7 +341,7 @@ def gerar_instancia(nome, n_pacientes, n_equipes=1, municipio=None, seed=None):
     try:
         setores_df = carregar_setores_censitarios()
     except FileNotFoundError:
-        print("  ⚠ Usando distribuição genérica (sem shapefile)")
+        print("  AVISO: Usando distribuicao generica (sem shapefile)")
         setores_df = None
     
     # 3. Gerar pacientes
@@ -394,7 +400,7 @@ def gerar_instancia(nome, n_pacientes, n_equipes=1, municipio=None, seed=None):
         'matriz_tempos': matriz.tolist()  # em minutos
     }
     
-    print(f"\n✅ Instância gerada com sucesso!")
+    print(f"\nInstancia gerada com sucesso!")
     
     return instancia
 
@@ -407,7 +413,7 @@ def salvar_instancia(instancia, formato='json'):
         arquivo = INSTANCIAS_DIR / f"{nome}.json"
         with open(arquivo, 'w', encoding='utf-8') as f:
             json.dump(instancia, f, indent=2, ensure_ascii=False)
-        print(f"📁 Salvo: {arquivo}")
+        print(f"Salvo: {arquivo}")
         
     elif formato == 'csv':
         eq_df = pd.DataFrame(instancia['equipes'])
@@ -419,7 +425,7 @@ def salvar_instancia(instancia, formato='json'):
         mat_df = pd.DataFrame(instancia['matriz_tempos'])
         mat_df.to_csv(INSTANCIAS_DIR / f"{nome}_matriz.csv", index=False)
         
-        print(f"📁 Salvos: {nome}_equipes.csv, {nome}_pacientes.csv, {nome}_matriz.csv")
+        print(f"Salvos: {nome}_equipes.csv, {nome}_pacientes.csv, {nome}_matriz.csv")
 
 
 def gerar_conjunto_instancias():
@@ -446,7 +452,7 @@ def gerar_conjunto_instancias():
         salvar_instancia(instancia, formato='csv')
     
     print("\n" + "="*70)
-    print(f"✅ {len(instancias_config)} instâncias geradas em: {INSTANCIAS_DIR}")
+    print(f"{len(instancias_config)} instancias geradas em: {INSTANCIAS_DIR}")
     print("="*70)
 
 
