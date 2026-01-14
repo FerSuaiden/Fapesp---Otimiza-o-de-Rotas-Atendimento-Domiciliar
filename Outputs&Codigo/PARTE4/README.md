@@ -37,14 +37,19 @@ As equipes não-conformes têm exatamente **40h de enfermeiro** - estavam confor
 | `analise_conformidade_sp_estado.py` | Análise de conformidade Estado SP (412 equipes) |
 | `visualizacao_temporal.py` | Visualização da evolução temporal das equipes |
 | `conformidade_legal_sp_estado.csv` | Resultado detalhado por equipe |
-| `evolucao_temporal_ad_sp.png` | Gráfico de evolução 2003-2025 |
+| `evolucao_temporal_ad_sp.png` | Gráfico de evolução 2011-2025 |
 
 ---
 
-## Evolução Temporal (2003-2025)
+## Evolução Temporal (2011-2025)
+
+O **Programa Melhor em Casa** foi instituído em **novembro de 2011** pela Portaria GM/MS nº 2.527/2011.
+
+> **Nota**: O CNES contém 6 registros de equipes AD anteriores a 2011 (1 em 2003, 5 em 2009), provavelmente de programas precursores de atenção domiciliar que foram reclassificados. A visualização considera o período a partir de 2011.
 
 | Ano | Equipes Ativas | Municípios |
 |:---:|:--------------:|:----------:|
+| 2011 | 6 | 5 |
 | 2015 | 167 | 71 |
 | 2020 | 277 | 104 |
 | 2024 | 391 | 139 |

@@ -66,8 +66,10 @@ def carregar_equipes():
 def calcular_evolucao_mensal(df):
     """Calcula numero de equipes ativas em cada mes."""
     
-    # Gerar serie de meses desde primeira ativacao ate hoje
-    data_inicio = df['DT_ATIVACAO'].min().replace(day=1)
+    # Programa Melhor em Casa foi criado em novembro de 2011
+    # Existem 6 registros anteriores no CNES (2003: 1, 2009: 5) que sao
+    # provavelmente equipes de programas precursores reclassificadas
+    data_inicio = datetime(2011, 1, 1)
     data_fim = datetime(2025, 8, 31)  # Dados ate agosto 2025
     
     meses = pd.date_range(start=data_inicio, end=data_fim, freq='MS')
