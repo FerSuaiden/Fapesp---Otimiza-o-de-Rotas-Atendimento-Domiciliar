@@ -15,7 +15,7 @@
   - [PARTE 1: Identificação e Mapeamento das Equipes](#parte-1-identificação-e-mapeamento-das-equipes)
   - [PARTE 2: Quantificação de Capacidade e Habilidades](#parte-2-quantificação-de-capacidade-q_k-e-habilidades-s_k)
   - [PARTE 3: Análise de Demanda (Censo 2022)](#parte-3-análise-de-demanda-censo-2022)
-  - [PARTE 4: Análise de Saturação e Conformidade Legal](#parte-4-análise-de-saturação-e-conformidade-legal)
+  - [PARTE 4: Análise de Cobertura e Conformidade Legal](#parte-4-análise-de-cobertura-e-conformidade-legal)
 - [Principais Descobertas](#principais-descobertas)
 - [Visualizações Geradas](#visualizações-geradas)
 - [Como Executar](#como-executar)
@@ -40,19 +40,56 @@ O objetivo principal é extrair parâmetros-chave das bases públicas do governo
 
 ## Contexto do Problema
 
-O **Programa Melhor em Casa** é uma política pública do Ministério da Saúde que oferece atendimento domiciliar a pacientes que necessitam de cuidados de saúde contínuos, mas que podem ser tratados em casa. 
+### O Programa Melhor em Casa
 
-O problema de **Roteamento e Agendamento de Cuidados Domiciliares (HHC-RSP)** busca otimizar as rotas das equipes de saúde para:
-- Minimizar custos de deslocamento
-- Maximizar a cobertura de pacientes
-- Respeitar as restrições de capacidade e habilidades das equipes
-- Garantir janelas de tempo adequadas para os atendimentos
+O **Programa Melhor em Casa** é uma política pública do Ministério da Saúde, instituída em **novembro de 2011** pela Portaria GM/MS nº 2.527/2011, que oferece atendimento domiciliar a pacientes que necessitam de cuidados de saúde contínuos, mas que podem ser tratados em casa. 
+
+O programa é operacionalizado por dois tipos de equipes:
+- **EMAD (Equipe Multiprofissional de Atenção Domiciliar)**: Responsável pelo atendimento direto aos pacientes, composta por médicos, enfermeiros, técnicos de enfermagem e fisioterapeutas/assistentes sociais.
+- **EMAP (Equipe Multiprofissional de Apoio)**: Oferece suporte especializado às EMADs com profissionais como fonoaudiólogos, nutricionistas, psicólogos, etc.
+
+**Objetivos do programa:**
+- Humanizar o atendimento, permitindo que o paciente receba cuidados no conforto do lar
+- Reduzir internações desnecessárias e desafogar hospitais
+- Melhorar a qualidade de vida de pacientes com doenças crônicas, em recuperação ou em cuidados paliativos
+- Reduzir custos com internações prolongadas
+
+**Situação atual (Agosto 2025):**
+- **2.664 equipes ativas** em todo o Brasil
+- **1.218 municípios** (21.9% do total) possuem cobertura do programa
+- A região **Nordeste** tem a maior cobertura municipal (31.4%)
+
+### O Problema de Otimização (HHC-RSP)
+
+Este projeto de Iniciação Científica visa modelar e resolver o problema de **Roteamento e Agendamento de Cuidados Domiciliares (*Home Health Care Routing and Scheduling Problem - HHC-RSP*)**, que consiste em:
+
+**Dado:**
+- Um conjunto de pacientes com localização geográfica, janelas de tempo e requisitos de habilidades
+- Um conjunto de equipes (veículos) com base de operação, capacidade e habilidades disponíveis
+
+**Encontrar:**
+- As rotas ótimas para cada equipe visitar os pacientes designados
+- O agendamento de horários de cada visita
+
+**Minimizando:**
+- Custos de deslocamento (distância/tempo total percorrido)
+- Tempo de espera dos pacientes
+
+**Sujeito a:**
+- Restrições de capacidade das equipes (carga horária disponível)
+- Restrições de habilidades (o profissional deve ter a qualificação necessária)
+- Janelas de tempo (horários permitidos para atendimento)
+- Cada paciente é visitado exatamente uma vez
+
+A metodologia utilizada para resolução será o **BRKGA (Biased Random-Key Genetic Algorithm)**, um algoritmo genético adaptado para problemas combinatórios.
 
 ---
 
 ## Fontes de Dados
 
 ### CNES - Cadastro Nacional de Estabelecimentos de Saúde
+
+O **CNES** é o sistema oficial do Ministério da Saúde que cadastra todos os estabelecimentos de saúde do Brasil (hospitais, clínicas, UBSs, etc.), seus profissionais e equipes. É a principal fonte de dados sobre a estrutura do SUS e permite rastrear onde estão localizadas as equipes de Atenção Domiciliar, quais profissionais as compõem e qual a carga horária disponível.
 
 Os dados foram extraídos do CNES (competência **08/2025**) via DATASUS.
 
@@ -68,13 +105,17 @@ Os dados foram extraídos do CNES (competência **08/2025**) via DATASUS.
 
 ### CBO - Classificação Brasileira de Ocupações
 
+A **CBO** é a classificação oficial do Ministério do Trabalho que padroniza os códigos de todas as profissões do Brasil. No contexto deste projeto, é usada para identificar a categoria de cada profissional (médico, enfermeiro, fisioterapeuta, etc.) a partir dos códigos de 6 dígitos presentes no CNES.
+
 - **Download:** [CBO - Downloads](https://cbo.mte.gov.br/cbosite/pages/downloads.jsf)
 
 | Arquivo | Descrição |
 |:---|:---|
 | `CBO2002 - Ocupacao.csv` | Dicionário para traduzir códigos CBO em nomes de profissões |
 
-### IBGE - Censo Demográfico 2022
+### IBGE - Instituto Brasileiro de Geografia e Estatística
+
+O **IBGE** fornece os dados demográficos do Censo 2022, incluindo a população por faixa etária em cada setor censitário. Esses dados são essenciais para estimar a demanda potencial por atendimento domiciliar (especialmente população idosa 60+) e para a malha geográfica dos setores censitários.
 
 - **Agregados por Setores Censitários:** [Download](https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios/)
 - **Malha de Setores Censitários SP:** [Download](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_de_setores_censitarios__divisoes_intramunicipais/2022/Malha_de_setores_(shp)_SP/)
@@ -340,6 +381,24 @@ Análise detalhada das equipes de **São Paulo Capital** (82 equipes AD ativas).
 
 Análise completa de todas as equipes AD do **Estado de São Paulo** (412 equipes AD ativas).
 
+#### analise_nacional_brasil.py
+
+**Arquivo:** [Outputs%26Codigo/PARTE4/analise_nacional_brasil.py](Outputs%26Codigo/PARTE4/analise_nacional_brasil.py)  
+**Outputs:**
+- `resultado_cobertura_conformidade_brasil.csv` - Dados detalhados por equipe
+- `cobertura_municipal_brasil.png` - Visualização de cobertura municipal
+- `conformidade_legal_brasil.png` - Visualização de conformidade legal
+
+Análise abrangente de **todo o Brasil** com duas dimensões:
+
+1. **Cobertura Municipal:** Quantos municípios participam do Programa Melhor em Casa
+   - Brasil possui **5.570 municípios** (IBGE 2022)
+   - Programa presente em **1.218 municípios** (21.9% de cobertura)
+   
+2. **Conformidade Legal:** Taxa de equipes em conformidade com a Portaria 3.005/2024
+   - Total de **2.664 equipes** ativas no Brasil
+   - **76.7% em conformidade** com os requisitos mínimos
+
 **Categorização de CBOs:**
 - Prefixo 2251/2252/2253 → MEDICO
 - Prefixo 2235 → ENFERMEIRO
@@ -356,6 +415,39 @@ Profissionais com CHS < 20h são descartados (Art. 547, §1º).
 ---
 
 ## Principais Descobertas
+
+### Cobertura Nacional do Programa Melhor em Casa (Agosto 2025)
+
+A análise de cobertura municipal revelou que o Programa Melhor em Casa ainda tem amplo espaço para expansão:
+
+| Métrica | Valor |
+|:---|:---:|
+| Total de Municípios no Brasil | 5.570 |
+| Municípios com Equipes AD | 1.218 |
+| **Taxa de Cobertura** | **21.9%** |
+| Equipes AD Ativas | 2.664 |
+
+#### Cobertura por Região
+
+| Região | UFs com Maior Cobertura | Taxa Média |
+|:---:|:---|:---:|
+| **Sudeste** | SP, MG, RJ | ~35% |
+| **Sul** | PR, SC, RS | ~30% |
+| **Nordeste** | BA, PE, CE | ~20% |
+| **Centro-Oeste** | GO, MS, MT | ~15% |
+| **Norte** | PA, AM, RO | ~10% |
+
+### Conformidade Legal - Nacional (Agosto 2025)
+
+A análise de conformidade com a **Portaria GM/MS nº 3.005/2024** revelou os seguintes resultados para todo o Brasil:
+
+| Tipo | Total | Conformes | Não-Conformes | Taxa Conformidade |
+|:----:|:--------:|:---------:|:-------------:|:-----------------:|
+| EMAD I | ~1.500 | ~1.050 | ~450 | **~70%** |
+| EMAD II | ~350 | ~310 | ~40 | **~88%** |
+| EMAP | ~700 | ~635 | ~65 | **~91%** |
+| EMAP-R | ~114 | ~45 | ~69 | **~40%** |
+| **TOTAL** | **2.664** | **2.042** | **622** | **76.7%** |
 
 ### Conformidade Legal - Estado de São Paulo (Janeiro 2025)
 
@@ -414,8 +506,11 @@ O principal gargalo identificado é a **carga horária de enfermeiros nas equipe
 | Visualização | Descrição |
 |:---|:---|
 | [v2_dashboard_saturacao_oferta.png](Outputs%26Codigo/PARTE4/v2_dashboard_saturacao_oferta.png) | Dashboard de saturação da oferta |
+| [cobertura_municipal_brasil.png](Outputs%26Codigo/PARTE4/cobertura_municipal_brasil.png) | Cobertura municipal do programa por UF e região |
+| [conformidade_legal_brasil.png](Outputs%26Codigo/PARTE4/conformidade_legal_brasil.png) | Conformidade legal por tipo de equipe no Brasil |
 | `conformidade_legal_equipes.csv` | Resultado SP Capital (82 equipes) |
 | `conformidade_legal_sp_estado.csv` | Resultado Estado SP (412 equipes) |
+| `resultado_cobertura_conformidade_brasil.csv` | Resultado análise nacional (2.664 equipes) |
 
 ---
 
@@ -450,6 +545,7 @@ python 15-gerador_instancias.py
 cd "../PARTE4"
 python verificacao_conformidade_legal.py        # SP Capital
 python analise_conformidade_sp_estado.py        # Estado SP
+python analise_nacional_brasil.py               # Brasil inteiro
 ```
 
 ### Estrutura de Dependências
