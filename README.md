@@ -443,11 +443,11 @@ A análise de conformidade com a **Portaria GM/MS nº 3.005/2024** revelou os se
 
 | Tipo | Total | Conformes | Não-Conformes | Taxa Conformidade |
 |:----:|:--------:|:---------:|:-------------:|:-----------------:|
-| EMAD I | ~1.500 | ~1.050 | ~450 | **~70%** |
-| EMAD II | ~350 | ~310 | ~40 | **~88%** |
-| EMAP | ~700 | ~635 | ~65 | **~91%** |
-| EMAP-R | ~114 | ~45 | ~69 | **~40%** |
-| **TOTAL** | **2.664** | **2.042** | **622** | **76.7%** |
+| EMAD I | 1.093 | 706 | 387 | **64.6%** |
+| EMAD II | 460 | 403 | 57 | **87.6%** |
+| EMAP | 929 | 800 | 129 | **86.1%** |
+| EMAP-R | 182 | 134 | 48 | **73.6%** |
+| **TOTAL** | **2.664** | **2.043** | **621** | **76.7%** |
 
 ### Conformidade Legal - Estado de São Paulo (Janeiro 2025)
 
