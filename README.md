@@ -590,3 +590,418 @@ requests>=2.28.0
 - **Orientadora:** Maristela Oliveira dos Santos
 - **Instituição:** Universidade de São Paulo (USP)
 - **Financiamento:** FAPESP
+
+---
+
+## Documentação Técnica dos Scripts
+
+Esta seção apresenta uma explicação detalhada a nível de código de cada script desenvolvido durante o projeto, incluindo: arquivos de entrada, transformações de dados aplicadas, lógica de processamento e arquivos de saída gerados.
+
+### PARTE 1: Mapeamento e Distribuição Geográfica
+
+#### Script 1: Mapa Interativo de Equipes AD em São Paulo
+**Arquivo:** `Outputs&Codigo/PARTE1/1-visuazacaoMapa.py`
+
+**Objetivo:** Gerar um mapa interativo com marcadores para todas as equipes de Atenção Domiciliar do estado de São Paulo, diferenciando visualmente os tipos de equipe.
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEstabelecimento202508.csv` — Cadastro de estabelecimentos de saúde com coordenadas geográficas
+- `CNES_DATA/tbEquipe202508.csv` — Tabela de equipes de saúde com tipo de equipe
+
+**Fluxo de Processamento:**
+1. **Carregamento dos dados:** Lê os dois CSVs utilizando `pandas.read_csv()` com separador `;` e encoding `latin-1`
+2. **Identificação das equipes AD:** Filtra equipes pelo campo `TP_EQUIPE` nos códigos relevantes:
+   - Códigos 22, 46 (EMAD I e II) → equipes de atendimento
+   - Códigos 23, 77 (EMAP e EMAP-R) → equipes de apoio
+3. **Join com estabelecimentos:** Obtém a lista de `CO_UNIDADE` das equipes filtradas e cruza com `tbEstabelecimento` via `.isin()`
+4. **Filtro geográfico:** Seleciona apenas SP via `CO_ESTADO_GESTOR == '35'`
+5. **Tratamento de coordenadas:** Converte `NU_LATITUDE` e `NU_LONGITUDE` para float, substituindo vírgula por ponto; remove valores nulos e zeros
+6. **Classificação por categoria:** Para cada estabelecimento, verifica se possui apenas EMAD (azul), apenas EMAP (verde) ou ambos (roxo)
+7. **Geração do mapa:** Utiliza a biblioteca `folium` para criar um mapa centrado em SP (-22.56, -48.63); adiciona `MarkerCluster` para agrupar marcadores próximos; cada marcador tem popup com informações do estabelecimento
+
+**Saída:** `mapa_Equipes_Atencao_Domiciliar_SP.html` (mapa interativo)
+
+**Dependências Python:** `pandas`, `folium`, `folium.plugins.MarkerCluster`
+
+---
+
+#### Script 2: Distribuição de Equipes por Estado
+**Arquivo:** `Outputs&Codigo/PARTE1/2-equipes_por_estado.py`
+
+**Objetivo:** Criar um gráfico de barras empilhadas mostrando a quantidade de equipes de cada tipo nos 15 estados com maior número de equipes.
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEstabelecimento202508.csv` — Coluna `CO_ESTADO_GESTOR` para identificar UF
+- `CNES_DATA/tbEquipe202508.csv` — Coluna `TP_EQUIPE` para tipo de equipe
+
+**Fluxo de Processamento:**
+1. **Carregamento otimizado:** Usa `usecols` para carregar apenas colunas necessárias (`CO_UNIDADE`, `CO_ESTADO_GESTOR`, `TP_EQUIPE`)
+2. **Filtragem de equipes AD:** Seleciona apenas registros onde `TP_EQUIPE` ∈ {22, 46, 23, 77}
+3. **Mapeamento de códigos:**
+   - `TP_EQUIPE` → nomes legíveis via dicionário `MAP_EQUIPES`
+   - Códigos IBGE UF → siglas (ex: '35' → 'SP') via dicionário `IBGE_UF_MAP`
+4. **Merge:** Junta `df_equipes` com `df_estabelecimentos` pela chave `CO_UNIDADE`
+5. **Crosstab:** Utiliza `pd.crosstab()` para criar tabela pivô Estado × Tipo de Equipe
+6. **Ordenação e seleção:** Calcula coluna 'Total', ordena decrescente e seleciona top 15
+7. **Visualização:** Gera gráfico de barras empilhadas com `matplotlib`, cores distintas para cada tipo, legenda detalhada
+
+**Saída:** `distribuicao_equipes_por_estado_empilhado.png`
+
+**Dependências Python:** `pandas`, `matplotlib`
+
+---
+
+#### Script 3: Composição Nacional (Gráfico Donut)
+**Arquivo:** `Outputs&Codigo/PARTE1/3-pizza.py`
+
+**Objetivo:** Visualizar a proporção de cada tipo de equipe AD em relação ao total nacional através de um gráfico de rosca (donut).
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEquipe202508.csv` — Apenas esta tabela é necessária
+
+**Fluxo de Processamento:**
+1. **Carregamento:** Lê apenas colunas `CO_UNIDADE` e `TP_EQUIPE`
+2. **Filtragem:** Mantém apenas equipes com códigos de AD
+3. **Contagem:** Usa `value_counts()` para contar ocorrências de cada tipo
+4. **Gráfico donut:** 
+   - Utiliza `ax.pie()` com `autopct='%1.1f%%'`
+   - Adiciona círculo branco central via `plt.Circle((0,0), 0.70, fc='white')` para criar efeito donut
+   - Legenda posicionada à direita com descrições completas dos tipos
+
+**Saída:** `composicao_nacional_pizza.png`
+
+**Dependências Python:** `pandas`, `matplotlib`
+
+---
+
+### PARTE 2: Análise de Capacidade e Habilidades
+
+#### Script 4: Análise de Capacidade (CHS)
+**Arquivo:** `Outputs&Codigo/PARTE2/4-capacidade.py`
+
+**Objetivo:** Calcular o parâmetro de capacidade $Q_k$ de cada equipe, definido como a soma das Cargas Horárias Semanais (CHS) de todos os profissionais vinculados à equipe.
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEstabelecimento202508.csv` — Para obter UF do estabelecimento
+- `CNES_DATA/tbEquipe202508.csv` — Identificação das equipes
+- `CNES_DATA/rlEstabEquipeProf202508.csv` — Relacionamento equipe ↔ profissional
+- `CNES_DATA/tbCargaHorariaSus202508.csv` — Carga horária de cada profissional
+
+**Fluxo de Processamento:**
+1. **Carregamento:** Cada tabela é lida com `usecols` para otimizar memória
+2. **Filtragem de equipes:** `df_equipes[df_equipes['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)]`
+3. **Primeiro merge (Equipes → Profissionais):**
+   ```python
+   pd.merge(df_equipes, df_prof_equipe, 
+            on=['CO_UNIDADE', 'SEQ_EQUIPE'], how='inner')
+   ```
+4. **Segundo merge (Profissionais → CHS):**
+   ```python
+   pd.merge(df_merge1, df_chs, 
+            on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO'], how='left')
+   ```
+5. **Cálculo da CHS por profissional:**
+   ```
+   CHS_i = QT_CARGA_HORARIA_AMBULATORIAL + QT_CARGA_HORARIA_OUTROS + QT_CARGA_HOR_HOSP_SUS
+   ```
+6. **Agregação por equipe:**
+   ```python
+   df.groupby(['CO_UNIDADE', 'SEQ_EQUIPE'])['CHS_PROFISSIONAL_TOTAL'].sum()
+   ```
+   Isso resulta em $Q_k = \sum_{i \in \text{equipe } k} \text{CHS}_i$
+7. **Terceiro merge:** Junta com `tbEstabelecimento` para obter UF
+8. **Geração de gráficos:**
+   - Gráfico 1: Barras horizontais com top 15 estados por CHS total
+   - Gráfico 2: Histograma da distribuição de $Q_k$ com linha de média
+
+**Saídas:**
+- `capacidade_total_chs_por_estado.png`
+- `distribuicao_capacidade_Qk_histograma.png`
+
+**Dependências Python:** `pandas`, `matplotlib`
+
+---
+
+#### Script 5: Mapa de Calor da Capacidade
+**Arquivo:** `Outputs&Codigo/PARTE2/5-heatMap.py`
+
+**Objetivo:** Gerar um mapa de calor (heatmap) do Brasil mostrando a concentração geográfica da capacidade de atendimento domiciliar.
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEstabelecimento202508.csv` — Coordenadas geográficas
+- `CNES_DATA/tbEquipe202508.csv` — Tipos de equipe
+- `CNES_DATA/rlEstabEquipeProf202508.csv` — Vínculo equipe-profissional
+- `CNES_DATA/tbCargaHorariaSus202508.csv` — Carga horária
+
+**Fluxo de Processamento:**
+1. **Pipeline de merge:** Mesmo processo do Script 4 para calcular CHS por profissional
+2. **Agregação por estabelecimento:**
+   ```python
+   df.groupby('CO_UNIDADE')['CHS_PROFISSIONAL_TOTAL'].sum()
+   ```
+3. **Merge com coordenadas:** Junta resultado com `tbEstabelecimento` para obter `NU_LATITUDE` e `NU_LONGITUDE`
+4. **Limpeza de coordenadas:** Remove NaN, substitui vírgula por ponto, converte para float
+5. **Preparação do heatmap:** Cria lista no formato `[[lat, lon, peso], ...]` onde peso é a CHS total
+6. **Geração do mapa:**
+   ```python
+   folium.Map(location=[-14.23, -51.92], zoom_start=4)
+   HeatMap(heatmap_list, radius=15, blur=10).add_to(mapa)
+   ```
+
+**Saída:** `mapa_calor_chs_brasil.html`
+
+**Dependências Python:** `pandas`, `folium`, `folium.plugins.HeatMap`
+
+---
+
+#### Script 6: Gráfico Sunburst de Habilidades
+**Arquivo:** `Outputs&Codigo/PARTE2/6-sunburst.py`
+
+**Objetivo:** Visualizar a composição profissional das equipes através de um gráfico sunburst hierárquico, representando o parâmetro de habilidades $S_k$ do modelo.
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEquipe202508.csv` — Tipos de equipe
+- `CNES_DATA/rlEstabEquipeProf202508.csv` — Profissionais por equipe
+- `CNES_DATA/tbCargaHorariaSus202508.csv` — Carga horária
+- `CBO_DATA/CBO2002 - Ocupacao.csv` — Dicionário de nomes de profissões (código CBO → título)
+
+**Fluxo de Processamento:**
+1. **Pipeline de merge (4 tabelas):**
+   - Equipes filtradas ⋈ Profissionais (via `CO_UNIDADE`, `SEQ_EQUIPE`)
+   - Resultado ⋈ CHS (via `CO_UNIDADE`, `CO_PROFISSIONAL_SUS`, `CO_CBO`)
+   - Resultado ⋈ CBO (via `CO_CBO`) para obter nome da profissão
+2. **Cálculo CHS por profissional:** Soma das três colunas de carga horária
+3. **Mapeamento de tipo:** `TP_EQUIPE` → nome legível (EMAD I, EMAD II, EMAP, EMAP-R)
+4. **Agregação:**
+   ```python
+   df.groupby(['Tipo_Equipe', 'Profissao'])['CHS_Profissional'].sum()
+   ```
+5. **Tratamento de profissões minoritárias:** Agrupa profissões com <0.5% do total em "Outras Profissões"
+6. **Geração sunburst com Plotly:**
+   ```python
+   px.sunburst(df, path=['Tipo_Equipe', 'Profissao'], 
+               values='CHS_Profissional', color='Tipo_Equipe')
+   ```
+
+**Interpretação:** O anel interno representa os tipos de equipe; o anel externo representa as profissões dentro de cada tipo. O tamanho dos setores é proporcional à CHS total.
+
+**Saída:** `habilidades_sunburst.html`
+
+**Dependências Python:** `pandas`, `plotly.express`
+
+---
+
+### PARTE 3: Geração de Instâncias para Otimização
+
+#### Script 15: Gerador de Instâncias Sintéticas
+**Arquivo:** `Outputs&Codigo/PARTE3/15-gerador_instancias.py`
+
+**Objetivo:** Gerar instâncias sintéticas realísticas para testar o algoritmo BRKGA de otimização do HHC-RSP, uma vez que dados reais de pacientes não estão disponíveis publicamente.
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEquipe202508.csv` — Equipes reais com localização
+- `CNES_DATA/tbEstabelecimento202508.csv` — Coordenadas dos estabelecimentos
+- `IBGE_DATA/demanda_idosos_sp_censo2022.csv` — População idosa por setor censitário (opcional)
+
+**Parâmetros Baseados na Portaria GM/MS nº 3.005/2024:**
+- **Distribuição de modalidade:** AD2 (70%) e AD3 (30%) — Art. 563-A, § 1º, III
+- **Frequência de visitas:**
+  - AD2: 1–3 visitas/semana (média complexidade)
+  - AD3: 5–7 visitas/semana (alta complexidade)
+- **Tempo de serviço:**
+  - AD2: 30–60 minutos por visita
+  - AD3: 45–90 minutos por visita
+- **Janelas de tempo:**
+  - Manhã (40%): 7:00–12:00
+  - Tarde (35%): 13:00–18:00
+  - Integral (25%): 7:00–18:00
+- **Capacidade diária da equipe:** 360–480 minutos (6–8 horas úteis)
+
+**Funções Principais:**
+1. `haversine(lon1, lat1, lon2, lat2)`: Calcula distância geodésica em km usando a fórmula de Haversine
+2. `carregar_equipes_emad(municipio_codigo)`: 
+   - Lê `tbEquipe202508.csv` em chunks
+   - Filtra equipes ativas (DT_DESATIVACAO = NULL) com códigos AD
+   - Filtra por município ou estado de SP (códigos iniciados em 35)
+   - Faz merge com `tbEstabelecimento` para obter coordenadas
+3. `gerar_pacientes(n, setores_df, centro_lat, centro_lon, raio_km)`:
+   - Gera coordenadas com distribuição gaussiana ao redor do centro
+   - Sorteia modalidade (AD2/AD3), janela de tempo, frequência e tempo de serviço
+   - Retorna lista de dicionários com atributos de cada paciente
+4. `calcular_matriz_distancias(equipes, pacientes)`:
+   - Cria matriz (n+1) × (n+1) onde índice 0 é o depósito
+   - Calcula tempos de viagem entre todos os pares usando Haversine + velocidade média (25 km/h)
+5. `gerar_instancia(nome, n_pacientes, n_equipes, municipio, seed)`:
+   - Orquestra todo o processo de geração
+   - Retorna dicionário JSON com metadata, equipes, pacientes e matriz de tempos
+
+**Estrutura da Instância Gerada (JSON):**
+```json
+{
+  "metadata": {
+    "nome": "media_50", "n_pacientes": 50, "n_equipes": 3
+  },
+  "equipes": [
+    {"id": 1, "tipo": "EMAD I", "lat": -23.55, "lon": -46.63, 
+     "capacidade_diaria": 420}
+  ],
+  "pacientes": [
+    {"id": 1, "lat": -23.52, "lon": -46.61, "modalidade": "AD2",
+     "janela_inicio": 420, "janela_fim": 720, "frequencia": 2,
+     "tempo_servico": 45}
+  ],
+  "matriz_tempos": [[0, 12.3, ...], ...]
+}
+```
+
+**Instâncias Geradas por Padrão:**
+
+| Nome | Pacientes | Equipes | Seed |
+|:---|:---:|:---:|:---:|
+| pequena_10 | 10 | 1 | 42 |
+| pequena_20 | 20 | 2 | 123 |
+| media_50 | 50 | 3 | 456 |
+| media_100 | 100 | 5 | 789 |
+| grande_200 | 200 | 8 | 1000 |
+| grande_500 | 500 | 15 | 2000 |
+
+**Saídas:**
+- `instancias/[nome].json` — Instância completa em formato JSON
+- `instancias/[nome]_equipes.csv` — Tabela de equipes
+- `instancias/[nome]_pacientes.csv` — Tabela de pacientes
+- `instancias/[nome]_matriz.csv` — Matriz de tempos de viagem
+
+**Dependências Python:** `pandas`, `numpy`, `json`, `pathlib`
+
+---
+
+### PARTE 4: Análise de Conformidade Legal e Cobertura
+
+A PARTE 4 contém os scripts de análise de conformidade legal das equipes em relação à Portaria GM/MS nº 3.005/2024, bem como visualizações de cobertura municipal por estado.
+
+#### Script: Análise Nacional de Conformidade
+**Arquivo:** `Outputs&Codigo/PARTE4/scripts/analise_nacional_brasil_v2.py`
+
+**Objetivo:** Verificar a conformidade legal de todas as 2.664 equipes de Atenção Domiciliar do Brasil em relação aos requisitos mínimos de composição estabelecidos pela Portaria GM/MS nº 3.005/2024, gerando relatórios detalhados e visualizações.
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEquipe202508.csv` — Cadastro de equipes
+- `CNES_DATA/rlEstabEquipeProf202508.csv` — Profissionais por equipe
+- `CNES_DATA/tbCargaHorariaSus202508.csv` — Carga horária de cada profissional
+- `CBO_DATA/CBO2002 - Ocupacao.csv` — Mapeamento de códigos CBO para categorias profissionais
+- `IBGE_DATA/municipios_ibge.csv` — Nomes dos municípios brasileiros
+
+**Regras de Conformidade Implementadas (Portaria 3.005/2024):**
+- **EMAD I (Art. 547, I):** Médico ≥40h, Enfermeiro ≥60h, Téc. Enfermagem ≥120h (total), Fisio ou AS ≥30h
+- **EMAD II (Art. 547, II):** Médico ≥20h, Enfermeiro ≥30h, Téc. Enfermagem ≥120h (total), Fisio ou AS ≥30h
+- **EMAP (Art. 548):** Mínimo 3 profissionais NS de categorias diferentes, CHS total ≥90h
+- **EMAP-R (Art. 548-A):** Mínimo 3 profissionais NS de categorias diferentes, CHS total ≥60h
+
+**Fluxo de Processamento:**
+1. **Carregamento:** Lê as tabelas com encoding `latin-1` e filtra equipes AD ativas
+2. **Merge:** Cruza equipes ⋈ profissionais ⋈ CHS por chaves compostas
+3. **Categorização CBO:** Mapeia códigos CBO para categorias usando prefixos (2251/2252/2253→Médico, 2235→Enfermeiro, etc.)
+4. **Agregação por equipe:** `groupby(['CO_UNIDADE', 'SEQ_EQUIPE', 'TP_EQUIPE'])` para somar CHS por categoria
+5. **Verificação de regras:** Para cada equipe, aplica as regras correspondentes ao tipo
+6. **Geração de outputs:** CSV com status de cada equipe e gráficos de conformidade
+
+**Saídas Geradas:**
+- `dados_csv/conformidade_legal_brasil_v2.csv` — Detalhamento equipe a equipe
+- `dados_csv/cobertura_municipal_brasil_v2.csv` — Municípios com/sem equipes AD
+- `dados_csv/cobertura_regiao_brasil_v2.csv` — Cobertura por região
+- `visualizacoes/nacional/conformidade_legal_brasil_v2.png` — Barras de conformidade por tipo
+- `visualizacoes/nacional/cobertura_municipal_brasil_v2.png` — Cobertura por região
+- `visualizacoes/nacional/analise_percapita_brasil.png` — Análise per capita por UF
+- `visualizacoes/nacional/conformidade_cobertura_nacional.png` — Gráficos donut resumo
+
+**Dependências Python:** `pandas`, `numpy`, `matplotlib`
+
+---
+
+#### Script: Visualizações por Estado
+**Arquivo:** `Outputs&Codigo/PARTE4/scripts/gerar_visualizacoes_estados_v2.py`
+
+**Objetivo:** Para cada um dos 27 estados brasileiros, gerar visualizações detalhadas mostrando a distribuição de equipes AD por município e a conformidade legal por município.
+
+**Fontes de Dados:**
+- `CNES_DATA/tbEquipe202508.csv` — Equipes com código de município
+- `dados_csv/conformidade_legal_brasil_v2.csv` — Status de conformidade (gerado pelo script anterior)
+- `IBGE_DATA/municipios_ibge.csv` — Nomes dos municípios
+
+**Fluxo de Processamento:**
+1. **Carregamento e filtro:** Lê equipes AD ativas, extrai UF do código de município
+2. **Merge com conformidade:** Associa cada `SEQ_EQUIPE` ao seu `CO_MUNICIPIO`
+3. **Agregação:** Para cada UF, agrupa por município calculando total de equipes e taxa de conformidade
+4. **Geração de figura dual:** Para cada estado, cria figura com 2 subplots:
+   - **Painel esquerdo:** Top 15 municípios por número de equipes (barras horizontais)
+   - **Painel direito:** Top 15 municípios por conformidade (barras empilhadas verde/vermelho)
+5. **Visualização nacional:** Gráficos donut mostrando % equipes conformes e % municípios cobertos
+
+**Saídas Geradas (por estado):**
+- `visualizacoes/estados/[UF]/[UF]_equipes_conformidade.png` — Figura com 2 painéis
+- `visualizacoes/estados/[UF]/[UF]_conformidade.csv` — Dados de conformidade por equipe
+- `visualizacoes/estados/[UF]/[UF]_dados_municipios.csv` — Dados agregados por município
+
+**Saídas Consolidadas:**
+- `visualizacoes/estados/resumo_por_estado_v2.csv` — Resumo com total de equipes, cobertura e taxa de conformidade por estado
+- `visualizacoes/nacional/conformidade_cobertura_nacional.png` — Indicadores nacionais em formato donut
+
+**Dependências Python:** `pandas`, `numpy`, `matplotlib`
+
+---
+
+### Estrutura de Diretórios da PARTE 4
+
+```
+PARTE4/
+├── scripts/
+│   ├── analise_nacional_brasil_v2.py
+│   ├── gerar_visualizacoes_estados_v2.py
+│   ├── visualizacao_temporal.py
+│   └── visualizacao_conformidade_temporal.py
+├── dados_csv/
+│   ├── conformidade_legal_brasil_v2.csv
+│   ├── cobertura_municipal_brasil_v2.csv
+│   ├── cobertura_regiao_brasil_v2.csv
+│   └── resumo_por_regiao_brasil.csv
+├── visualizacoes/
+│   ├── nacional/
+│   │   ├── conformidade_legal_brasil_v2.png
+│   │   ├── cobertura_municipal_brasil_v2.png
+│   │   ├── analise_percapita_brasil.png
+│   │   ├── conformidade_cobertura_nacional.png
+│   │   ├── evolucao_temporal_ad_sp.png
+│   │   └── evolucao_conformidade_temporal.png
+│   └── estados/
+│       ├── resumo_por_estado_v2.csv
+│       ├── AC/ (AC_equipes_conformidade.png, ...)
+│       ├── SP/ (SP_equipes_conformidade.png, ...)
+│       └── ... (demais 25 estados)
+└── README.md
+```
+
+---
+
+## Requisitos de Composição (Portaria 3.005/2024)
+
+### EMAD I (Art. 547, I):
+- 1 médico com CHS mínima de 40 horas
+- 1 enfermeiro com CHS mínima de 60 horas
+- 3 técnicos ou auxiliares de enfermagem, totalizando CHS mínima de 120 horas
+- 1 fisioterapeuta OU 1 assistente social com CHS mínima de 30 horas
+
+### EMAD II (Art. 547, II):
+- 1 médico com CHS mínima de 20 horas
+- 1 enfermeiro com CHS mínima de 30 horas
+- 3 técnicos ou auxiliares de enfermagem, totalizando CHS mínima de 120 horas
+- 1 fisioterapeuta OU 1 assistente social com CHS mínima de 30 horas
+
+### EMAP (Art. 548):
+- Mínimo de 3 profissionais de nível superior de categorias profissionais diferentes
+- CHS total mínima de 90 horas
+
+### EMAP-R (Art. 548-A):
+- Mínimo de 3 profissionais de nível superior de categorias profissionais diferentes
+- CHS total mínima de 60 horas (municípios com menos de 20.000 habitantes)
+
+> **Art. 547, §1º:** Nenhum profissional componente de EMAD poderá ter CHS inferior a 20 horas.

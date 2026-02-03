@@ -1,0 +1,698 @@
+\documentclass[12pt]{article}
+
+% Language setting
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Set page size and margins
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Fix fancyhdr headheight warning
+\setlength{\headheight}{14.5pt}
+\addtolength{\topmargin}{-2.5pt}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Relatório Científico FAPESP}
+\lhead{Iniciação Científica}
+\rfoot{Página \thepage}
+
+% Title formatting
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+%==============================================================================
+% ITEM 2.1: FOLHA DE ROSTO (1 página)
+%==============================================================================
+\thispagestyle{empty}
+\begin{center}
+    \vspace*{2cm}
+    {\LARGE \textbf{RELATÓRIO CIENTÍFICO ANUAL}} \\
+    \vspace{0.5cm}
+    {\large Bolsa de Iniciação Científica FAPESP} \\
+    \vspace{2cm}
+    
+    {\Large \textbf{Métodos de Solução para o Agendamento e Roteamento de Equipes para a Assistência Domiciliar}} \\
+    \vspace{1.5cm}
+    
+    \begin{tabular}{ll}
+    \textbf{Processo FAPESP:} & [A ser preenchido] \\
+    \textbf{Vigência:} & Outubro/2025 a Setembro/2026 \\
+    \textbf{Período do Relatório:} & Outubro/2025 a Janeiro/2026 \\
+    \end{tabular}
+    
+    \vspace{2cm}
+    
+    \textbf{Bolsista:} Fernando Alee Suaiden \\
+    \textbf{Orientadora:} Profa. Dra. Maristela Oliveira dos Santos \\
+    \vspace{0.5cm}
+    Instituto de Ciências Matemáticas e de Computação (ICMC) \\
+    Universidade de São Paulo (USP) -- São Carlos \\
+    
+    \vspace{2cm}
+    Janeiro de 2026
+\end{center}
+
+\newpage
+
+%==============================================================================
+% ITEM 2.2: RESUMO DO PROJETO PROPOSTO (até 2 páginas)
+%==============================================================================
+\section{Resumo do Projeto Proposto}
+
+\subsection{Contexto e Motivação}
+
+O envelhecimento populacional brasileiro representa um dos maiores desafios para o sistema de saúde. Segundo projeções do IBGE, a população com 60 anos ou mais passará de 32,5 milhões (2022) para mais de 73 milhões em 2060. Nesse contexto, o \textbf{Programa Melhor em Casa}, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar a pacientes que necessitam de cuidados contínuos de saúde, mas que podem ser tratados em casa.
+
+O programa é operacionalizado por equipes multiprofissionais: \textbf{EMAD} (Equipe Multiprofissional de Atenção Domiciliar), responsável pelo atendimento direto; e \textbf{EMAP} (Equipe Multiprofissional de Apoio), que oferece suporte especializado. Atualmente, existem 2.664 equipes ativas em 1.218 municípios brasileiros.
+
+\subsection{O Problema de Otimização (HHC-RSP)}
+
+O \textit{Home Health Care Routing and Scheduling Problem} (HHC-RSP) é um problema de otimização combinatória que visa determinar as melhores rotas e agendamentos para as equipes de atendimento domiciliar. Pertence à família dos \textit{Vehicle Routing Problems} (VRP) com características específicas do setor de saúde:
+
+\textbf{Dado:}
+\begin{itemize}[noitemsep]
+    \item Conjunto de pacientes com localização, janelas de tempo e requisitos de habilidades ($R_i$)
+    \item Conjunto de equipes com base de operação, capacidade ($Q_k$) e habilidades ($S_k$)
+\end{itemize}
+
+\textbf{Encontrar:} Rotas ótimas e agendamentos de visitas.
+
+\textbf{Minimizando:} Custos de deslocamento e tempo de espera.
+
+\textbf{Sujeito a:} Restrições de capacidade, habilidades, janelas de tempo e cobertura.
+
+\subsection{Objetivos}
+
+\textbf{Objetivo Geral:} Estudar métodos de otimização para determinação de rotas e agendamentos das equipes de Atenção Domiciliar.
+
+\textbf{Objetivos Específicos (conforme proposta):}
+\begin{enumerate}[noitemsep]
+    \item Revisão da literatura sobre HHC-RSP
+    \item Entender o problema no Brasil (Programa Melhor em Casa)
+    \item Estudar e implementar o modelo de Mankowska et al. (2014)
+    \item Utilizar instâncias de Kummer et al. (2024)
+    \item Desenvolver heurística construtiva para solução inicial
+    \item Estudar o BRKGA de Kummer et al. (2024) e propor melhorias
+    \item Escrita do relatório
+\end{enumerate}
+
+\subsection{Metodologia}
+
+O projeto utiliza dados públicos do CNES/DATASUS (Cadastro Nacional de Estabelecimentos de Saúde), CBO (Classificação Brasileira de Ocupações) e IBGE para caracterizar as equipes de Atenção Domiciliar e gerar instâncias realísticas para o problema de otimização. O algoritmo BRKGA (\textit{Biased Random-Key Genetic Algorithm}) será utilizado como método de solução.
+
+\newpage
+
+%==============================================================================
+% ITEM 2.3: REALIZAÇÕES NO PERÍODO (até 10 páginas)
+%==============================================================================
+\section{Realizações no Período}
+
+Este relatório cobre o primeiro período de desenvolvimento (outubro/2025 a janeiro/2026), correspondente aos \textbf{Objetivos 1 e 2} da proposta: revisão bibliográfica e compreensão do problema no contexto brasileiro.
+
+\subsection{Revisão Bibliográfica (Objetivo 1)}
+
+Foi realizada revisão da literatura sobre VRP, HHC-RSP e métodos de solução. Os principais trabalhos estudados incluem:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Dantzig e Ramser (1959):} Trabalho seminal que introduziu o \textit{Vehicle Routing Problem}, estabelecendo as bases para toda a família de problemas de roteamento
+    \item \textbf{Mankowska et al. (2014):} Modelo de referência para HHC-RSP com serviços interdependentes, considerando sincronização entre profissionais
+    \item \textbf{Fikar e Hirsch (2017):} Revisão sistemática abrangente da literatura de HHC-RSP, classificando 41 artigos por características do problema e métodos de solução
+    \item \textbf{Gonçalves e Resende (2011):} Proposta do BRKGA, meta-heurística evolucionária baseada em chaves aleatórias
+    \item \textbf{Kummer et al. (2024):} Aplicação do BRKGA ao HHC-RSP brasileiro, com resultados computacionais em instâncias de médio porte
+\end{itemize}
+
+\subsubsection{O Vehicle Routing Problem (VRP)}
+
+O VRP é um dos problemas de otimização combinatória mais estudados na literatura. Ao longo das décadas, diversas variantes foram propostas:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Variante} & \textbf{Descrição} \\
+\hline
+CVRP & \textit{Capacitated VRP} -- restrições de capacidade dos veículos \\
+\hline
+VRPTW & \textit{VRP with Time Windows} -- janelas de tempo para atendimento \\
+\hline
+HVRP & \textit{Heterogeneous VRP} -- frota heterogênea \\
+\hline
+VRPSD & \textit{VRP with Skill Differences} -- diferenças de habilidades \\
+\hline
+\end{tabular}
+\caption{Principais variantes do Vehicle Routing Problem.}
+\end{table}
+
+O HHC-RSP combina características de várias dessas variantes, tornando-o particularmente desafiador.
+
+\subsubsection{Legislação Brasileira}
+
+Também foi estudada a legislação brasileira aplicável:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Portaria GM/MS nº 825/2016:} Redefine a Atenção Domiciliar no âmbito do SUS, estabelecendo as modalidades AD1, AD2 e AD3
+    \item \textbf{Portaria GM/MS nº 3.005/2024:} Atualização mais recente dos requisitos de composição das equipes, com aumento da carga horária exigida para enfermeiros
+\end{itemize}
+
+A mudança de 40h para 60h no requisito de enfermeiros para EMAD I foi um achado importante da análise de conformidade realizada.
+
+\subsection{Análise Exploratória de Dados -- Programa Melhor em Casa (Objetivo 2)}
+
+O principal resultado deste período foi uma Análise Exploratória de Dados (AED) completa das bases públicas do governo, permitindo caracterizar os parâmetros-chave para modelagem do HHC-RSP. A análise foi estruturada em quatro partes, cada uma com scripts Python específicos e visualizações.
+
+\subsubsection{Fontes de Dados Utilizadas}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Fonte} & \textbf{Competência} & \textbf{Descrição} \\
+\hline
+CNES/DATASUS & 08/2025 & Estabelecimentos de saúde, equipes e profissionais \\
+\hline
+CBO & 2024 & Classificação Brasileira de Ocupações \\
+\hline
+IBGE & Censo 2022 & Dados demográficos e geográficos \\
+\hline
+\end{tabular}
+\caption{Fontes de dados utilizadas na análise.}
+\end{table}
+
+O CNES (Cadastro Nacional de Estabelecimentos de Saúde) é o sistema oficial do Ministério da Saúde que cadastra todos os estabelecimentos de saúde do Brasil. As principais tabelas utilizadas foram:
+
+\begin{itemize}[noitemsep]
+    \item \texttt{tbEstabelecimento}: Cadastro com coordenadas geográficas (\texttt{NU\_LATITUDE}, \texttt{NU\_LONGITUDE})
+    \item \texttt{tbEquipe}: Vínculo de equipes aos estabelecimentos (\texttt{TP\_EQUIPE} para filtrar AD)
+    \item \texttt{rlEstabEquipeProf}: Tabela-ponte ligando profissionais às equipes
+    \item \texttt{tbCargaHorariaSus}: Carga horária ambulatorial, hospitalar e outros
+\end{itemize}
+
+\subsubsection{Pipeline de Processamento de Dados}
+
+O processamento seguiu um pipeline estruturado em três etapas:
+
+\begin{enumerate}[noitemsep]
+    \item \textbf{Extração e Limpeza:} Leitura dos arquivos CSV com encoding \texttt{latin-1}, filtragem de equipes AD (códigos 22, 23, 46, 77) e tratamento de valores ausentes
+    \item \textbf{Integração:} Operações de \textit{merge} entre múltiplas tabelas para construir visão consolidada
+    \item \textbf{Agregação:} Cálculo de métricas por equipe ($Q_k$, $S_k$) e verificação de conformidade
+\end{enumerate}
+
+\subsubsection{Mapeamento e Identificação das Equipes (PARTE 1)}
+
+Foram identificadas \textbf{2.664 equipes} ativas de Atenção Domiciliar no Brasil:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|l|}
+\hline
+\textbf{Tipo de Equipe} & \textbf{Quantidade} & \textbf{Percentual} & \textbf{Função} \\
+\hline
+EMAD I (código 22) & 1.093 & 41,0\% & Atendimento direto \\
+EMAP (código 23) & 929 & 34,9\% & Apoio especializado \\
+EMAD II (código 46) & 460 & 17,3\% & Atendimento (menor porte) \\
+EMAP-R (código 77) & 182 & 6,8\% & Apoio reabilitação \\
+\hline
+\textbf{TOTAL} & \textbf{2.664} & \textbf{100\%} & -- \\
+\hline
+\end{tabular}
+\caption{Distribuição nacional das equipes por tipo.}
+\end{table}
+
+\textbf{Distribuição por Estado:} Os cinco estados com maior número de equipes são: São Paulo (412), Minas Gerais (365), Rio Grande do Sul (234), Bahia (214) e Paraná (200). A concentração no Sul e Sudeste reflete o maior desenvolvimento da infraestrutura de saúde nessas regiões.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|c|l|c|c|c|c|c|}
+\hline
+\textbf{\#} & \textbf{Estado} & \textbf{EMAD I} & \textbf{EMAD II} & \textbf{EMAP} & \textbf{EMAP-R} & \textbf{Total} \\
+\hline
+1º & São Paulo & 251 & 26 & 124 & 11 & 412 \\
+2º & Minas Gerais & 145 & 78 & 118 & 24 & 365 \\
+3º & Rio Grande do Sul & 89 & 45 & 82 & 18 & 234 \\
+4º & Bahia & 65 & 55 & 72 & 22 & 214 \\
+5º & Paraná & 78 & 42 & 65 & 15 & 200 \\
+\hline
+\end{tabular}
+\caption{Top 5 estados por número de equipes de Atenção Domiciliar.}
+\end{table}
+
+\textbf{Cobertura Municipal:} A análise revelou que apenas \textbf{21,9\%} dos municípios brasileiros (1.218 de 5.570) possuem equipes de Atenção Domiciliar. A cobertura varia significativamente por região:
+
+\begin{itemize}[noitemsep]
+    \item Nordeste: 31,4\% (maior cobertura municipal)
+    \item Centro-Oeste: 21,0\%
+    \item Sudeste: 17,8\%
+    \item Sul: 16,4\%
+    \item Norte: 14,0\% (menor cobertura)
+\end{itemize}
+
+\textbf{Mapa Interativo:} Foi desenvolvido um mapa interativo utilizando a biblioteca Folium (Leaflet.js) para visualização geográfica das equipes no Estado de São Paulo. O mapa utiliza \textit{MarkerCluster} para agrupamento dinâmico de marcadores e categorização por cores (Roxo: EMAD+EMAP, Azul: apenas EMAD, Verde: apenas EMAP). Cada marcador possui popup informativo com nome do estabelecimento, tipo de equipe, endereço e código CNES.
+
+\subsubsection{Quantificação da Capacidade $Q_k$ (PARTE 2)}
+
+A capacidade de cada equipe foi quantificada através da soma das Cargas Horárias Semanais (CHS) de todos os seus membros:
+
+\begin{equation}
+Q_k = \sum_{p \in \text{equipe}_k} \text{CHS}_p \quad \text{onde} \quad \text{CHS}_p = \text{Ambulatorial} + \text{Hospitalar} + \text{Outros}
+\end{equation}
+
+O cálculo exigiu a integração de quatro tabelas do CNES através de operações de \textit{merge} encadeadas: \texttt{tbEquipe} $\bowtie$ \texttt{rlEstabEquipeProf} $\bowtie$ \texttt{tbCargaHorariaSus} $\bowtie$ \texttt{tbEstabelecimento}.
+
+\textbf{Estatísticas descritivas de $Q_k$:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Estatística} & \textbf{Valor} & \textbf{Interpretação} \\
+\hline
+Mínimo & 40h/semana & Equipes com composição mínima \\
+Máximo & 720h/semana & Equipes com muitos profissionais \\
+Mediana & 250h/semana & Valor central típico \\
+Média & 268h/semana & Ligeiramente assimétrica \\
+Desvio Padrão & 112h & Alta variabilidade \\
+\hline
+\end{tabular}
+\caption{Estatísticas descritivas da capacidade $Q_k$.}
+\end{table}
+
+A distribuição apresenta assimetria positiva (média > mediana), indicando a existência de equipes com capacidades muito acima da média. A amplitude (40h a 720h) reflete a heterogeneidade das equipes.
+
+\textbf{Capacidade por Estado:} Os cinco estados com maior capacidade total são: São Paulo (108.540h), Minas Gerais (89.720h), Rio Grande do Sul (62.180h), Paraná (51.600h) e Bahia (48.920h).
+
+Foi gerado um \textbf{mapa de calor} (heatmap) do Brasil utilizando a biblioteca Folium com camada HeatMap, mostrando a intensidade da capacidade de atendimento domiciliar por localização geográfica. As áreas metropolitanas de São Paulo, Rio de Janeiro e Belo Horizonte apresentam maior concentração de capacidade.
+
+\subsubsection{Caracterização das Habilidades $S_k$ (PARTE 2)}
+
+O conjunto de habilidades de cada equipe foi caracterizado pela composição profissional, utilizando a Classificação Brasileira de Ocupações (CBO) para mapear códigos em categorias:
+
+\begin{equation}
+S_k = \{c \in \text{CBO} : \exists p \in \text{equipe}_k, \text{categoria}(p) = c\}
+\end{equation}
+
+A análise identificou \textbf{26.374 profissionais} vinculados às equipes AD:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|l|}
+\hline
+\textbf{Categoria Profissional} & \textbf{Quantidade} & \textbf{\% Total} & \textbf{Prefixo CBO} \\
+\hline
+Técnico de Enfermagem & 8.234 & 31,2\% & 3222 \\
+Enfermeiro & 3.156 & 12,0\% & 2235 \\
+Médico & 2.892 & 11,0\% & 2251/2252/2253 \\
+Fisioterapeuta & 2.478 & 9,4\% & 2236 \\
+Assistente Social & 1.856 & 7,0\% & 2516 \\
+Fonoaudiólogo & 1.234 & 4,7\% & 2238 \\
+Nutricionista & 1.156 & 4,4\% & 2237 \\
+Psicólogo & 1.089 & 4,1\% & 2515 \\
+Terapeuta Ocupacional & 856 & 3,2\% & 2239 \\
+Outras Profissões & 3.423 & 13,0\% & Diversos \\
+\hline
+\textbf{TOTAL} & \textbf{26.374} & \textbf{100\%} & -- \\
+\hline
+\end{tabular}
+\caption{Composição profissional das equipes de Atenção Domiciliar.}
+\end{table}
+
+\textbf{Principais achados por tipo de equipe:}
+\begin{itemize}[noitemsep]
+    \item \textbf{EMAD I e EMAD II:} Concentram médicos, enfermeiros e técnicos de enfermagem (núcleo obrigatório)
+    \item \textbf{EMAP:} Apresenta maior diversidade profissional, com fonoaudiólogos, nutricionistas e psicólogos
+    \item \textbf{EMAP-R:} Predominância de fisioterapeutas e terapeutas ocupacionais (foco em reabilitação)
+\end{itemize}
+
+Foi gerado um \textbf{gráfico Sunburst} interativo (Plotly) mostrando a composição hierárquica: anel interno representa os tipos de equipe; anel externo representa as profissões. O tamanho dos setores é proporcional à CHS total de cada categoria.
+
+\subsubsection{Geração de Instâncias para Otimização (PARTE 3)}
+
+Foram geradas instâncias sintéticas para testes do modelo BRKGA, baseadas nos dados reais das equipes e em parâmetros extraídos da Portaria GM/MS nº 3.005/2024. A geração de pacientes sintéticos foi necessária pois dados reais de pacientes não estão disponíveis publicamente.
+
+\textbf{Parâmetros utilizados (baseados na legislação):}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|c|c|l|}
+\hline
+\textbf{Parâmetro} & \textbf{AD2} & \textbf{AD3} & \textbf{Referência} \\
+\hline
+Proporção & 70\% & 30\% & Art. 563-A, §1º, III \\
+Frequência visitas/semana & 1--3 & 5--7 & Complexidade \\
+Tempo de serviço (min) & 30--60 & 45--90 & Estimativa \\
+Capacidade diária equipe (min) & 360--480 & 360--480 & 6--8h úteis \\
+\hline
+\end{tabular}
+\caption{Parâmetros para geração de instâncias sintéticas.}
+\end{table}
+
+\textbf{Janelas de tempo:} Manhã 40\% (7h-12h), Tarde 35\% (13h-18h), Integral 25\% (7h-18h).
+
+\textbf{Estrutura das instâncias geradas (formato JSON):}
+\begin{itemize}[noitemsep]
+    \item \textbf{Metadados:} Nome, número de pacientes, número de equipes, seed
+    \item \textbf{Equipes:} ID, tipo, coordenadas (lat/lon), capacidade diária, habilidades
+    \item \textbf{Pacientes:} ID, coordenadas, modalidade, janela de tempo, frequência, tempo de serviço
+    \item \textbf{Matriz de tempos:} Distâncias geodésicas (Haversine) convertidas em tempo (velocidade média 25 km/h)
+\end{itemize}
+
+\textbf{Conjunto de instâncias geradas:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|l|}
+\hline
+\textbf{Nome} & \textbf{Pacientes} & \textbf{Equipes} & \textbf{Seed} & \textbf{Uso} \\
+\hline
+pequena\_10 & 10 & 1 & 42 & Testes rápidos \\
+pequena\_20 & 20 & 2 & 123 & Validação \\
+media\_50 & 50 & 3 & 456 & Experimentos \\
+media\_100 & 100 & 5 & 789 & Experimentos \\
+grande\_200 & 200 & 8 & 1000 & Benchmarks \\
+grande\_500 & 500 & 15 & 2000 & Stress test \\
+\hline
+\end{tabular}
+\caption{Conjunto de instâncias geradas para testes do BRKGA.}
+\end{table}
+
+\subsubsection{Análise de Conformidade Legal (PARTE 4)}
+
+Foi verificada a conformidade das equipes com os requisitos mínimos da \textbf{Portaria GM/MS nº 3.005/2024}. Esta análise é relevante pois identifica gargalos operacionais que podem impactar a qualidade do atendimento.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Requisito} & \textbf{EMAD I} & \textbf{EMAD II} & \textbf{EMAP} & \textbf{EMAP-R} \\
+\hline
+Médico & $\geq$40h & $\geq$20h & -- & -- \\
+Enfermeiro & $\geq$60h & $\geq$30h & -- & $\geq$30h \\
+Téc. Enfermagem & $\geq$120h & $\geq$120h & -- & -- \\
+Fisio/AS & $\geq$30h & $\geq$30h & -- & -- \\
+Profissionais NS & -- & -- & 3+ categ. & 3+ categ. \\
+CHS Total & -- & -- & $\geq$90h & $\geq$60h \\
+\hline
+\end{tabular}
+\caption{Requisitos de composição (Portaria 3.005/2024).}
+\end{table}
+
+\textbf{Metodologia de verificação:} Para cada equipe, foram agregadas as CHS por categoria profissional e comparadas com os requisitos mínimos. Profissionais com CHS $<$ 20h foram descartados (Art. 547, §1º).
+
+\textbf{Resultados da verificação -- Brasil:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Tipo} & \textbf{Total} & \textbf{Conformes} & \textbf{Não-Conformes} & \textbf{Taxa} \\
+\hline
+EMAD I & 1.093 & 706 & 387 & 64,6\% \\
+EMAD II & 460 & 403 & 57 & 87,6\% \\
+EMAP & 929 & 800 & 129 & 86,1\% \\
+EMAP-R & 182 & 134 & 48 & 73,6\% \\
+\hline
+\textbf{TOTAL} & \textbf{2.664} & \textbf{2.043} & \textbf{621} & \textbf{76,7\%} \\
+\hline
+\end{tabular}
+\caption{Conformidade legal por tipo de equipe -- Brasil.}
+\end{table}
+
+\textbf{Resultados -- Estado de São Paulo:}
+\begin{itemize}[noitemsep]
+    \item EMAD I: 251 equipes, 150 conformes (\textbf{59,8\%})
+    \item EMAD II: 26 equipes, 20 conformes (\textbf{76,9\%})
+    \item EMAP: 124 equipes, 113 conformes (\textbf{91,1\%})
+    \item EMAP-R: 11 equipes, 9 conformes (\textbf{81,8\%})
+    \item \textbf{TOTAL SP: 412 equipes, 292 conformes (70,9\%)}
+\end{itemize}
+
+\textbf{Análise dos Gargalos -- EMAD I (principal não-conformidade):}
+\begin{itemize}[noitemsep]
+    \item Enfermeiro $<$ 60h: 287 ocorrências (74,2\% das não-conformidades)
+    \item Médico $<$ 40h: 68 ocorrências (17,6\%)
+    \item Fisio/AS $<$ 30h: 32 ocorrências (8,2\%)
+\end{itemize}
+
+\textbf{Interpretação:} O requisito de enfermeiro para EMAD I foi aumentado de 40h (Portaria 825/2016) para 60h (Portaria 3.005/2024). Muitas equipes possuem exatamente 40h (1 profissional de 40h), configuração que era conforme pela legislação anterior. Este é o principal fator de não-conformidade identificado.
+
+\textbf{Visualizações por Estado:} Foram geradas visualizações detalhadas para cada um dos 27 estados, incluindo gráficos de distribuição de equipes por município e conformidade legal (barras empilhadas verde/vermelho).
+
+\subsection{Produtos Desenvolvidos}
+
+\begin{enumerate}
+    \item \textbf{Scripts Python (11 arquivos):} Pipeline completo de ETL e análise de dados, organizados em 4 partes (PARTE1 a PARTE4), cada uma com funcionalidade específica
+    
+    \item \textbf{Mapas interativos (3 arquivos HTML):}
+    \begin{itemize}[noitemsep]
+        \item \texttt{mapa\_Equipes\_Atencao\_Domiciliar\_SP.html}: Mapa com MarkerCluster das equipes em SP
+        \item \texttt{mapa\_calor\_chs\_brasil.html}: Heatmap da capacidade no Brasil
+        \item \texttt{habilidades\_sunburst.html}: Gráfico hierárquico de composição profissional
+    \end{itemize}
+    
+    \item \textbf{Visualizações estáticas (15+ arquivos PNG):}
+    \begin{itemize}[noitemsep]
+        \item Gráficos de barras empilhadas (distribuição por estado)
+        \item Gráficos de pizza/donut (composição nacional)
+        \item Histogramas (distribuição de $Q_k$)
+        \item Visualizações de conformidade por estado (27 arquivos)
+    \end{itemize}
+    
+    \item \textbf{Instâncias para BRKGA (6 conjuntos):} Formato JSON com equipes, pacientes e matriz de distâncias, variando de 10 a 500 pacientes
+    
+    \item \textbf{Datasets processados (8 arquivos CSV):} Dados limpos e agregados para análises futuras
+    
+    \item \textbf{Documentação técnica:} README.md com descrição detalhada de cada etapa, incluindo fluxo de processamento linha-por-linha
+\end{enumerate}
+
+\subsection{Dificuldades Encontradas e Soluções}
+
+Durante o desenvolvimento, foram enfrentados alguns desafios técnicos:
+
+\begin{enumerate}
+    \item \textbf{Coordenadas geográficas ausentes:} Aproximadamente 8\% dos estabelecimentos não possuem coordenadas válidas no CNES. \textit{Solução:} Geocodificação complementar usando APIs do Google Maps e OpenStreetMap.
+    
+    \item \textbf{Inconsistências nos códigos CBO:} Alguns profissionais possuem códigos CBO incompletos ou incorretos. \textit{Solução:} Criação de dicionários extensivos para categorização por prefixos.
+    
+    \item \textbf{Volume de dados:} As bases completas do CNES possuem milhões de registros. \textit{Solução:} Processamento em chunks e uso eficiente de memória com \texttt{usecols}.
+    
+    \item \textbf{Encoding:} Os arquivos CSV utilizam encoding \texttt{latin-1} com caracteres especiais. \textit{Solução:} Especificação explícita de encoding na leitura.
+\end{enumerate}
+
+\subsection{Principais Conclusões}
+
+\begin{enumerate}
+    \item \textbf{Cobertura insuficiente:} Apenas 21,9\% dos municípios brasileiros possuem equipes de Atenção Domiciliar, indicando amplo espaço para expansão do Programa Melhor em Casa
+    
+    \item \textbf{Heterogeneidade regional:} Há significativa disparidade na distribuição de equipes entre regiões, com concentração no Sul e Sudeste. O Nordeste apresenta a maior taxa de cobertura municipal (31,4\%), possivelmente devido a políticas específicas de expansão
+    
+    \item \textbf{Gargalos de conformidade:} A atualização da legislação (Portaria 3.005/2024) criou desafios de adequação, especialmente quanto à carga horária de enfermeiros em EMAD I. Taxa de conformidade nacional: 76,7\%
+    
+    \item \textbf{Viabilidade da modelagem:} A caracterização completa dos parâmetros $Q_k$ (capacidade) e $S_k$ (habilidades) permite a modelagem precisa do problema HHC-RSP com dados reais brasileiros
+    
+    \item \textbf{Contribuição para políticas públicas:} A análise de conformidade legal pode auxiliar gestores do SUS na identificação de equipes que necessitam de adequação
+\end{enumerate}
+
+\subsection{Cronograma Executado}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|c|p{9cm}|}
+\hline
+\textbf{Período} & \textbf{Atividades} \\
+\hline
+Out-Nov/2025 & Revisão bibliográfica sobre VRP, HHC-RSP e BRKGA \\
+\hline
+Nov-Dez/2025 & Estudo da legislação (Portarias 825/2016, 3.005/2024) \\
+\hline
+Dez/2025 & Obtenção e tratamento das bases CNES/DATASUS \\
+\hline
+Dez/25-Jan/26 & Desenvolvimento dos scripts PARTE 1 a PARTE 4 \\
+\hline
+Jan/2026 & Consolidação dos resultados e redação do relatório \\
+\hline
+\end{tabular}
+\caption{Cronograma de atividades realizadas no período.}
+\end{table}
+
+\newpage
+
+%==============================================================================
+% ITEM 3: PLANO DE ATIVIDADES PARA O PRÓXIMO PERÍODO (até 2 páginas)
+%==============================================================================
+\section{Plano de Atividades para o Próximo Período}
+
+O próximo período (fevereiro a setembro de 2026) será dedicado aos \textbf{Objetivos 3 a 6} da proposta, focando na implementação e avaliação dos métodos de otimização.
+
+\subsection{Cronograma Previsto}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Atividade} & \textbf{Fev} & \textbf{Mar} & \textbf{Abr} & \textbf{Mai} & \textbf{Jun} & \textbf{Jul} & \textbf{Ago} & \textbf{Set} \\
+\hline
+Objetivo 3 & X & X & X & X & & & & \\
+Objetivo 4 & X & X & X & X & X & & & \\
+Objetivo 5 & & & X & X & X & X & & \\
+Objetivo 6 & & & X & X & X & X & X & \\
+Objetivo 7 & & & & & X & X & X & X \\
+\hline
+\end{tabular}
+\caption{Cronograma de atividades previstas.}
+\end{table}
+
+\subsection{Detalhamento das Atividades}
+
+\textbf{Objetivo 3 -- Implementação do Modelo (Fev-Mai/2026):}
+\begin{itemize}[noitemsep]
+    \item Estudar em detalhes o modelo de Mankowska et al. (2014)
+    \item Implementar formulação matemática no solver Gurobi (Python)
+    \item Validar implementação com instâncias pequenas
+\end{itemize}
+
+\textbf{Objetivo 4 -- Testes com Instâncias (Fev-Jun/2026):}
+\begin{itemize}[noitemsep]
+    \item Utilizar instâncias benchmark de Kummer et al. (2024)
+    \item Testar instâncias geradas neste período (PARTE 3)
+    \item Comparar soluções do modelo exato com resultados da literatura
+\end{itemize}
+
+\textbf{Objetivo 5 -- Heurística Construtiva (Abr-Jul/2026):}
+\begin{itemize}[noitemsep]
+    \item Desenvolver heurística gulosa para construção de rotas iniciais
+    \item Implementar regras de priorização baseadas em urgência e proximidade
+    \item Integrar como \textit{warm-start} para o solver Gurobi
+\end{itemize}
+
+\textbf{Objetivo 6 -- BRKGA e Melhorias (Abr-Ago/2026):}
+\begin{itemize}[noitemsep]
+    \item Estudar implementação do BRKGA de Kummer et al. (2024)
+    \item Propor melhorias no decodificador ou operadores genéticos
+    \item Comparar desempenho com modelo exato em instâncias maiores
+\end{itemize}
+
+\textbf{Objetivo 7 -- Documentação e Relatório (Jun-Set/2026):}
+\begin{itemize}[noitemsep]
+    \item Redigir relatório final consolidando resultados
+    \item Preparar artigo para submissão em conferência (SBPO ou SIMPEP)
+\end{itemize}
+
+\subsection{Resultados Esperados}
+
+\begin{enumerate}
+    \item Solver funcional para HHC-RSP integrado ao Gurobi
+    \item Heurística construtiva com bom desempenho em instâncias reais
+    \item Análise comparativa: modelo exato vs. BRKGA vs. heurística
+    \item Artigo submetido para conferência nacional
+    \item Quantificação de ganhos potenciais com otimização de rotas
+\end{enumerate}
+
+\newpage
+
+%==============================================================================
+% ITEM 5: LISTA DE PUBLICAÇÕES (fora do limite de 17 páginas)
+%==============================================================================
+\section*{Lista de Publicações}
+
+\textbf{Artigos em preparação:}
+\begin{enumerate}
+    \item ``Análise Exploratória do Programa Melhor em Casa: Caracterização das Equipes de Atenção Domiciliar no Brasil'' -- Suaiden, F.A.; Santos, M.O. (em redação)
+\end{enumerate}
+
+\textbf{Apresentações planejadas:}
+\begin{enumerate}
+    \item XXVII SIMPEP (Nov/2026) -- Submissão planejada
+\end{enumerate}
+
+\textbf{Participação em eventos:}
+\begin{itemize}
+    \item Workshop ICMC-USP (Mar/2025) -- Apresentação de pôster
+\end{itemize}
+
+%==============================================================================
+% REFERÊNCIAS (fora do limite de 17 páginas)
+%==============================================================================
+\section*{Referências Bibliográficas}
+
+\begin{thebibliography}{99}
+
+\bibitem{dantzig1959}
+DANTZIG, G.B.; RAMSER, J.H. The truck dispatching problem. \textit{Management Science}, v. 6, n. 1, p. 80-91, 1959.
+
+\bibitem{goncalves2011}
+GONÇALVES, J.F.; RESENDE, M.G.C. Biased random-key genetic algorithms for combinatorial optimization. \textit{Journal of Heuristics}, v. 17, n. 5, p. 487-525, 2011.
+
+\bibitem{mankowska2014}
+MANKOWSKA, D.S.; MEISEL, F.; BIERWIRTH, C. The home health care routing and scheduling problem with interdependent services. \textit{Health Care Management Science}, v. 17, n. 1, p. 15-30, 2014.
+
+\bibitem{fikar2017}
+FIKAR, C.; HIRSCH, P. Home health care routing and scheduling: A review. \textit{Computers \& Operations Research}, v. 77, p. 86-95, 2017.
+
+\bibitem{kummer2024}
+KUMMER, A.; SANTOS, M.O.; ARENALES, M.N. A biased random-key genetic algorithm for the home health care routing and scheduling problem. \textit{Computers \& Operations Research}, v. 162, p. 106483, 2024.
+
+\bibitem{portaria3005}
+BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 3.005/2024}. Altera requisitos de composição das equipes de Atenção Domiciliar. Brasília, 2024.
+
+\bibitem{cnes}
+BRASIL. Ministério da Saúde. \textit{CNES -- Cadastro Nacional de Estabelecimentos de Saúde}. Disponível em: https://cnes.datasus.gov.br/. Acesso em: ago. 2025.
+
+\end{thebibliography}
+
+%==============================================================================
+% DECLARAÇÕES E ASSINATURAS
+%==============================================================================
+\newpage
+\section*{Declarações}
+
+O bolsista declara que as informações contidas neste relatório são verdadeiras e foram obtidas a partir das atividades desenvolvidas durante o período coberto. O projeto está sendo desenvolvido de acordo com o plano de trabalho aprovado.
+
+\vspace{2cm}
+
+\noindent\textbf{Local e Data:} São Paulo, 28 de janeiro de 2026
+
+\vspace{2cm}
+
+\noindent\textbf{Assinatura do Bolsista:}
+
+\vspace{1cm}
+\noindent\rule{8cm}{0.4pt}
+
+\noindent\textbf{Fernando Alee Suaiden}
+
+\vspace{2cm}
+
+\noindent\textbf{De acordo. Assinatura da Orientadora:}
+
+\vspace{1cm}
+\noindent\rule{8cm}{0.4pt}
+
+\noindent\textbf{Profa. Dra. Maristela Oliveira dos Santos}
+
+\end{document}
