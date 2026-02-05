@@ -201,7 +201,14 @@ A mudança de 40h para 60h no requisito de enfermeiros para EMAD I foi um achado
 
 \subsection{Análise Exploratória de Dados -- Programa Melhor em Casa (Objetivo 2)}
 
-O principal resultado deste período foi uma Análise Exploratória de Dados (AED) completa das bases públicas do governo, permitindo caracterizar os parâmetros-chave para modelagem do HHC-RSP. A análise foi estruturada em quatro partes, cada uma com scripts Python específicos e visualizações.
+O principal resultado deste período foi uma Análise Exploratória de Dados (AED) completa das bases públicas do governo, permitindo caracterizar os parâmetros-chave para modelagem do HHC-RSP. A análise foi estruturada em quatro partes, correspondendo à organização dos scripts no repositório:
+
+\begin{itemize}[noitemsep]
+    \item PARTE 1: Mapeamento e identificação das equipes de Atenção Domiciliar
+    \item PARTE 2: Quantificação da capacidade e habilidades das equipes
+    \item PARTE 3: Geração de instâncias sintéticas para otimização
+    \item PARTE 4: Análise de conformidade legal (Portaria 3.005/2024)
+\end{itemize}
 
 \subsubsection{Fontes de Dados Utilizadas}
 
@@ -295,14 +302,13 @@ Foi desenvolvido um mapa interativo utilizando a biblioteca Folium (Leaflet.js) 
 
 \begin{figure}[H]
 \centering
-% Substituir pelo arquivo de imagem:
-% \includegraphics[width=0.85\textwidth]{mapa_screenshot.png}
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}\textbf{Mapa Interativo SP}\\Inserir: screenshot do mapa HTML\vspace{2.5cm}}}
+% Onde 'mapa_screenshot' é o nome exato do arquivo que você subiu
+\includegraphics[width=0.85\textwidth]{mapaSP.png} 
 \caption{Mapa interativo das equipes de Atenção Domiciliar no Estado de São Paulo.}
 \label{fig:mapa}
 \end{figure}
 
-\subsubsection{Quantificação da Capacidade $Q_k$ (PARTE 2)}
+\subsubsection{Quantificação da Capacidade \texorpdfstring{$Q_k$}{Qk} (PARTE 2)}
 
 A capacidade de cada equipe $k$ foi quantificada através da soma das Cargas Horárias Semanais (CHS) de todos os seus profissionais. Para cada profissional $p$ pertencente à equipe $k$, define-se:
 
@@ -351,7 +357,7 @@ Foi gerado um mapa de calor (heatmap) do Brasil utilizando a biblioteca Folium c
 \label{fig:cobertura}
 \end{figure}
 
-\subsubsection{Caracterização das Habilidades $S_k$ (PARTE 2)}
+\subsubsection{Caracterização das Habilidades \texorpdfstring{$S_k$}{Sk} (PARTE 2)}
 
 O conjunto de habilidades de cada equipe $k$ foi caracterizado pela composição profissional, utilizando a Classificação Brasileira de Ocupações (CBO) para mapear códigos em categorias. Formalmente, define-se:
 
@@ -545,7 +551,7 @@ Todo o código-fonte está disponível publicamente no repositório GitHub: \url
     \item Documentação técnica: README.md com descrição detalhada de cada etapa, incluindo fluxo de processamento linha-por-linha
 \end{enumerate}
 
-\subsection{Mapeamento Dados $\rightarrow$ Código}
+\subsection{Mapeamento Dados \texorpdfstring{$\rightarrow$}{->} Código}
 
 A tabela a seguir apresenta a rastreabilidade entre os dados apresentados neste relatório e os scripts que os geraram:
 
