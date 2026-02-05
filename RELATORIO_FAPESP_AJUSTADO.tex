@@ -68,7 +68,7 @@
     Universidade de São Paulo (USP) -- São Carlos \\
     
     \vspace{2cm}
-    Janeiro de 2026
+    Março de 2026
 \end{center}
 
 \newpage
@@ -78,7 +78,7 @@
 %==============================================================================
 \begin{abstract}
 \noindent
-Este relatório apresenta os resultados do primeiro período de desenvolvimento (outubro/2025 a janeiro/2026) do projeto de Iniciação Científica focado na otimização de rotas e agendamentos para equipes de Atenção Domiciliar do Programa Melhor em Casa. Foi realizada uma Análise Exploratória de Dados completa utilizando bases públicas do CNES/DATASUS, CBO e IBGE, permitindo caracterizar os parâmetros fundamentais para modelagem do problema HHC-RSP (Home Health Care Routing and Scheduling Problem). Foram identificadas 2.664 equipes ativas em 1.218 municípios brasileiros, com quantificação da capacidade ($Q_k$) e habilidades ($S_k$) de cada equipe. A análise de conformidade legal revelou que 76,7\% das equipes atendem aos requisitos da Portaria GM/MS nº 3.005/2024. Foram desenvolvidos scripts Python para processamento de dados, mapas interativos e geração de instâncias sintéticas para testes do algoritmo BRKGA.
+Este relatório apresenta os resultados do primeiro período de desenvolvimento (outubro/2025 a março/2026) do projeto de Iniciação Científica focado na otimização de rotas e agendamentos para equipes de Atenção Domiciliar do Programa Melhor em Casa. Foi realizada uma Análise Exploratória de Dados completa utilizando bases públicas do CNES/DATASUS, CBO e IBGE, permitindo caracterizar os parâmetros fundamentais para modelagem do problema HHC-RSP (Home Health Care Routing and Scheduling Problem). Foram identificadas 2.664 equipes ativas em 1.218 municípios brasileiros, com quantificação da capacidade ($Q_k$) e habilidades ($S_k$) de cada equipe. A análise de conformidade legal revelou que 76,7\% das equipes atendem aos requisitos da Portaria GM/MS nº 3.005/2024. Foram desenvolvidos scripts Python para processamento de dados, mapas interativos e geração de instâncias sintéticas para testes do algoritmo BRKGA.
 
 \vspace{0.5cm}
 \noindent
@@ -149,7 +149,7 @@ O projeto utiliza dados públicos do CNES/DATASUS (Cadastro Nacional de Estabele
 %==============================================================================
 \section{Realizações no Período}
 
-Este relatório cobre o primeiro período de desenvolvimento (outubro/2025 a janeiro/2026), correspondente aos Objetivos 1 e 2 da proposta: revisão bibliográfica e compreensão do problema no contexto brasileiro.
+Este relatório cobre o primeiro período de desenvolvimento (outubro/2025 a março/2026), correspondente aos Objetivos 1 e 2 da proposta: revisão bibliográfica e compreensão do problema no contexto brasileiro.
 
 \subsection{Revisão Bibliográfica (Objetivo 1)}
 
@@ -236,7 +236,7 @@ O CNES (Cadastro Nacional de Estabelecimentos de Saúde) é o sistema oficial do
 O processamento seguiu um pipeline estruturado em três etapas:
 
 \begin{enumerate}[noitemsep]
-    \item Extração e Limpeza: Leitura dos arquivos CSV com encoding \texttt{latin-1}, filtragem de equipes AD (códigos 22, 23, 46, 77) e tratamento de valores ausentes
+    \item Extração e Limpeza: Leitura dos arquivos CSV, filtragem de equipes AD (códigos 22, 23, 46, 77) e tratamento de valores ausentes
     \item Integração: Operações de \textit{merge} entre múltiplas tabelas para construir visão consolidada
     \item Agregação: Cálculo de métricas por equipe ($Q_k$, $S_k$) e verificação de conformidade
 \end{enumerate}
@@ -336,7 +336,7 @@ Desvio Padrão & 112h & Alta variabilidade \\
 \caption{Estatísticas descritivas da capacidade $Q_k$.}
 \end{table}
 
-A distribuição apresenta assimetria positiva (média > mediana), indicando a existência de equipes com capacidades muito acima da média. A amplitude (40h a 720h) reflete a heterogeneidade das equipes.
+A amplitude (40h a 720h) reflete a heterogeneidade das equipes em termos de composição profissional.
 
 Os cinco estados com maior capacidade total são: São Paulo (108.540h), Minas Gerais (89.720h), Rio Grande do Sul (62.180h), Paraná (51.600h) e Bahia (48.920h).
 
@@ -593,13 +593,11 @@ Conformidade SP & 70,9\% & \texttt{analise\_nacional\_brasil\_v2.py : 610-620} \
 Durante o desenvolvimento, foram enfrentados alguns desafios técnicos:
 
 \begin{enumerate}
-    \item Coordenadas geográficas ausentes: Aproximadamente 8\% dos estabelecimentos não possuem coordenadas válidas no CNES. Solução: Geocodificação complementar usando APIs do Google Maps e OpenStreetMap.
+    \item Coordenadas geográficas ausentes: Aproximadamente 8\% dos estabelecimentos não possuem coordenadas válidas no CNES. Solução: Exclusão desses registros nas análises geoespaciais (mapas e heatmaps), mantendo-os nas análises agregadas.
     
-    \item Inconsistências nos códigos CBO: Alguns profissionais possuem códigos CBO incompletos ou incorretos. Solução: Criação de dicionários extensivos para categorização por prefixos.
+    \item Volume de dados: As bases completas do CNES possuem milhões de registros. Solução: Processamento seletivo com \texttt{usecols} para carregar apenas colunas necessárias.
     
-    \item Volume de dados: As bases completas do CNES possuem milhões de registros. Solução: Processamento em chunks e uso eficiente de memória com \texttt{usecols}.
-    
-    \item Encoding: Os arquivos CSV utilizam encoding \texttt{latin-1} com caracteres especiais. Solução: Especificação explícita de encoding na leitura.
+    \item Categorização profissional: O CBO possui milhares de códigos diferentes. Solução: Mapeamento por prefixos de 4 dígitos para agrupar profissões em categorias relevantes (ex: 2235 $\rightarrow$ Enfermeiro).
 \end{enumerate}
 
 \subsection{Principais Conclusões}
