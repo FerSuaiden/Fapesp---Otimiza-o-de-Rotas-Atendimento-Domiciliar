@@ -14,7 +14,7 @@
 - [Metodologia](#metodologia)
   - [PARTE 1: Identificação e Mapeamento das Equipes](#parte-1-identificação-e-mapeamento-das-equipes)
   - [PARTE 2: Quantificação de Capacidade e Habilidades](#parte-2-quantificação-de-capacidade-q_k-e-habilidades-s_k)
-  - [PARTE 3: Análise de Demanda (Censo 2022)](#parte-3-análise-de-demanda-censo-2022)
+  - [PARTE 3: Geração de Instâncias para Otimização](#parte-3-geração-de-instâncias-para-otimização)
   - [PARTE 4: Análise de Cobertura e Conformidade Legal](#parte-4-análise-de-cobertura-e-conformidade-legal)
 - [Principais Descobertas](#principais-descobertas)
 - [Visualizações Geradas](#visualizações-geradas)
@@ -526,8 +526,8 @@ pip install pandas numpy matplotlib folium plotly geopandas requests
 
 ```bash
 # Clone o repositório
-git clone https://github.com/FernandoAle);Suaiden/IC.git
-cd IC
+git clone https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar.git
+cd Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar
 
 # Execute os scripts na ordem
 cd "Outputs&Codigo/PARTE1"
