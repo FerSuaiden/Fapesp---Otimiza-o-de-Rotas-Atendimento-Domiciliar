@@ -269,7 +269,7 @@ EMAP-R (código 77) & 182 & 6,8\% & Apoio reabilitação \\
 \caption{Distribuição nacional das equipes por tipo.}
 \end{table}
 
-A distribuição por estado mostra que os cinco estados com maior número de equipes são: São Paulo (412), Minas Gerais (365), Rio Grande do Sul (234), Bahia (214) e Paraná (200). A concentração no Sul e Sudeste reflete o maior desenvolvimento da infraestrutura de saúde nessas regiões.
+A distribuição por estado mostra que os cinco estados com maior número de equipes são: São Paulo (412), Minas Gerais (317), Bahia (282), Ceará (181) e Pará (154). A concentração no Sudeste e Nordeste reflete tanto o maior desenvolvimento da infraestrutura de saúde quanto políticas de expansão do Programa Melhor em Casa.
 
 \begin{table}[H]
 \centering
@@ -279,10 +279,10 @@ A distribuição por estado mostra que os cinco estados com maior número de equ
 \textbf{\#} & \textbf{Estado} & \textbf{EMAD I} & \textbf{EMAD II} & \textbf{EMAP} & \textbf{EMAP-R} & \textbf{Total} \\
 \hline
 1º & São Paulo & 251 & 26 & 124 & 11 & 412 \\
-2º & Minas Gerais & 145 & 78 & 118 & 24 & 365 \\
-3º & Rio Grande do Sul & 89 & 45 & 82 & 18 & 234 \\
-4º & Bahia & 65 & 55 & 72 & 22 & 214 \\
-5º & Paraná & 78 & 42 & 65 & 15 & 200 \\
+2º & Minas Gerais & 123 & 51 & 101 & 42 & 317 \\
+3º & Bahia & 85 & 70 & 110 & 17 & 282 \\
+4º & Ceará & 73 & 35 & 68 & 5 & 181 \\
+5º & Pará & 57 & 26 & 68 & 3 & 154 \\
 \hline
 \end{tabular}
 \caption{Top 5 estados por número de equipes de Atenção Domiciliar.}
@@ -292,10 +292,10 @@ A análise de cobertura municipal revelou que apenas 21,9\% dos municípios bras
 
 \begin{itemize}[noitemsep]
     \item Nordeste: 31,4\% (maior cobertura municipal)
-    \item Centro-Oeste: 21,0\%
-    \item Sudeste: 17,8\%
-    \item Sul: 16,4\%
-    \item Norte: 14,0\% (menor cobertura)
+    \item Norte: 22,0\%
+    \item Sudeste: 21,5\%
+    \item Centro-Oeste: 19,1\%
+    \item Sul: 9,0\% (menor cobertura)
 \end{itemize}
 
 Foi desenvolvido um mapa interativo utilizando a biblioteca Folium (Leaflet.js) para visualização geográfica das equipes no Estado de São Paulo. O mapa utiliza \textit{MarkerCluster} para agrupamento dinâmico de marcadores e categorização por cores (Roxo: EMAD+EMAP, Azul: apenas EMAD, Verde: apenas EMAP). Cada marcador possui popup informativo com nome do estabelecimento, tipo de equipe, endereço e código CNES.
@@ -332,19 +332,19 @@ As estatísticas descritivas de $Q_k$ são apresentadas na Tabela a seguir:
 \hline
 \textbf{Estatística} & \textbf{Valor} & \textbf{Interpretação} \\
 \hline
-Mínimo & 40h/semana & Equipes com composição mínima \\
-Máximo & 720h/semana & Equipes com muitos profissionais \\
-Mediana & 250h/semana & Valor central típico \\
-Média & 268h/semana & Ligeiramente assimétrica \\
-Desvio Padrão & 112h & Alta variabilidade \\
+Mínimo & 0h/semana & Equipes sem CHS registrada \\
+Máximo & 3.732h/semana & Equipes com muitos profissionais \\
+Mediana & 230h/semana & Valor central típico \\
+Média & 224,7h/semana & Distribuição aproximadamente simétrica \\
+Desvio Padrão & 169,8h & Alta variabilidade \\
 \hline
 \end{tabular}
 \caption{Estatísticas descritivas da capacidade $Q_k$.}
 \end{table}
 
-A amplitude (40h a 720h) reflete a heterogeneidade das equipes em termos de composição profissional.
+A amplitude (0h a 3.732h) reflete a heterogeneidade das equipes em termos de composição profissional.
 
-Os cinco estados com maior capacidade total são: São Paulo (108.540h), Minas Gerais (89.720h), Rio Grande do Sul (62.180h), Paraná (51.600h) e Bahia (48.920h).
+Os cinco estados com maior capacidade total são: São Paulo (100.929h), Minas Gerais (67.752h), Bahia (57.125h), Rio de Janeiro (51.390h) e Ceará (36.164h).
 
 Foi gerado um mapa de calor (heatmap) do Brasil utilizando a biblioteca Folium com camada HeatMap, mostrando a intensidade da capacidade de atendimento domiciliar por localização geográfica. As áreas metropolitanas de São Paulo, Rio de Janeiro e Belo Horizonte apresentam maior concentração de capacidade.
 
@@ -365,7 +365,7 @@ O conjunto de habilidades de cada equipe $k$ foi caracterizado pela composição
 S_k = \{c \in \mathcal{C} : \exists \, p \in \text{equipe}_k \text{ tal que } \text{categoria}(p) = c\}
 \end{equation}
 
-Onde $\mathcal{C}$ representa o conjunto de todas as categorias profissionais (CBO), $p$ representa um profissional e $S_k$ é o subconjunto de categorias presentes na equipe $k$. A análise identificou 26.374 profissionais vinculados às equipes AD:
+Onde $\mathcal{C}$ representa o conjunto de todas as categorias profissionais (CBO), $p$ representa um profissional e $S_k$ é o subconjunto de categorias presentes na equipe $k$. A análise identificou 17.776 profissionais únicos vinculados às equipes AD:
 
 \begin{table}[H]
 \centering
@@ -373,18 +373,18 @@ Onde $\mathcal{C}$ representa o conjunto de todas as categorias profissionais (C
 \hline
 \textbf{Categoria Profissional} & \textbf{Quantidade} & \textbf{\% Total} & \textbf{Prefixo CBO} \\
 \hline
-Técnico de Enfermagem & 8.234 & 31,2\% & 3222 \\
-Enfermeiro & 3.156 & 12,0\% & 2235 \\
-Médico & 2.892 & 11,0\% & 2251/2252/2253 \\
-Fisioterapeuta & 2.478 & 9,4\% & 2236 \\
-Assistente Social & 1.856 & 7,0\% & 2516 \\
-Fonoaudiólogo & 1.234 & 4,7\% & 2238 \\
-Nutricionista & 1.156 & 4,4\% & 2237 \\
-Psicólogo & 1.089 & 4,1\% & 2515 \\
-Terapeuta Ocupacional & 856 & 3,2\% & 2239 \\
-Outras Profissões & 3.423 & 13,0\% & Diversos \\
+Técnico de Enfermagem & 5.938 & 33,4\% & 3222 \\
+Enfermeiro & 2.888 & 16,2\% & 2235 \\
+Fisioterapeuta & 2.638 & 14,8\% & 2236 \\
+Médico & 2.197 & 12,4\% & 2251/2252/2253 \\
+Nutricionista & 1.052 & 5,9\% & 2237 \\
+Assistente Social & 959 & 5,4\% & 2516 \\
+Psicólogo & 844 & 4,7\% & 2515 \\
+Outras Profissões & 640 & 3,6\% & Diversos \\
+Fonoaudiólogo & 529 & 3,0\% & 2238 \\
+Terapeuta Ocupacional & 91 & 0,5\% & 2239 \\
 \hline
-\textbf{TOTAL} & \textbf{26.374} & \textbf{100\%} & -- \\
+\textbf{TOTAL} & \textbf{17.776} & \textbf{100\%} & -- \\
 \hline
 \end{tabular}
 \caption{Composição profissional das equipes de Atenção Domiciliar.}
@@ -502,11 +502,12 @@ Os resultados para o Estado de São Paulo são:
     \item Total SP: 412 equipes, 292 conformes (70,9\%)
 \end{itemize}
 
-A análise dos gargalos para EMAD I, que apresenta a principal não-conformidade, revelou:
+A análise dos gargalos para EMAD I, que apresenta a principal não-conformidade (387 equipes), revelou os seguintes déficits (uma equipe pode apresentar mais de um):
 \begin{itemize}[noitemsep]
-    \item Enfermeiro $<$ 60h: 287 ocorrências (74,2\% das não-conformidades)
-    \item Médico $<$ 40h: 68 ocorrências (17,6\%)
-    \item Fisio/AS $<$ 30h: 32 ocorrências (8,2\%)
+    \item Enfermeiro $<$ 60h: 298 equipes (77,0\% das não-conformes)
+    \item Téc. Enfermagem $<$ 120h: 84 equipes (21,7\%)
+    \item Fisio/AS $<$ 30h: 33 equipes (8,5\%)
+    \item Médico $<$ 40h: 20 equipes (5,2\%)
 \end{itemize}
 
 O requisito de enfermeiro para EMAD I foi aumentado de 40h (Portaria 825/2016) para 60h (Portaria 3.005/2024). Muitas equipes possuem exatamente 40h (1 profissional de 40h), configuração que era conforme pela legislação anterior. Este é o principal fator de não-conformidade identificado.
@@ -527,7 +528,7 @@ Foram geradas visualizações detalhadas para cada um dos 27 estados, incluindo 
 Todo o código-fonte está disponível publicamente no repositório GitHub: \url{https://github.com/fersuaiden/IC}, incluindo scripts de processamento, dados processados e documentação técnica detalhada.
 
 \begin{enumerate}
-    \item Scripts Python (11 arquivos): Pipeline completo de ETL e análise de dados, organizados em 4 partes (PARTE1 a PARTE4), cada uma com funcionalidade específica
+    \item Scripts Python (13 arquivos): Pipeline completo de ETL e análise de dados, organizados em 4 partes (PARTE1 a PARTE4), cada uma com funcionalidade específica
     
     \item Mapas interativos (3 arquivos HTML):
     \begin{itemize}[noitemsep]
@@ -536,11 +537,12 @@ Todo o código-fonte está disponível publicamente no repositório GitHub: \url
         \item \texttt{habilidades\_sunburst.html}: Gráfico hierárquico de composição profissional
     \end{itemize}
     
-    \item Visualizações estáticas (15+ arquivos PNG):
+    \item Visualizações estáticas (37 arquivos PNG):
     \begin{itemize}[noitemsep]
         \item Gráficos de barras empilhadas (distribuição por estado)
         \item Gráficos de pizza/donut (composição nacional)
         \item Histogramas (distribuição de $Q_k$)
+        \item Análises de cobertura, per capita e conformidade (6 gráficos nacionais)
         \item Visualizações de conformidade por estado (27 arquivos)
     \end{itemize}
     
@@ -555,42 +557,40 @@ Todo o código-fonte está disponível publicamente no repositório GitHub: \url
 
 A tabela a seguir apresenta a rastreabilidade entre os dados apresentados neste relatório e os scripts que os geraram:
 
-\begin{longtable}{|p{4cm}|c|p{6cm}|}
+\begin{longtable}{|p{3.5cm}|c|p{4cm}|p{3.5cm}|}
 \hline
-\textbf{Dado/Resultado} & \textbf{Valor} & \textbf{Arquivo : Linha(s)} \\
+\textbf{Dado/Resultado} & \textbf{Valor} & \textbf{Script gerador} & \textbf{Verificação} \\
 \hline
 \endhead
-Total de equipes AD & 2.664 & \texttt{analise\_nacional\_brasil\_v2.py : 204} \\
+Total de equipes AD & 2.664 & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{[5] Conformidade} \\
 \hline
-Municípios com AD & 1.218 & \texttt{analise\_nacional\_brasil\_v2.py : 206} \\
+Municípios com AD & 1.218 & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{[2] Cobertura} \\
 \hline
-Cobertura municipal & 21,9\% & \texttt{analise\_nacional\_brasil\_v2.py : 207} \\
+Cobertura municipal & 21,9\% & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{[2] Cobertura} \\
 \hline
-Taxa conformidade & 76,7\% & \texttt{analise\_nacional\_brasil\_v2.py : 577} \\
+Taxa conformidade & 76,7\% & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{CONFORMIDADE POR TIPO} \\
 \hline
-EMAD I: 1.093 eq. & 41,0\% & \texttt{analise\_nacional\_brasil\_v2.py : 180-185} \\
+Distrib. tipos (Tab. 3) & 1.093/929/460/182 & \texttt{analise\_nacional\_ brasil\_v2.py} & Output + \texttt{conformidade\_legal\_ brasil\_v2.csv} \\
 \hline
-EMAP: 929 eq. & 34,9\% & \texttt{analise\_nacional\_brasil\_v2.py : 180-185} \\
+Top 5 estados (Tab. 4) & 412/317/282/181/154 & \texttt{2-equipes\_por\_ estado.py} & Output: tabela por estado \\
 \hline
-EMAD II: 460 eq. & 17,3\% & \texttt{analise\_nacional\_brasil\_v2.py : 180-185} \\
+Coberturas regionais & 31,4\% a 9,0\% & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{COBERTURA POR REGIÃO} \\
 \hline
-EMAP-R: 182 eq. & 6,8\% & \texttt{analise\_nacional\_brasil\_v2.py : 180-185} \\
+Total profissionais & 17.776 & \texttt{6-sunburst.py} & Output: \texttt{COMPOSIÇÃO PROFISSIONAL} \\
 \hline
-Total profissionais & 26.374 & \texttt{analise\_nacional\_brasil\_v2.py : 320} \\
+Composição prof. (Tab. 8) & 5.938/2.888/... & \texttt{6-sunburst.py} & Output: tabela por categoria \\
 \hline
-Top 5 estados (SP, MG, RS, BA, PR) & 412, 365, 234, 214, 200 & \texttt{analise\_nacional\_brasil\_v2.py : 220-240} \\
+$Q_k$ (mín/máx/med.) & 0h/3.732h/230h & \texttt{4-capacidade.py} & Output: \texttt{ESTATÍSTICAS DE Qk} \\
 \hline
-Cobertura Nordeste & 31,4\% & \texttt{analise\_nacional\_brasil\_v2.py : 250-270} \\
+CHS top 5 estados & 100.929h a 36.164h & \texttt{4-capacidade.py} & Output: \texttt{CHS POR ESTADO} \\
 \hline
-Cobertura Norte & 14,0\% & \texttt{analise\_nacional\_brasil\_v2.py : 250-270} \\
+Gargalo EMAD I & 77,0\% enf. & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{GARGALOS POR TIPO} \\
 \hline
-$Q_k$ (mín/máx/mediana) & 40h/720h/250h & \texttt{analise\_capacidade.py : 85-95} \\
+Conformidade SP & 70,9\% & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{CONFORMIDADE SP} \\
 \hline
-Gargalo EMAD I (enf.) & 74,2\% & \texttt{analise\_nacional\_brasil\_v2.py : 590-600} \\
+Coord. ausentes & $\approx$8\% & \texttt{1-visuazacaoMapa.py} & Output: \texttt{COORDENADAS} \\
 \hline
-Conformidade SP & 70,9\% & \texttt{analise\_nacional\_brasil\_v2.py : 610-620} \\
-\hline
-\caption{Rastreabilidade dados $\rightarrow$ código-fonte.}
+\caption{Rastreabilidade dados $\rightarrow$ código-fonte $\rightarrow$ saída verificável. Todos os dados são verificáveis pelo output (terminal) dos scripts listados.}
 \label{tab:rastreabilidade}
 \end{longtable}
 
@@ -599,7 +599,7 @@ Conformidade SP & 70,9\% & \texttt{analise\_nacional\_brasil\_v2.py : 610-620} \
 Durante o desenvolvimento, foram enfrentados alguns desafios técnicos:
 
 \begin{enumerate}
-    \item Coordenadas geográficas ausentes: Aproximadamente 8\% dos estabelecimentos não possuem coordenadas válidas no CNES. Solução: Exclusão desses registros nas análises geoespaciais (mapas e heatmaps), mantendo-os nas análises agregadas.
+    \item Coordenadas geográficas ausentes: Uma parcela dos estabelecimentos não possui coordenadas válidas no CNES (verificável pelo output de \texttt{1-visuazacaoMapa.py}). Solução: Exclusão desses registros nas análises geoespaciais (mapas e heatmaps), mantendo-os nas análises agregadas.
     
     \item Volume de dados: As bases completas do CNES possuem milhões de registros. Solução: Processamento seletivo com \texttt{usecols} para carregar apenas colunas necessárias.
     
@@ -611,7 +611,7 @@ Durante o desenvolvimento, foram enfrentados alguns desafios técnicos:
 \begin{enumerate}
     \item Cobertura insuficiente: Apenas 21,9\% dos municípios brasileiros possuem equipes de Atenção Domiciliar, indicando amplo espaço para expansão do Programa Melhor em Casa
     
-    \item Heterogeneidade regional: Há significativa disparidade na distribuição de equipes entre regiões, com concentração no Sul e Sudeste. O Nordeste apresenta a maior taxa de cobertura municipal (31,4\%), possivelmente devido a políticas específicas de expansão
+    \item Heterogeneidade regional: Há significativa disparidade na distribuição de equipes entre regiões. O Nordeste apresenta a maior taxa de cobertura municipal (31,4\%), seguido pelo Norte (22,0\%) e Sudeste (21,5\%). O Sul apresenta a menor cobertura (9,0\%), sugerindo que o programa ainda tem espaço significativo para expansão nessa região
     
     \item Gargalos de conformidade: A atualização da legislação (Portaria 3.005/2024) criou desafios de adequação, especialmente quanto à carga horária de enfermeiros em EMAD I. Taxa de conformidade nacional: 76,7\%
     

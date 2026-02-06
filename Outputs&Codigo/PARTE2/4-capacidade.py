@@ -146,6 +146,30 @@ try:
     plt.savefig(nome_grafico_histograma)
     print(f"Gráficos salvos: {nome_grafico_chs_estado}, {nome_grafico_histograma}")
 
+    # === SAÍDA DE VERIFICAÇÃO: Estatísticas de Qk ===
+    Qk_todos = df_dados_plot['Qk_CHS_Equipe']  # Incluindo Qk=0
+    print("\n" + "=" * 70)
+    print("ESTATÍSTICAS DESCRITIVAS DE Qk (CHS total por equipe)")
+    print("=" * 70)
+    print(f"  N (equipes com Qk calculado): {len(Qk_todos):,}")
+    print(f"  Mínimo:         {Qk_todos.min():.0f} h/semana")
+    print(f"  Máximo:         {Qk_todos.max():.0f} h/semana")
+    print(f"  Mediana:        {Qk_todos.median():.0f} h/semana")
+    print(f"  Média:          {Qk_todos.mean():.1f} h/semana")
+    print(f"  Desvio Padrão:  {Qk_todos.std():.1f} h/semana")
+    
+    # === SAÍDA DE VERIFICAÇÃO: CHS total por estado (Top 15) ===
+    print("\n" + "=" * 70)
+    print("CAPACIDADE TOTAL (CHS) POR ESTADO - TOP 15")
+    print("=" * 70)
+    chs_por_estado = df_dados_plot.groupby('Estado_UF')['Qk_CHS_Equipe'].sum().sort_values(ascending=False)
+    print(f"\n{'UF':<5} {'CHS Total (h)':>15}")
+    print("-" * 25)
+    for uf, chs in chs_por_estado.head(15).items():
+        print(f"{uf:<5} {chs:>15,.0f}")
+    print("-" * 25)
+    print(f"{'BRASIL':<5} {chs_por_estado.sum():>15,.0f}")
+
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")
     print("Por favor, verifique se os caminhos e nomes dos arquivos estão corretos.")

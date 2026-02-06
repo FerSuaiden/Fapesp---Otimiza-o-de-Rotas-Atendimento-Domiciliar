@@ -16,12 +16,18 @@ Gerar instâncias de entrada para o modelo de otimização de rotas de Atenção
 
 ### Instâncias Geradas
 
-| Arquivo | Descrição |
-|---------|-----------|
-| `SP_Capital_Pequena.json` | Instância reduzida para testes rápidos |
-| `SP_Capital_Completa.json` | Instância completa de SP Capital |
-| `equipes_sp_capital.csv` | Dados tabulares das equipes |
-| `pacientes_sinteticos.csv` | Pacientes sintéticos para testes |
+| Arquivo | Pacientes | Equipes | Seed | Uso |
+|---------|:---------:|:-------:|:----:|-----|
+| `pequena_10.json` | 10 | 1 | 42 | Debug rápido |
+| `pequena_20.json` | 20 | 2 | 123 | Debug |
+| `media_50.json` | 50 | 3 | 456 | Testes |
+| `media_100.json` | 100 | 5 | 789 | Testes |
+| `grande_200.json` | 200 | 8 | 1000 | Experimentos |
+| `grande_500.json` | 500 | 15 | 2000 | Experimentos |
+
+Cada instância gera 4 arquivos: `.json` (completo), `_equipes.csv`, `_pacientes.csv`, `_matriz.csv`.
+
+O campo **seed** garante reprodutibilidade: rodar o script com a mesma seed gera exatamente os mesmos pacientes sintéticos.
 
 ---
 
@@ -65,4 +71,4 @@ As instâncias seguem o formato requerido pelo modelo BRKGA:
 
 ---
 
-*Última atualização: Janeiro 2025*
+*Última atualização: Fevereiro 2026*

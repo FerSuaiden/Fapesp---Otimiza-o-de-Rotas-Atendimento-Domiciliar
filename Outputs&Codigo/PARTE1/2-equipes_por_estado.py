@@ -109,6 +109,20 @@ try:
     plt.savefig(nome_grafico, bbox_inches='tight')
     print(f"Gráfico salvo: {nome_grafico}")
 
+    # === SAÍDA DE VERIFICAÇÃO: Tabela completa por estado e tipo ===
+    print("\n" + "=" * 70)
+    print("DISTRIBUIÇÃO DE EQUIPES POR ESTADO E TIPO (tbEquipe - sem filtro de profissionais)")
+    print("=" * 70)
+    print(f"\n{'UF':<5} {'EMAD I':>8} {'EMAD II':>8} {'EMAP':>8} {'EMAP-R':>8} {'TOTAL':>8}")
+    print("-" * 50)
+    for uf, row in df_plot_data.iterrows():
+        print(f"{uf:<5} {int(row['EMAD I']):>8} {int(row['EMAD II']):>8} {int(row['EMAP']):>8} {int(row['EMAP-R']):>8} {int(row['Total']):>8}")
+    print("-" * 50)
+    total_row = df_plot_data[['EMAD I', 'EMAD II', 'EMAP', 'EMAP-R', 'Total']].sum()
+    print(f"{'TOTAL':<5} {int(total_row['EMAD I']):>8} {int(total_row['EMAD II']):>8} {int(total_row['EMAP']):>8} {int(total_row['EMAP-R']):>8} {int(total_row['Total']):>8}")
+    print(f"\nNOTA: Este script usa tbEquipe diretamente (N={int(total_row['Total'])} equipes).")
+    print("O relatório usa N=2.664 (equipes com profissionais vinculados via rlEstabEquipeProf).")
+
 
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")

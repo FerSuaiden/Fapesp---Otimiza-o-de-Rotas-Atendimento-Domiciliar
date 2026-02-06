@@ -42,6 +42,9 @@ warnings.filterwarnings('ignore')
 BASE_DIR = '/home/fersuaiden/Área de trabalho/Faculdade/IC'
 CNES_DIR = os.path.join(BASE_DIR, 'CNES_DATA')
 OUTPUT_DIR = os.path.join(BASE_DIR, 'Outputs&Codigo/PARTE4')
+OUTPUT_CSV_DIR = os.path.join(OUTPUT_DIR, 'dados_csv')
+OUTPUT_VIS_COB_DIR = os.path.join(OUTPUT_DIR, 'visualizacoes/nacional/cobertura_municipal')
+OUTPUT_VIS_CONF_DIR = os.path.join(OUTPUT_DIR, 'visualizacoes/nacional/conformidade_legal')
 CHS_MINIMA_INDIVIDUAL = 20  # Art. 547, §1º
 
 # Mapeamento UF (código IBGE → sigla)
@@ -597,16 +600,13 @@ def main():
                     'Sul': '#27ae60', 'Centro-Oeste': '#9b59b6'}
     
     # =========================================================================
-    # VISUALIZAÇÃO 1: COBERTURA MUNICIPAL
+    # VISUALIZAÇÃO 1: COBERTURA MUNICIPAL - PIZZA POR REGIÃO
     # =========================================================================
     
-    fig1, axes1 = plt.subplots(1, 2, figsize=(16, 7))
+    fig1, ax1 = plt.subplots(figsize=(8, 7))
     fig1.suptitle('Programa Melhor em Casa - Cobertura Municipal no Brasil\n'
                   f'{total_mun_ad:,} municípios com equipes AD ({cobertura_nacional:.1f}% do Brasil)',
                   fontsize=14, fontweight='bold', y=1.02)
-    
-    # ----- GRÁFICO 1.1: Cobertura Municipal por Região (Pizza) -----
-    ax1 = axes1[0]
     
     ordem_regioes = ['Sudeste', 'Nordeste', 'Sul', 'Norte', 'Centro-Oeste']
     dados_cobertura = cobertura_regiao.set_index('REGIAO').loc[ordem_regioes]
@@ -624,10 +624,26 @@ def main():
     ax1.set_title(f'Distribuição de Municípios com AD por Região',
                   fontsize=12, fontweight='bold', pad=10)
     
-    # ----- GRÁFICO 1.2: Cobertura por UF (Barras Horizontais) -----
-    ax2 = axes1[1]
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+    fig1.text(0.5, 0.01, 
+             f'Fonte: CNES/DATASUS (Agosto 2025) | Total Brasil: {TOTAL_MUNICIPIOS_BRASIL:,} municípios',
+             ha='center', fontsize=9, style='italic', color='gray')
     
-    top_ufs = municipios_ad.nlargest(15, 'MUN_COM_AD')
+    output_cobertura_fig1 = os.path.join(OUTPUT_VIS_COB_DIR, 'distribuicao_por_regiao.png')
+    plt.savefig(output_cobertura_fig1, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close(fig1)
+    print(f"    1. Cobertura por região: {output_cobertura_fig1}")
+    
+    # =========================================================================
+    # VISUALIZAÇÃO 2: COBERTURA MUNICIPAL - TOP 15 UFs (POR % COBERTURA)
+    # =========================================================================
+    
+    fig2, ax2 = plt.subplots(figsize=(10, 8))
+    fig2.suptitle('Programa Melhor em Casa - Cobertura Municipal no Brasil\n'
+                  f'{total_mun_ad:,} municípios com equipes AD ({cobertura_nacional:.1f}% do Brasil)',
+                  fontsize=14, fontweight='bold', y=1.02)
+    
+    top_ufs = municipios_ad.nlargest(15, 'COBERTURA_%')
     
     y_pos = np.arange(len(top_ufs))
     bars1 = ax2.barh(y_pos, top_ufs['MUN_TOTAL'], color='#dfe6e9', label='Total de Municípios')
@@ -637,38 +653,36 @@ def main():
     ax2.set_yticklabels(top_ufs['UF'])
     ax2.invert_yaxis()
     ax2.set_xlabel('Número de Municípios')
-    ax2.set_title('Top 15 UFs - Cobertura Municipal', 
+    ax2.set_title('Top 15 UFs por Cobertura Municipal (%)\n(ordenado pela % de municípios cobertos)', 
                   fontsize=12, fontweight='bold', pad=10)
     ax2.legend(loc='lower right', fontsize=9)
     
     for i, (idx, row) in enumerate(top_ufs.iterrows()):
-        ax2.text(row['MUN_COM_AD'] + 5, i, f"{row['COBERTURA_%']:.0f}%", 
-                va='center', fontsize=9, fontweight='bold', color=cor_conforme)
+        ax2.text(row['MUN_TOTAL'] + 5, i, 
+                 f"{int(row['MUN_COM_AD'])}/{int(row['MUN_TOTAL'])} = {row['COBERTURA_%']:.0f}%", 
+                 va='center', fontsize=9, fontweight='bold', color='#2c3e50')
     
     ax2.grid(True, alpha=0.3, axis='x')
+    ax2.set_xlim(0, top_ufs['MUN_TOTAL'].max() * 1.35)
     
     plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    
-    fig1.text(0.5, 0.01, 
+    fig2.text(0.5, 0.01, 
              f'Fonte: CNES/DATASUS (Agosto 2025) | Total Brasil: {TOTAL_MUNICIPIOS_BRASIL:,} municípios',
              ha='center', fontsize=9, style='italic', color='gray')
     
-    output_cobertura_fig = os.path.join(OUTPUT_DIR, 'cobertura_municipal_brasil.png')
-    plt.savefig(output_cobertura_fig, dpi=150, bbox_inches='tight', facecolor='white')
-    plt.close(fig1)
-    print(f"    1. Cobertura municipal: {output_cobertura_fig}")
+    output_cobertura_fig2 = os.path.join(OUTPUT_VIS_COB_DIR, 'top15_cobertura_percentual.png')
+    plt.savefig(output_cobertura_fig2, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close(fig2)
+    print(f"    2. Top 15 UFs cobertura: {output_cobertura_fig2}")
     
     # =========================================================================
-    # VISUALIZAÇÃO 2: CONFORMIDADE LEGAL
+    # VISUALIZAÇÃO 3: CONFORMIDADE POR TIPO DE EQUIPE
     # =========================================================================
     
-    fig2, axes2 = plt.subplots(1, 2, figsize=(16, 7))
-    fig2.suptitle('Programa Melhor em Casa - Conformidade Legal (Portaria 3.005/2024)\n'
+    fig3, ax3 = plt.subplots(figsize=(9, 7))
+    fig3.suptitle('Programa Melhor em Casa - Conformidade Legal (Portaria 3.005/2024)\n'
                   f'{total_conformes:,} de {total_equipes:,} equipes em conformidade ({taxa_nacional:.1f}%)',
                   fontsize=14, fontweight='bold', y=1.02)
-    
-    # ----- GRÁFICO 2.1: Conformidade por Tipo de Equipe (Barras Empilhadas) -----
-    ax3 = axes2[0]
     
     tipos_ordem = ['EMAD I', 'EMAD II', 'EMAP', 'EMAP-R']
     df_stats_tipo_sorted = df_stats_tipo.set_index('TIPO').loc[tipos_ordem].reset_index()
@@ -697,8 +711,24 @@ def main():
     
     ax3.grid(True, alpha=0.3, axis='y')
     
-    # ----- GRÁFICO 2.2: Conformidade por Região (Barras Agrupadas) -----
-    ax4 = axes2[1]
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+    fig3.text(0.5, 0.01, 
+             f'Fonte: CNES/DATASUS (Agosto 2025) | Referência: Portaria GM/MS nº 3.005/2024',
+             ha='center', fontsize=9, style='italic', color='gray')
+    
+    output_conf_fig1 = os.path.join(OUTPUT_VIS_CONF_DIR, 'conformidade_por_tipo.png')
+    plt.savefig(output_conf_fig1, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close(fig3)
+    print(f"    3. Conformidade por tipo: {output_conf_fig1}")
+    
+    # =========================================================================
+    # VISUALIZAÇÃO 4: CONFORMIDADE POR REGIÃO
+    # =========================================================================
+    
+    fig4, ax4 = plt.subplots(figsize=(9, 7))
+    fig4.suptitle('Programa Melhor em Casa - Conformidade Legal (Portaria 3.005/2024)\n'
+                  f'{total_conformes:,} de {total_equipes:,} equipes em conformidade ({taxa_nacional:.1f}%)',
+                  fontsize=14, fontweight='bold', y=1.02)
     
     ordem_regioes_graf = ['Sudeste', 'Nordeste', 'Sul', 'Centro-Oeste', 'Norte']
     stats_regiao_sorted = stats_regiao.set_index('REGIAO').loc[ordem_regioes_graf].reset_index()
@@ -725,15 +755,14 @@ def main():
     ax4.grid(True, alpha=0.3, axis='y')
     
     plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    
-    fig2.text(0.5, 0.01, 
+    fig4.text(0.5, 0.01, 
              f'Fonte: CNES/DATASUS (Agosto 2025) | Referência: Portaria GM/MS nº 3.005/2024',
              ha='center', fontsize=9, style='italic', color='gray')
     
-    output_conformidade_fig = os.path.join(OUTPUT_DIR, 'conformidade_legal_brasil.png')
-    plt.savefig(output_conformidade_fig, dpi=150, bbox_inches='tight', facecolor='white')
-    plt.close(fig2)
-    print(f"    2. Conformidade legal: {output_conformidade_fig}")
+    output_conf_fig2 = os.path.join(OUTPUT_VIS_CONF_DIR, 'conformidade_por_regiao.png')
+    plt.savefig(output_conf_fig2, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close(fig4)
+    print(f"    4. Conformidade por região: {output_conf_fig2}")
     
     # =========================================================================
     # ETAPA 8: SALVAR RESULTADOS EM CSV
@@ -744,17 +773,17 @@ def main():
     print("─" * 80)
     
     # CSV 1: Resultado de conformidade por equipe
-    output_conformidade = os.path.join(OUTPUT_DIR, 'conformidade_legal_brasil.csv')
+    output_conformidade = os.path.join(OUTPUT_CSV_DIR, 'conformidade_legal_brasil.csv')
     df_resultados.to_csv(output_conformidade, sep=';', index=False)
     print(f"    1. Conformidade por equipe: {output_conformidade}")
     
     # CSV 2: Cobertura municipal por UF
-    output_cobertura = os.path.join(OUTPUT_DIR, 'cobertura_municipal_brasil.csv')
+    output_cobertura = os.path.join(OUTPUT_CSV_DIR, 'cobertura_municipal_brasil.csv')
     municipios_ad.to_csv(output_cobertura, sep=';', index=False)
     print(f"    2. Cobertura municipal: {output_cobertura}")
     
     # CSV 3: Resumo por região
-    output_regiao = os.path.join(OUTPUT_DIR, 'resumo_por_regiao_brasil.csv')
+    output_regiao = os.path.join(OUTPUT_CSV_DIR, 'resumo_por_regiao_brasil.csv')
     stats_regiao.to_csv(output_regiao, sep=';', index=False)
     print(f"    3. Resumo por região: {output_regiao}")
     

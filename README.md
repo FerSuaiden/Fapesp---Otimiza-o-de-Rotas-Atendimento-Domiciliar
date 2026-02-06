@@ -160,8 +160,8 @@ IC/
 ├── Outputs&Codigo/                  # Scripts e visualizações
 │   ├── PARTE1/                      # Mapeamento de Equipes
 │   ├── PARTE2/                      # Capacidade e Habilidades
-│   ├── PARTE3/                      # Análise de Demanda
-│   └── PARTE4/                      # Análise de Saturação
+│   ├── PARTE3/                      # Geração de Instâncias para Otimização
+│   └── PARTE4/                      # Cobertura Municipal e Conformidade Legal
 └── README.md
 ```
 
@@ -334,12 +334,17 @@ Este script gera as instâncias de entrada para o modelo de otimização de rota
 - Equipes com capacidade $Q_k$ e conjuntos de habilidades $S_k$
 - Matriz de distâncias/tempos entre localizações
 
-**Instâncias disponíveis:**
-| Arquivo | Descrição |
-|---------|-----------|
-| `SP_Capital_Pequena.json` | Instância reduzida para testes |
-| `SP_Capital_Completa.json` | Instância completa de SP Capital |
-| `equipes_sp_capital.csv` | Dados tabulares das equipes |
+**Instâncias disponíveis (geradas com diferentes seeds para reprodutibilidade):**
+| Arquivo | Pacientes | Equipes | Seed |
+|---------|:---------:|:-------:|:----:|
+| `pequena_10.json` | 10 | 1 | 42 |
+| `pequena_20.json` | 20 | 2 | 123 |
+| `media_50.json` | 50 | 3 | 456 |
+| `media_100.json` | 100 | 5 | 789 |
+| `grande_200.json` | 200 | 8 | 1000 |
+| `grande_500.json` | 500 | 15 | 2000 |
+
+Cada instância gera 4 arquivos: `.json` (completo), `_equipes.csv`, `_pacientes.csv`, `_matriz.csv`.
 
 ---
 
@@ -367,27 +372,22 @@ Esta fase avalia se as equipes EMAD/EMAP atendem aos requisitos mínimos de comp
 
 > **Art. 547, §1º:** Nenhum profissional componente de EMAD poderá ter CHS inferior a **20 horas**.
 
-#### verificacao_conformidade_legal.py
+#### analise_nacional_brasil_v2.py (principal)
 
-**Arquivo:** [Outputs%26Codigo/PARTE4/verificacao_conformidade_legal.py](Outputs%26Codigo/PARTE4/verificacao_conformidade_legal.py)  
-**Output:** `conformidade_legal_equipes.csv`
-
-Análise detalhada das equipes de **São Paulo Capital** (82 equipes AD ativas).
-
-#### analise_conformidade_sp_estado.py
-
-**Arquivo:** [Outputs%26Codigo/PARTE4/analise_conformidade_sp_estado.py](Outputs%26Codigo/PARTE4/analise_conformidade_sp_estado.py)  
-**Output:** `conformidade_legal_sp_estado.csv`
-
-Análise completa de todas as equipes AD do **Estado de São Paulo** (412 equipes AD ativas).
-
-#### analise_nacional_brasil.py
-
-**Arquivo:** [Outputs%26Codigo/PARTE4/analise_nacional_brasil.py](Outputs%26Codigo/PARTE4/analise_nacional_brasil.py)  
+**Arquivo:** [Outputs&Codigo/PARTE4/scripts/analise_nacional_brasil_v2.py](Outputs%26Codigo/PARTE4/scripts/analise_nacional_brasil_v2.py)  
 **Outputs:**
-- `resultado_cobertura_conformidade_brasil.csv` - Dados detalhados por equipe
-- `cobertura_municipal_brasil.png` - Visualização de cobertura municipal
-- `conformidade_legal_brasil.png` - Visualização de conformidade legal
+- `dados_csv/conformidade_legal_brasil_v2.csv` — Status de conformidade por equipe
+- `dados_csv/cobertura_municipal_brasil_v2.csv` — Municípios com/sem equipes AD
+- `visualizacoes/nacional/cobertura_municipal/top15_cobertura_percentual.png`
+- `visualizacoes/nacional/analise_percapita/densidade_por_regiao.png` + `top15_percapita_ufs.png`
+- `visualizacoes/nacional/conformidade_legal/conformidade_por_tipo.png` + `conformidade_por_regiao.png`
+
+#### gerar_visualizacoes_estados_v2.py
+
+**Arquivo:** [Outputs&Codigo/PARTE4/scripts/gerar_visualizacoes_estados_v2.py](Outputs%26Codigo/PARTE4/scripts/gerar_visualizacoes_estados_v2.py)  
+**Outputs:**
+- `visualizacoes/nacional/resumo/conformidade_nacional_donut.png` + `cobertura_nacional_donut.png`
+- `visualizacoes/estados/[UF]/[UF]_equipes_conformidade.png` — para cada um dos 27 estados
 
 Análise abrangente de **todo o Brasil** com duas dimensões:
 
@@ -497,20 +497,22 @@ O principal gargalo identificado é a **carga horária de enfermeiros nas equipe
 
 | Arquivo | Descrição |
 |:---|:---|
-| `instancias/SP_Capital_Pequena.json` | Instância reduzida para testes |
-| `instancias/SP_Capital_Completa.json` | Instância completa de SP Capital |
-| `instancias/equipes_sp_capital.csv` | Dados tabulares das equipes |
+| `instancias/pequena_10.json` | 10 pacientes, 1 equipe (debug) |
+| `instancias/media_50.json` | 50 pacientes, 3 equipes (testes) |
+| `instancias/grande_500.json` | 500 pacientes, 15 equipes (experimentos) |
 
-### PARTE 4 - Conformidade Legal
+### PARTE 4 - Cobertura e Conformidade Legal
 
 | Visualização | Descrição |
 |:---|:---|
-| [v2_dashboard_saturacao_oferta.png](Outputs%26Codigo/PARTE4/v2_dashboard_saturacao_oferta.png) | Dashboard de saturação da oferta |
-| [cobertura_municipal_brasil.png](Outputs%26Codigo/PARTE4/cobertura_municipal_brasil.png) | Cobertura municipal do programa por UF e região |
-| [conformidade_legal_brasil.png](Outputs%26Codigo/PARTE4/conformidade_legal_brasil.png) | Conformidade legal por tipo de equipe no Brasil |
-| `conformidade_legal_equipes.csv` | Resultado SP Capital (82 equipes) |
-| `conformidade_legal_sp_estado.csv` | Resultado Estado SP (412 equipes) |
-| `resultado_cobertura_conformidade_brasil.csv` | Resultado análise nacional (2.664 equipes) |
+| `cobertura_municipal/top15_cobertura_percentual.png` | Top 15 UFs por % de cobertura municipal |
+| `cobertura_municipal/distribuicao_por_regiao.png` | Distribuição de equipes por região (pizza) |
+| `analise_percapita/densidade_por_regiao.png` | Equipes por 100k hab. por região |
+| `analise_percapita/top15_percapita_ufs.png` | Top 15 UFs por equipes per capita |
+| `conformidade_legal/conformidade_por_tipo.png` | Conformidade por tipo (EMAD I/II, EMAP) |
+| `conformidade_legal/conformidade_por_regiao.png` | Conformidade por região |
+| `resumo/conformidade_nacional_donut.png` | Donut: 76.7% equipes conformes |
+| `resumo/cobertura_nacional_donut.png` | Donut: 21.9% municípios cobertos |
 
 ---
 
@@ -542,10 +544,9 @@ python 6-sunburst.py
 cd "../PARTE3"
 python 15-gerador_instancias.py
 
-cd "../PARTE4"
-python verificacao_conformidade_legal.py        # SP Capital
-python analise_conformidade_sp_estado.py        # Estado SP
-python analise_nacional_brasil.py               # Brasil inteiro
+cd "../PARTE4/scripts"
+python analise_nacional_brasil_v2.py             # Análise nacional (gráficos individuais)
+python gerar_visualizacoes_estados_v2.py        # Visualizações por estado (27 UFs)
 ```
 
 ### Estrutura de Dependências
@@ -909,10 +910,11 @@ A PARTE 4 contém os scripts de análise de conformidade legal das equipes em re
 - `dados_csv/conformidade_legal_brasil_v2.csv` — Detalhamento equipe a equipe
 - `dados_csv/cobertura_municipal_brasil_v2.csv` — Municípios com/sem equipes AD
 - `dados_csv/cobertura_regiao_brasil_v2.csv` — Cobertura por região
-- `visualizacoes/nacional/conformidade_legal_brasil_v2.png` — Barras de conformidade por tipo
-- `visualizacoes/nacional/cobertura_municipal_brasil_v2.png` — Cobertura por região
-- `visualizacoes/nacional/analise_percapita_brasil.png` — Análise per capita por UF
-- `visualizacoes/nacional/conformidade_cobertura_nacional.png` — Gráficos donut resumo
+- `visualizacoes/nacional/cobertura_municipal/top15_cobertura_percentual.png` — Top 15 UFs por % de cobertura
+- `visualizacoes/nacional/analise_percapita/densidade_por_regiao.png` — Equipes por 100k hab. por região
+- `visualizacoes/nacional/analise_percapita/top15_percapita_ufs.png` — Top 15 UFs per capita
+- `visualizacoes/nacional/conformidade_legal/conformidade_por_tipo.png` — Barras de conformidade por tipo
+- `visualizacoes/nacional/conformidade_legal/conformidade_por_regiao.png` — Conformidade por região
 
 **Dependências Python:** `pandas`, `numpy`, `matplotlib`
 
@@ -944,7 +946,8 @@ A PARTE 4 contém os scripts de análise de conformidade legal das equipes em re
 
 **Saídas Consolidadas:**
 - `visualizacoes/estados/resumo_por_estado_v2.csv` — Resumo com total de equipes, cobertura e taxa de conformidade por estado
-- `visualizacoes/nacional/conformidade_cobertura_nacional.png` — Indicadores nacionais em formato donut
+- `visualizacoes/nacional/resumo/conformidade_nacional_donut.png` — Donut: 76.7% equipes conformes
+- `visualizacoes/nacional/resumo/cobertura_nacional_donut.png` — Donut: 21.9% municípios cobertos
 
 **Dependências Python:** `pandas`, `numpy`, `matplotlib`
 
@@ -954,30 +957,41 @@ A PARTE 4 contém os scripts de análise de conformidade legal das equipes em re
 
 ```
 PARTE4/
+├── README.md
 ├── scripts/
-│   ├── analise_nacional_brasil_v2.py
-│   ├── gerar_visualizacoes_estados_v2.py
-│   ├── visualizacao_temporal.py
-│   └── visualizacao_conformidade_temporal.py
+│   ├── analise_nacional_brasil.py         # V1 (com rastreamento detalhado de problemas)
+│   ├── analise_nacional_brasil_v2.py      # V2 (com per capita, imagens separadas)
+│   ├── gerar_visualizacoes_estados.py     # Visualizações por estado V1
+│   └── gerar_visualizacoes_estados_v2.py  # Visualizações por estado V2 (+ conformidade)
 ├── dados_csv/
-│   ├── conformidade_legal_brasil_v2.csv
+│   ├── cobertura_municipal_brasil.csv
 │   ├── cobertura_municipal_brasil_v2.csv
 │   ├── cobertura_regiao_brasil_v2.csv
+│   ├── conformidade_legal_brasil.csv
+│   ├── conformidade_legal_brasil_v2.csv
+│   ├── conformidade_legal_sp_estado.csv
 │   └── resumo_por_regiao_brasil.csv
 ├── visualizacoes/
 │   ├── nacional/
-│   │   ├── conformidade_legal_brasil_v2.png
-│   │   ├── cobertura_municipal_brasil_v2.png
-│   │   ├── analise_percapita_brasil.png
-│   │   ├── conformidade_cobertura_nacional.png
-│   │   ├── evolucao_temporal_ad_sp.png
-│   │   └── evolucao_conformidade_temporal.png
+│   │   ├── cobertura_municipal/
+│   │   │   ├── distribuicao_por_regiao.png
+│   │   │   └── top15_cobertura_percentual.png
+│   │   ├── analise_percapita/
+│   │   │   ├── densidade_por_regiao.png
+│   │   │   └── top15_percapita_ufs.png
+│   │   ├── conformidade_legal/
+│   │   │   ├── conformidade_por_tipo.png
+│   │   │   └── conformidade_por_regiao.png
+│   │   └── resumo/
+│   │       ├── conformidade_nacional_donut.png
+│   │       └── cobertura_nacional_donut.png
 │   └── estados/
+│       ├── resumo_por_estado.csv
 │       ├── resumo_por_estado_v2.csv
+│       ├── todos_municipios_brasil.csv
 │       ├── AC/ (AC_equipes_conformidade.png, ...)
 │       ├── SP/ (SP_equipes_conformidade.png, ...)
 │       └── ... (demais 25 estados)
-└── README.md
 ```
 
 ---

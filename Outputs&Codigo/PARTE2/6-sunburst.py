@@ -128,6 +128,30 @@ try:
     fig.write_html(nome_grafico_sunburst)
     print(f"Gráfico salvo: {nome_grafico_sunburst}")
 
+    # === SAÍDA DE VERIFICAÇÃO: Composição profissional por contagem de indivíduos ===
+    # Conta profissionais ÚNICOS (não CHS) por categoria
+    df_prof_unicos = df_merge1.drop_duplicates(subset=['CO_PROFISSIONAL_SUS'])[['CO_PROFISSIONAL_SUS', 'CO_CBO']].copy()
+    df_prof_unicos = pd.merge(df_prof_unicos, df_cbo, on='CO_CBO', how='left')
+    
+    # Agrupa profissões minoritárias
+    contagem = df_prof_unicos['Profissao'].value_counts()
+    total_prof = len(df_prof_unicos)
+    limite_agrup = total_prof * 0.003  # <0.3%
+    prof_minoritarias = contagem[contagem < limite_agrup].index
+    df_prof_unicos.loc[df_prof_unicos['Profissao'].isin(prof_minoritarias), 'Profissao'] = 'Outras Profissões'
+    contagem_final = df_prof_unicos['Profissao'].value_counts()
+    
+    print("\n" + "=" * 70)
+    print("COMPOSIÇÃO PROFISSIONAL - CONTAGEM DE PROFISSIONAIS ÚNICOS")
+    print("=" * 70)
+    print(f"\n{'Categoria':<35} {'Qtde':>8} {'%':>8}")
+    print("-" * 55)
+    for prof, qtd in contagem_final.items():
+        pct = 100 * qtd / total_prof
+        print(f"{prof:<35} {qtd:>8} {pct:>7.1f}%")
+    print("-" * 55)
+    print(f"{'TOTAL':<35} {total_prof:>8} {'100.0%':>8}")
+
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")
     print("Por favor, verifique se os caminhos e nomes dos arquivos estão corretos.")

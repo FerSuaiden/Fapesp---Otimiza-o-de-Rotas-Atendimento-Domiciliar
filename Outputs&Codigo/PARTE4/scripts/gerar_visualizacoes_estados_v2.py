@@ -195,14 +195,16 @@ def main():
     municipios_com_ad = len(df_por_mun)
     taxa_cobertura_municipal = 100 * municipios_com_ad / total_municipios_brasil
     
-    # Criar figura com 2 gráficos de pizza/donut lado a lado
-    fig, axes = plt.subplots(1, 2, figsize=(14, 7))
-    fig.suptitle('Programa Melhor em Casa - Indicadores Nacionais de Conformidade e Cobertura\n'
+    # Criar 2 gráficos de donut separados
+    resumo_dir = os.path.join(OUTPUT_NACIONAL_DIR, 'resumo')
+    os.makedirs(resumo_dir, exist_ok=True)
+    
+    # ----- GRÁFICO 1: % Equipes Conformes -----
+    fig1, ax1 = plt.subplots(figsize=(8, 7))
+    fig1.suptitle('Programa Melhor em Casa - Indicadores Nacionais\n'
                  f'Brasil - {total_equipes:,} equipes AD em {municipios_com_ad:,} municípios',
                  fontsize=14, fontweight='bold', y=1.02)
     
-    # ----- GRÁFICO 1: % Equipes Conformes -----
-    ax1 = axes[0]
     sizes1 = [equipes_conformes, equipes_nao_conformes]
     labels1 = ['Conformes', 'Não Conformes']
     colors1 = ['#27ae60', '#e74c3c']
@@ -221,12 +223,25 @@ def main():
     ax1.set_title(f'Conformidade das Equipes AD\n({equipes_conformes:,} de {total_equipes:,} equipes)',
                   fontsize=12, fontweight='bold', pad=15)
     
-    # Legenda detalhada
     ax1.legend([f'Conformes: {equipes_conformes:,}', f'Não Conformes: {equipes_nao_conformes:,}'],
                loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=10)
     
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+    fig1.text(0.5, 0.01, 
+             f'Fonte: CNES/DATASUS (Agosto 2025) | Portaria GM/MS nº 3.005/2024',
+             ha='center', fontsize=9, style='italic', color='gray')
+    
+    output_conformidade = os.path.join(resumo_dir, 'conformidade_nacional_donut.png')
+    plt.savefig(output_conformidade, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close(fig1)
+    print(f"    Conformidade nacional: {output_conformidade}")
+    
     # ----- GRÁFICO 2: % Municípios com Cobertura -----
-    ax2 = axes[1]
+    fig2, ax2 = plt.subplots(figsize=(8, 7))
+    fig2.suptitle('Programa Melhor em Casa - Indicadores Nacionais\n'
+                 f'Brasil - {total_equipes:,} equipes AD em {municipios_com_ad:,} municípios',
+                 fontsize=14, fontweight='bold', y=1.02)
+    
     municipios_sem_ad = total_municipios_brasil - municipios_com_ad
     sizes2 = [municipios_com_ad, municipios_sem_ad]
     labels2 = ['Com Equipes AD', 'Sem Cobertura']
@@ -246,19 +261,18 @@ def main():
     ax2.set_title(f'Cobertura Municipal do Programa\n({municipios_com_ad:,} de {total_municipios_brasil:,} municípios)',
                   fontsize=12, fontweight='bold', pad=15)
     
-    # Legenda detalhada
     ax2.legend([f'Com AD: {municipios_com_ad:,}', f'Sem AD: {municipios_sem_ad:,}'],
                loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=10)
     
     plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    fig.text(0.5, 0.01, 
-             f'Fonte: CNES/DATASUS (Agosto 2025) | Portaria GM/MS nº 3.005/2024 | IBGE 2022',
+    fig2.text(0.5, 0.01, 
+             f'Fonte: CNES/DATASUS (Agosto 2025) | IBGE 2022',
              ha='center', fontsize=9, style='italic', color='gray')
     
-    output_nacional = os.path.join(OUTPUT_NACIONAL_DIR, 'conformidade_cobertura_nacional.png')
-    plt.savefig(output_nacional, dpi=150, bbox_inches='tight', facecolor='white')
-    plt.close(fig)
-    print(f"    Visualização nacional salva: {output_nacional}")
+    output_cobertura = os.path.join(resumo_dir, 'cobertura_nacional_donut.png')
+    plt.savefig(output_cobertura, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close(fig2)
+    print(f"    Cobertura nacional: {output_cobertura}")
     
     # =========================================================================
     # ETAPA 4: GERAR VISUALIZAÇÕES POR ESTADO
