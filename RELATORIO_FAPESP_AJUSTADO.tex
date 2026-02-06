@@ -339,14 +339,14 @@ As estatísticas descritivas de $Q_k$ são apresentadas na Tabela a seguir:
 \hline
 \textbf{Estatística} & \textbf{Valor} & \textbf{Interpretação} \\
 \hline
-Mínimo & 0h/semana & Equipes sem CHS registrada \\
+Mínimo & 0h/semana & Profissionais sem registro na tabela de CHS\textsuperscript{$\dagger$} \\
 Máximo & 3.732h/semana & Equipes com muitos profissionais \\
 Mediana & 230h/semana & Valor central típico \\
 Média & 224,7h/semana & Distribuição aproximadamente simétrica \\
 Desvio Padrão & 169,8h & Alta variabilidade \\
 \hline
 \end{tabular}
-\caption{Estatísticas descritivas da capacidade $Q_k$.}
+\caption{Estatísticas descritivas da capacidade $Q_k$. \textsuperscript{$\dagger$}14 equipes (0,5\%) possuem $Q_k = 0$ porque seus profissionais constam em \texttt{rlEstabEquipeProf} mas não em \texttt{tbCargaHorariaSus} (possível vínculo cessado ou erro cadastral).}
 \end{table}
 
 A amplitude (0h a 3.732h) reflete a heterogeneidade das equipes em termos de composição profissional.
@@ -460,17 +460,17 @@ Foi verificada a conformidade das equipes com os requisitos mínimos da Portaria
 \textbf{Requisito} & \textbf{EMAD I} & \textbf{EMAD II} & \textbf{EMAP} & \textbf{EMAP-R} \\
 \hline
 Médico & $\geq$40h & $\geq$20h & -- & -- \\
-Enfermeiro & $\geq$60h & $\geq$30h & -- & $\geq$30h \\
+Enfermeiro & $\geq$60h & $\geq$30h & -- & -- \\
 Téc. Enfermagem & $\geq$120h & $\geq$120h & -- & -- \\
 Fisio/AS & $\geq$30h & $\geq$30h & -- & -- \\
-Profissionais NS & -- & -- & 3+ categ. & 3+ categ. \\
+Profissionais NS & -- & -- & 3+ categ. & 3+ categ.\textsuperscript{*} \\
 CHS Total & -- & -- & $\geq$90h & $\geq$60h \\
 \hline
 \end{tabular}
-\caption{Requisitos de composição (Portaria 3.005/2024).}
+\caption{Requisitos de composição (Portaria 3.005/2024). \textsuperscript{*}Para EMAP-R, enfermeiros são contabilizados como profissionais de nível superior.}
 \end{table}
 
-A metodologia de verificação consistiu em agregar as CHS por categoria profissional para cada equipe e compará-las com os requisitos mínimos. Profissionais com CHS $<$ 20h foram descartados (Art. 547, §1º).
+A metodologia de verificação consistiu em agregar as CHS por categoria profissional para cada equipe e compará-las com os requisitos mínimos. Na análise de conformidade (PARTE 4), profissionais com CHS $<$ 20h foram descartados (Art. 547, §1º). Esta filtragem não se aplica ao cálculo de $Q_k$ (PARTE 2), que considera todos os profissionais vinculados.
 
 Os resultados da verificação para o Brasil são apresentados a seguir:
 
@@ -533,7 +533,7 @@ Foram geradas visualizações detalhadas para cada um dos 27 estados, incluindo 
 Todo o código-fonte está disponível publicamente no repositório GitHub: \url{https://github.com/fersuaiden/IC}, incluindo scripts de processamento, dados processados e documentação técnica detalhada.
 
 \begin{enumerate}
-    \item Scripts Python (13 arquivos): Pipeline completo de ETL e análise de dados, organizados em 4 partes (PARTE1 a PARTE4), cada uma com funcionalidade específica
+    \item Scripts Python (11 arquivos): Pipeline completo de ETL e análise de dados, organizados em 4 partes (PARTE1 a PARTE4), cada uma com funcionalidade específica
     
     \item Mapas interativos (3 arquivos HTML):
     \begin{itemize}[noitemsep]
@@ -542,18 +542,17 @@ Todo o código-fonte está disponível publicamente no repositório GitHub: \url
         \item \texttt{habilidades\_sunburst.html}: Gráfico hierárquico de composição profissional
     \end{itemize}
     
-    \item Visualizações estáticas (37 arquivos PNG):
+    \item Visualizações estáticas (39 arquivos PNG):
     \begin{itemize}[noitemsep]
-        \item Gráficos de barras empilhadas (distribuição por estado)
-        \item Gráficos de pizza/donut (composição nacional)
-        \item Histogramas (distribuição de $Q_k$)
-        \item Análises de cobertura, per capita e conformidade (6 gráficos nacionais)
-        \item Visualizações de conformidade por estado (27 arquivos)
+        \item Gráficos de barras empilhadas e pizza (PARTE1: 2 arquivos)
+        \item Histogramas e barras de capacidade (PARTE2: 2 arquivos)
+        \item Análises nacionais: cobertura, per capita, conformidade e resumo (PARTE4: 8 gráficos)
+        \item Visualizações de conformidade por estado (PARTE4: 27 arquivos)
     \end{itemize}
     
     \item Instâncias para BRKGA (6 conjuntos): Formato JSON com equipes, pacientes e matriz de distâncias, variando de 10 a 500 pacientes
     
-    \item Datasets processados (8 arquivos CSV): Dados limpos e agregados para análises futuras
+    \item Datasets processados (7 arquivos CSV): Dados limpos e agregados para análises futuras
     
     \item Documentação técnica: README.md com descrição detalhada de cada etapa, incluindo fluxo de processamento linha-por-linha
 \end{enumerate}
@@ -589,9 +588,9 @@ $Q_k$ (mín/máx/med.) & 0h/3.732h/230h & \texttt{4-capacidade.py} & Output: \te
 \hline
 CHS top 5 estados & 100.929h a 36.164h & \texttt{4-capacidade.py} & Output: \texttt{CHS POR ESTADO} \\
 \hline
-Gargalo EMAD I & 77,0\% enf. & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{GARGALOS POR TIPO} \\
+Gargalo EMAD I & 77,0\% enf. & \texttt{analise\_nacional\_ brasil.py} (v1) & CSV: \texttt{conformidade\_legal\_ brasil.csv} \\
 \hline
-Conformidade SP & 70,9\% & \texttt{analise\_nacional\_ brasil\_v2.py} & Output: \texttt{CONFORMIDADE SP} \\
+Conformidade SP & 70,9\% & \texttt{gerar\_visualizacoes\_ estados\_v2.py} & CSV: \texttt{conformidade\_legal\_ sp\_estado.csv} \\
 \hline
 Coord. ausentes & $\approx$8\% & \texttt{1-visuazacaoMapa.py} & Output: \texttt{COORDENADAS} \\
 \hline
