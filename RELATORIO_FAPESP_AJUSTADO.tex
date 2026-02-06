@@ -424,10 +424,12 @@ As janelas de tempo foram distribuídas em: Manhã 40\% (7h-12h), Tarde 35\% (13
 A estrutura das instâncias geradas (formato JSON) contém:
 \begin{itemize}[noitemsep]
     \item Metadados: Nome, número de pacientes, número de equipes, seed
-    \item Equipes: ID, tipo, coordenadas (lat/lon), capacidade diária, habilidades
+    \item Equipes: ID, tipo, coordenadas (lat/lon), capacidade diária, habilidades ($S_k$)
     \item Pacientes: ID, coordenadas, modalidade, janela de tempo, frequência, tempo de serviço
     \item Matriz de tempos: Distâncias geodésicas (Haversine) convertidas em tempo (velocidade média 25 km/h)
 \end{itemize}
+
+\textbf{Nota sobre requisitos de habilidades ($R_i$):} Nesta etapa, as instâncias geradas não incluem os requisitos de habilidades dos pacientes ($R_i$), assumindo que qualquer equipe pode atender qualquer paciente dentro de sua capacidade horária. A definição formal de $R_i$ --- derivada da modalidade de atendimento (AD2/AD3) e dos tipos de profissionais necessários para cada visita --- será incorporada na próxima etapa do projeto, juntamente com a implementação das restrições de compatibilidade de habilidades ($R_i \subseteq S_k$) no modelo de otimização.
 
 O conjunto de instâncias geradas é apresentado na Tabela a seguir:
 
@@ -685,8 +687,9 @@ Objetivo 3 -- Implementação do Modelo (Fev-Mai/2026):
 
 Objetivo 4 -- Testes com Instâncias (Fev-Jun/2026):
 \begin{itemize}[noitemsep]
+    \item Definir formalmente os requisitos de habilidades dos pacientes ($R_i$), derivando-os da modalidade de atendimento (AD2/AD3) e incorporando-os às instâncias
     \item Utilizar instâncias benchmark de Kummer et al. (2024)
-    \item Testar instâncias geradas neste período (PARTE 3)
+    \item Testar instâncias geradas neste período (PARTE 3), agora com restrições de habilidades ($R_i \subseteq S_k$)
     \item Comparar soluções do modelo exato com resultados da literatura
 \end{itemize}
 
