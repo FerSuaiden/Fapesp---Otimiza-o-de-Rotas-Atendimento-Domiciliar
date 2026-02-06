@@ -340,11 +340,10 @@ def main():
     y_pos = np.arange(len(top_ufs_pct))
     cores_uf_cob = [cores_regiao[UF_REGIAO[uf]] for uf in top_ufs_pct['UF']]
     
-    # Lollipop chart: linha + ponto
+    # Barras horizontais da porcentagem de cobertura
+    ax1.barh(y_pos, top_ufs_pct['COBERTURA_%'], color=cores_uf_cob, alpha=0.85, height=0.6)
+    
     for i, (_, row) in enumerate(top_ufs_pct.iterrows()):
-        cor = cores_regiao[UF_REGIAO[row['UF']]]
-        ax1.hlines(y=i, xmin=0, xmax=row['COBERTURA_%'], color=cor, linewidth=2.5, alpha=0.7)
-        ax1.plot(row['COBERTURA_%'], i, 'o', color=cor, markersize=10, zorder=5)
         ax1.text(row['COBERTURA_%'] + 1.5, i, 
                  f"{row['COBERTURA_%']:.1f}%  ({int(row['MUN_COM_AD'])}/{int(row['MUN_TOTAL'])})", 
                  va='center', fontsize=9, fontweight='bold', color='#2c3e50')
