@@ -13,7 +13,7 @@ PARTE4/
 ├── README.md                          # Este arquivo
 ├── scripts/                           # Scripts Python
 │   ├── analise_nacional_brasil.py     # Análise nacional V1 (com rastreamento de problemas)
-│   ├── analise_nacional_brasil_v2.py  # Análise nacional V2 (com per capita, imagens separadas)
+│   ├── analise_nacional_brasil_v2.py  # Análise nacional V2 (com taxa/100k hab., imagens separadas)
 │   ├── gerar_visualizacoes_estados.py     # Visualizações por estado V1
 │   └── gerar_visualizacoes_estados_v2.py  # Visualizações por estado V2 (+ conformidade)
 ├── dados_csv/                         # Dados gerados em CSV
@@ -29,9 +29,9 @@ PARTE4/
     │   ├── cobertura_municipal/       # Cobertura do programa por UF
     │   │   ├── distribuicao_por_regiao.png       (V1: pizza por região)
     │   │   └── top15_cobertura_percentual.png   (V1+V2: top 15 UFs por %)
-    │   ├── analise_percapita/         # Equipes por 100k habitantes
+    │   ├── analise_densidade_100k_habitantes/  # Equipes por 100k habitantes
     │   │   ├── densidade_por_regiao.png         (V2: por região)
-    │   │   └── top15_percapita_ufs.png          (V2: top 15 UFs)
+    │   │   └── top15_taxa_100k_ufs.png          (V2: top 15 UFs)
     │   ├── conformidade_legal/        # Conformidade com Portaria 3.005/2024
     │   │   ├── conformidade_por_tipo.png        (V1+V2: por tipo de equipe)
     │   │   └── conformidade_por_regiao.png      (V1+V2: por região)
@@ -93,7 +93,7 @@ PARTE4/
 | Sudeste | 892 | 677 | **75.9%** |
 | Sul | 215 | 153 | **71.2%** |
 
-### 📊 Análise Per Capita (equipes por 100 mil hab.)
+### 📊 Taxa por 100 mil Habitantes
 
 | Região | Equipes | População (mil) | Equipes/100k |
 |--------|---------|-----------------|--------------|

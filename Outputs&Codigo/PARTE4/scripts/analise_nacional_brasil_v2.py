@@ -5,8 +5,8 @@ ANÁLISE NACIONAL V2 - COBERTURA E CONFORMIDADE DO PROGRAMA MELHOR EM CASA
 ===============================================================================
 
 Versão melhorada com:
-1. Gráfico de cobertura municipal corrigido (números + porcentagem claros)
-2. Análise per capita (equipes por 100 mil habitantes)
+1. Gráfico de cobertura municipal (lollipop chart)
+2. Análise de taxa por 100 mil habitantes
 3. Visualizações mais informativas
 
 Fontes de dados:
@@ -38,7 +38,7 @@ OUTPUT_CSV_DIR = os.path.join(OUTPUT_DIR, 'dados_csv')
 
 # Subpastas organizadas por tipo de visualização
 VIS_COBERTURA_DIR = os.path.join(OUTPUT_VIS_DIR, 'cobertura_municipal')
-VIS_PERCAPITA_DIR = os.path.join(OUTPUT_VIS_DIR, 'analise_percapita')
+VIS_TAXA100K_DIR = os.path.join(OUTPUT_VIS_DIR, 'analise_densidade_100k_habitantes')
 VIS_CONFORMIDADE_DIR = os.path.join(OUTPUT_VIS_DIR, 'conformidade_legal')
 CHS_MINIMA_INDIVIDUAL = 20
 
@@ -163,11 +163,11 @@ def verificar_conformidade_equipe(df_prof, tipo_equipe):
 def main():
     print("=" * 80)
     print("ANÁLISE NACIONAL V2 - PROGRAMA MELHOR EM CASA")
-    print("Cobertura Municipal, Conformidade Legal e Análise Per Capita")
+    print("Cobertura Municipal, Conformidade Legal e Taxa por 100 mil Hab.")
     print("=" * 80)
     
     # Criar diretórios de saída
-    for d in [VIS_COBERTURA_DIR, VIS_PERCAPITA_DIR, VIS_CONFORMIDADE_DIR, OUTPUT_CSV_DIR]:
+    for d in [VIS_COBERTURA_DIR, VIS_TAXA100K_DIR, VIS_CONFORMIDADE_DIR, OUTPUT_CSV_DIR]:
         os.makedirs(d, exist_ok=True)
     
     # =========================================================================
@@ -338,28 +338,35 @@ def main():
     top_ufs_pct = municipios_ad.nlargest(15, 'COBERTURA_%').copy()
     
     y_pos = np.arange(len(top_ufs_pct))
+    cores_uf_cob = [cores_regiao[UF_REGIAO[uf]] for uf in top_ufs_pct['UF']]
     
-    # Barras: proporção coberta vs não coberta
-    bars_total = ax1.barh(y_pos, top_ufs_pct['MUN_TOTAL'], color='#ecf0f1', 
-                          edgecolor='#bdc3c7', label='Sem cobertura')
-    bars_ad = ax1.barh(y_pos, top_ufs_pct['MUN_COM_AD'], color='#27ae60', 
-                       alpha=0.85, label='Com equipes AD')
-    
-    ax1.set_yticks(y_pos)
-    ax1.set_yticklabels(top_ufs_pct['UF'])
-    ax1.invert_yaxis()
-    ax1.set_xlabel('Número de Municípios')
-    ax1.set_title('Top 15 UFs por Cobertura Percentual\n(ordenado pela % de municípios cobertos)', 
-                  fontsize=11, fontweight='bold', pad=10)
-    ax1.legend(loc='lower right', fontsize=9)
-    
+    # Lollipop chart: linha + ponto
     for i, (_, row) in enumerate(top_ufs_pct.iterrows()):
-        ax1.text(row['MUN_TOTAL'] + 5, i, 
-                 f"{int(row['MUN_COM_AD'])}/{int(row['MUN_TOTAL'])} = {row['COBERTURA_%']:.0f}%", 
+        cor = cores_regiao[UF_REGIAO[row['UF']]]
+        ax1.hlines(y=i, xmin=0, xmax=row['COBERTURA_%'], color=cor, linewidth=2.5, alpha=0.7)
+        ax1.plot(row['COBERTURA_%'], i, 'o', color=cor, markersize=10, zorder=5)
+        ax1.text(row['COBERTURA_%'] + 1.5, i, 
+                 f"{row['COBERTURA_%']:.1f}%  ({int(row['MUN_COM_AD'])}/{int(row['MUN_TOTAL'])})", 
                  va='center', fontsize=9, fontweight='bold', color='#2c3e50')
     
+    # Linha de média nacional
+    ax1.axvline(cobertura_nacional, color='red', linestyle='--', linewidth=1.5, alpha=0.7)
+    ax1.text(cobertura_nacional + 0.5, len(top_ufs_pct) - 0.5, 
+             f'Média Brasil\n{cobertura_nacional:.1f}%', fontsize=8, color='red', va='top')
+    
+    ax1.set_yticks(y_pos)
+    ax1.set_yticklabels(top_ufs_pct['UF'], fontsize=10)
+    ax1.invert_yaxis()
+    ax1.set_xlabel('Cobertura Municipal (%)')
+    ax1.set_title('Top 15 UFs por Cobertura Percentual\n(% de municípios com equipes de Atenção Domiciliar)', 
+                  fontsize=11, fontweight='bold', pad=10)
+    
+    # Legenda de regiões
+    handles_cob = [mpatches.Patch(color=cores_regiao[r], label=r) for r in cores_regiao]
+    ax1.legend(handles=handles_cob, title='Região', loc='lower right', fontsize=8)
+    
     ax1.grid(True, alpha=0.3, axis='x')
-    ax1.set_xlim(0, top_ufs_pct['MUN_TOTAL'].max() * 1.35)
+    ax1.set_xlim(0, top_ufs_pct['COBERTURA_%'].max() * 1.25)
     
     plt.tight_layout(rect=[0, 0.05, 1, 0.95])
     fig1a.text(0.5, 0.01, 
@@ -372,14 +379,14 @@ def main():
     print(f"    [1/5] Cobertura percentual: {output_fig1a}")
     
     # =========================================================================
-    # VISUALIZAÇÃO 2A: ANÁLISE PER CAPITA - DENSIDADE POR REGIÃO
+    # VISUALIZAÇÃO 2A: TAXA POR 100K HABITANTES - DENSIDADE POR REGIÃO
     # =========================================================================
     
     media_nacional = total_equipes / TOTAL_POPULACAO_BRASIL * 100
     
     fig2a, ax3 = plt.subplots(figsize=(10, 7))
-    fig2a.suptitle('Programa Melhor em Casa - Análise Per Capita\n'
-                  f'Equipes por 100 mil habitantes - Brasil ({total_equipes:,} equipes)',
+    fig2a.suptitle('Programa Melhor em Casa - Taxa por 100 mil Habitantes\n'
+                  f'Equipes de Atenção Domiciliar - Brasil ({total_equipes:,} equipes)',
                   fontsize=14, fontweight='bold', y=1.02)
     
     ordem_regioes = cobertura_regiao.sort_values('EQUIPES_POR_100K', ascending=True)
@@ -389,7 +396,7 @@ def main():
                     color=cores_barras, alpha=0.85)
     
     ax3.set_xlabel('Equipes por 100 mil habitantes')
-    ax3.set_title('Densidade de Equipes AD por Região\n(equipes por 100 mil habitantes)', 
+    ax3.set_title('Taxa de Equipes AD por Região\n(equipes por 100 mil habitantes)', 
                   fontsize=11, fontweight='bold', pad=10)
     
     # Linha de média nacional
@@ -410,18 +417,18 @@ def main():
              f'Fonte: CNES/DATASUS (Agosto 2025) + IBGE Censo 2022 | População Brasil: {TOTAL_POPULACAO_BRASIL:,} mil',
              ha='center', fontsize=9, style='italic', color='gray')
     
-    output_fig2a = os.path.join(VIS_PERCAPITA_DIR, 'densidade_por_regiao.png')
+    output_fig2a = os.path.join(VIS_TAXA100K_DIR, 'densidade_por_regiao.png')
     plt.savefig(output_fig2a, dpi=150, bbox_inches='tight', facecolor='white')
     plt.close(fig2a)
     print(f"    [2/5] Densidade por região: {output_fig2a}")
     
     # =========================================================================
-    # VISUALIZAÇÃO 2B: ANÁLISE PER CAPITA - TOP 15 UFs
+    # VISUALIZAÇÃO 2B: TAXA POR 100K HABITANTES - TOP 15 UFs
     # =========================================================================
     
     fig2b, ax4 = plt.subplots(figsize=(10, 8))
-    fig2b.suptitle('Programa Melhor em Casa - Análise Per Capita\n'
-                  f'Equipes por 100 mil habitantes - Brasil ({total_equipes:,} equipes)',
+    fig2b.suptitle('Programa Melhor em Casa - Taxa por 100 mil Habitantes\n'
+                  f'Equipes de Atenção Domiciliar - Brasil ({total_equipes:,} equipes)',
                   fontsize=14, fontweight='bold', y=1.02)
     
     top_ufs_percapita = municipios_ad.nlargest(15, 'EQUIPES_POR_100K').copy()
@@ -435,7 +442,7 @@ def main():
     ax4.set_yticklabels(top_ufs_percapita['UF'])
     ax4.invert_yaxis()
     ax4.set_xlabel('Equipes por 100 mil habitantes')
-    ax4.set_title('Top 15 UFs por Densidade de Equipes\n(equipes per capita)', 
+    ax4.set_title('Top 15 UFs por Taxa de Equipes\n(equipes por 100 mil habitantes)', 
                   fontsize=11, fontweight='bold', pad=10)
     
     # Linha de média
@@ -458,10 +465,10 @@ def main():
              f'Fonte: CNES/DATASUS (Agosto 2025) + IBGE Censo 2022 | População Brasil: {TOTAL_POPULACAO_BRASIL:,} mil',
              ha='center', fontsize=9, style='italic', color='gray')
     
-    output_fig2b = os.path.join(VIS_PERCAPITA_DIR, 'top15_percapita_ufs.png')
+    output_fig2b = os.path.join(VIS_TAXA100K_DIR, 'top15_taxa_100k_ufs.png')
     plt.savefig(output_fig2b, dpi=150, bbox_inches='tight', facecolor='white')
     plt.close(fig2b)
-    print(f"    [3/5] Top 15 UFs per capita: {output_fig2b}")
+    print(f"    [3/5] Top 15 UFs taxa/100k: {output_fig2b}")
     
     # =========================================================================
     # VISUALIZAÇÃO 3A: CONFORMIDADE LEGAL - POR TIPO DE EQUIPE
@@ -577,7 +584,7 @@ def main():
       Municípios com AD: {total_mun_ad:,} de {TOTAL_MUNICIPIOS_BRASIL:,} ({cobertura_nacional:.1f}%)
       Total de equipes: {total_equipes:,}
     
-    ANÁLISE PER CAPITA:
+    TAXA POR 100 MIL HABITANTES:
       Média nacional: {media_nacional:.2f} equipes por 100 mil habitantes
       Melhor região: {cobertura_regiao.loc[cobertura_regiao['EQUIPES_POR_100K'].idxmax(), 'REGIAO']} ({cobertura_regiao['EQUIPES_POR_100K'].max():.2f}/100k)
     
