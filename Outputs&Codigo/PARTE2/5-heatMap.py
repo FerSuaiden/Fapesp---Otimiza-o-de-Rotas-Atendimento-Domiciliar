@@ -96,10 +96,34 @@ try:
         heatmap_list,
         name='Capacidade (CHS) de Atenção Domiciliar',
         min_opacity=0.2,
-        max_val=float(df_heatmap_data['CHS_TOTAL_ESTABELECIMENTO'].max()), # Define o máximo com base nos dados
         radius=15,
         blur=10
     ).add_to(mapa_calor)
+
+    # Legenda explicativa
+    legend_html = """
+    <div style="position: fixed; 
+                bottom: 50px; left: 50px; width: 380px; height: auto; 
+                border:2px solid grey; z-index:9999; font-size:14px;
+                background-color:white; opacity: .92; padding: 14px;
+                line-height: 1.6;
+                ">
+                <b style="font-size:16px;">Mapa de Calor &mdash; Capacidade (CHS)</b><br><br>
+                <div style="display:flex; align-items:center; margin-bottom:8px;">
+                    <div style="width:200px; height:18px; background: linear-gradient(to right, #0000ff, #00ff00, #ffff00, #ff0000); border-radius:3px;"></div>
+                    <span style="margin-left:10px; font-size:13px;">Menor &rarr; Maior</span>
+                </div>
+                <span style="font-size:13px; line-height:1.7;">
+                A intensidade da cor indica a <b>Carga Horária Semanal (CHS)</b><br>
+                total dos profissionais de Atenção Domiciliar vinculados<br>
+                a cada estabelecimento de saúde (EMAD + EMAP).<br>
+                <b>Azul:</b> Baixa capacidade &nbsp;|&nbsp; <b>Vermelho:</b> Alta capacidade<br>
+                <hr style="margin: 8px 0;">
+                <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
+                </span>
+    </div>
+    """
+    mapa_calor.get_root().html.add_child(folium.Element(legend_html))
 
     nome_arquivo = 'mapa_calor_chs_brasil.html'
     mapa_calor.save(nome_arquivo)

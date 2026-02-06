@@ -100,7 +100,7 @@ try:
     
     # Melhora a legibilidade
     fig.update_layout(
-        margin=dict(t=80, l=25, r=25, b=80),
+        margin=dict(t=80, l=25, r=25, b=140),
         font_size=12,
         # Adiciona anotações como legenda
         annotations=[
@@ -114,8 +114,8 @@ try:
                 align='left',
                 showarrow=False,
                 xref='paper', yref='paper',
-                x=0, y=-0.15,
-                font=dict(size=11)
+                x=0, y=-0.08,
+                font=dict(size=13)
             )
         ]
     )

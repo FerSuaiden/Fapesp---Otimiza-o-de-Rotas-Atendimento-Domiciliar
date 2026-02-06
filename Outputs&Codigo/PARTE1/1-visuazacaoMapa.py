@@ -61,22 +61,22 @@ try:
     # Legenda HTML
     legend_html = """
     <div style="position: fixed; 
-                bottom: 50px; left: 50px; width: 380px; height: auto; 
-                border:2px solid grey; z-index:9999; font-size:12px;
-                background-color:white; opacity: .92; padding: 12px;
-                line-height: 1.5;
+                bottom: 50px; left: 50px; width: 420px; height: auto; 
+                border:2px solid grey; z-index:9999; font-size:14px;
+                background-color:white; opacity: .92; padding: 14px;
+                line-height: 1.6;
                 ">
-                <b style="font-size:14px;">Legenda - Programa Melhor em Casa</b><br><br>
+                <b style="font-size:16px;">Legenda - Programa Melhor em Casa</b><br><br>
                 <i class="fa fa-map-marker fa-2x" style="color:purple"></i>&nbsp; <b>Atendimento + Apoio</b> (EMAD + EMAP)<br>
                 <i class="fa fa-map-marker fa-2x" style="color:blue"></i>&nbsp; <b>Apenas EMAD</b> (Equipe de Atendimento)<br>
                 <i class="fa fa-map-marker fa-2x" style="color:green"></i>&nbsp; <b>Apenas EMAP</b> (Equipe de Apoio)<br>
                 <hr style="margin: 10px 0;">
-                <small style="line-height: 1.6;">
+                <span style="line-height: 1.7; font-size: 13px;">
                 <b>EMAD I/II:</b> Equipe Multidisciplinar de Atenção Domiciliar<br>
                 <b>EMAP:</b> Equipe Multiprofissional de Apoio<br>
                 <b>EMAP-R:</b> EMAP para Reabilitação<br>
                 <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
-                </small>
+                </span>
     </div>
     """
     mapa_final.get_root().html.add_child(folium.Element(legend_html))
