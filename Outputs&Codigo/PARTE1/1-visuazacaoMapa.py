@@ -23,28 +23,6 @@ try:
     # Tratamento de coordenadas
     df_sp['NU_LATITUDE'] = pd.to_numeric(df_sp['NU_LATITUDE'].str.replace(',', '.'), errors='coerce')
     df_sp['NU_LONGITUDE'] = pd.to_numeric(df_sp['NU_LONGITUDE'].str.replace(',', '.'), errors='coerce')
-    
-    # === SAÍDA DE VERIFICAÇÃO: Coordenadas ausentes ===
-    total_estab_sp = len(df_sp)
-    sem_coord = df_sp[df_sp['NU_LATITUDE'].isna() | df_sp['NU_LONGITUDE'].isna() | (df_sp['NU_LATITUDE'] == 0)]
-    n_sem_coord = len(sem_coord)
-    pct_sem_coord = 100 * n_sem_coord / total_estab_sp if total_estab_sp > 0 else 0
-    print(f"\n=== COORDENADAS GEOGRÁFICAS (SP) ===")
-    print(f"  Estabelecimentos com equipes AD em SP: {total_estab_sp}")
-    print(f"  Sem coordenadas válidas: {n_sem_coord} ({pct_sem_coord:.1f}%)")
-    print(f"  Com coordenadas válidas: {total_estab_sp - n_sem_coord} ({100-pct_sem_coord:.1f}%)")
-    
-    # Agora verificar para BRASIL inteiro (todos os estados)
-    df_todos = df_estabelecimentos_filtrados.copy()
-    df_todos['NU_LATITUDE'] = pd.to_numeric(df_todos['NU_LATITUDE'].str.replace(',', '.'), errors='coerce')
-    df_todos['NU_LONGITUDE'] = pd.to_numeric(df_todos['NU_LONGITUDE'].str.replace(',', '.'), errors='coerce')
-    total_brasil = len(df_todos)
-    sem_coord_br = len(df_todos[df_todos['NU_LATITUDE'].isna() | df_todos['NU_LONGITUDE'].isna() | (df_todos['NU_LATITUDE'] == 0)])
-    pct_sem_br = 100 * sem_coord_br / total_brasil if total_brasil > 0 else 0
-    print(f"\n  BRASIL (todos os estados):")
-    print(f"  Estabelecimentos com equipes AD: {total_brasil}")
-    print(f"  Sem coordenadas válidas: {sem_coord_br} ({pct_sem_br:.1f}%)")
-    
     df_mapeamento = df_sp.dropna(subset=['NU_LATITUDE', 'NU_LONGITUDE'])
     df_mapeamento = df_mapeamento[df_mapeamento['NU_LATITUDE'] != 0]
 
@@ -83,38 +61,21 @@ try:
     # Legenda HTML
     legend_html = """
     <div style="position: fixed; 
-                bottom: 50px; left: 50px; width: 420px; height: auto; 
+                bottom: 50px; left: 50px; width: 380px; height: auto; 
                 border:2px solid grey; z-index:9999; font-size:12px;
                 background-color:white; opacity: .92; padding: 12px;
                 line-height: 1.5;
                 ">
-                <b style="font-size:14px;">Legenda - Programa Melhor em Casa (SP)</b><br><br>
-                
-                <b style="font-size:12px;">Marcadores (estabelecimentos individuais):</b><br>
-                <i class="fa fa-map-marker fa-2x" style="color:purple"></i>&nbsp; <b>Atendimento + Apoio</b> — possui EMAD e EMAP no mesmo local<br>
-                <i class="fa fa-map-marker fa-2x" style="color:blue"></i>&nbsp; <b>Apenas EMAD</b> — Equipe de Atendimento (EMAD I ou II)<br>
-                <i class="fa fa-map-marker fa-2x" style="color:green"></i>&nbsp; <b>Apenas EMAP</b> — Equipe de Apoio (EMAP ou EMAP-R)<br>
-                
-                <hr style="margin: 8px 0;">
-                <b style="font-size:12px;">Clusters (agrupamentos automáticos):</b><br>
-                <small style="line-height: 1.8;">
-                Os <b>círculos coloridos com números</b> são <b>clusters</b>: agrupam
-                vários estabelecimentos próximos para facilitar a visualização.<br>
-                &bull; O <b>número</b> indica quantos estabelecimentos estão agrupados.<br>
-                &bull; A <b>cor do círculo</b> varia de <span style="color:green;font-weight:bold;">verde</span>
-                (poucos) → <span style="color:orange;font-weight:bold;">amarelo</span>
-                → <span style="color:red;font-weight:bold;">vermelho</span> (muitos).<br>
-                &bull; <b>Clique no cluster</b> para expandir e ver os marcadores individuais.<br>
-                &bull; <b>Clusters verdes NÃO são estabelecimentos</b> — são apenas agrupamentos
-                com poucos pontos naquela região.
-                </small>
-                
-                <hr style="margin: 8px 0;">
+                <b style="font-size:14px;">Legenda - Programa Melhor em Casa</b><br><br>
+                <i class="fa fa-map-marker fa-2x" style="color:purple"></i>&nbsp; <b>Atendimento + Apoio</b> (EMAD + EMAP)<br>
+                <i class="fa fa-map-marker fa-2x" style="color:blue"></i>&nbsp; <b>Apenas EMAD</b> (Equipe de Atendimento)<br>
+                <i class="fa fa-map-marker fa-2x" style="color:green"></i>&nbsp; <b>Apenas EMAP</b> (Equipe de Apoio)<br>
+                <hr style="margin: 10px 0;">
                 <small style="line-height: 1.6;">
-                <b>EMAD I/II:</b> Equipe Multiprofissional de Atenção Domiciliar<br>
+                <b>EMAD I/II:</b> Equipe Multidisciplinar de Atenção Domiciliar<br>
                 <b>EMAP:</b> Equipe Multiprofissional de Apoio<br>
                 <b>EMAP-R:</b> EMAP para Reabilitação<br>
-                <i>Fonte: CNES/DataSUS — Competência 2025/08</i>
+                <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
                 </small>
     </div>
     """

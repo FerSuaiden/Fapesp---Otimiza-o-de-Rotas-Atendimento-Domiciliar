@@ -298,13 +298,12 @@ A análise de cobertura municipal revelou que apenas 21,9\% dos municípios bras
     \item Sul: 9,0\% (menor cobertura)
 \end{itemize}
 
-Foi desenvolvido um mapa interativo utilizando a biblioteca Folium (Leaflet.js) para visualização geográfica das equipes no Estado de São Paulo. O mapa utiliza \textit{MarkerCluster} para agrupamento dinâmico de marcadores e categorização por cores (Roxo: EMAD+EMAP, Azul: apenas EMAD, Verde: apenas EMAP). Cada marcador possui popup informativo com nome do estabelecimento, tipo de equipe, endereço e código CNES.
+Foi desenvolvido um mapa interativo utilizando a biblioteca Folium (Leaflet.js) para visualização geográfica das equipes no Estado de São Paulo. O mapa utiliza \textit{MarkerCluster} para agrupamento dinâmico de marcadores e categorização por cores (Roxo: EMAD+EMAP, Azul: apenas EMAD, Verde: apenas EMAP). Os círculos coloridos com números visíveis no mapa são \textit{clusters} --- agrupamentos automáticos de marcadores próximos, não estabelecimentos individuais. A cor do cluster indica a quantidade de pontos agrupados (verde: poucos, amarelo: médio, vermelho: muitos). Ao clicar em um cluster, ele se expande revelando os marcadores individuais. Cada marcador possui popup informativo com nome do estabelecimento, tipo de equipe, endereço e código CNES.
 
 \begin{figure}[H]
 \centering
-% Onde 'mapa_screenshot' é o nome exato do arquivo que você subiu
 \includegraphics[width=0.85\textwidth]{mapaSP.png} 
-\caption{Mapa interativo das equipes de Atenção Domiciliar no Estado de São Paulo.}
+\caption{Mapa interativo das equipes de Atenção Domiciliar no Estado de São Paulo. Círculos com números são clusters (agrupamentos automáticos); marcadores individuais indicam estabelecimentos.}
 \label{fig:mapa}
 \end{figure}
 
@@ -347,15 +346,6 @@ A amplitude (0h a 3.732h) reflete a heterogeneidade das equipes em termos de com
 Os cinco estados com maior capacidade total são: São Paulo (100.929h), Minas Gerais (67.752h), Bahia (57.125h), Rio de Janeiro (51.390h) e Ceará (36.164h).
 
 Foi gerado um mapa de calor (heatmap) do Brasil utilizando a biblioteca Folium com camada HeatMap, mostrando a intensidade da capacidade de atendimento domiciliar por localização geográfica. As áreas metropolitanas de São Paulo, Rio de Janeiro e Belo Horizonte apresentam maior concentração de capacidade.
-
-\begin{figure}[H]
-\centering
-% Substituir pelo arquivo de imagem:
-% \includegraphics[width=0.9\textwidth]{cobertura_municipal_brasil_v2.png}
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}\textbf{Cobertura Municipal}\\Inserir: \texttt{cobertura\_municipal\_brasil\_v2.png}\vspace{2.5cm}}}
-\caption{Cobertura municipal do Programa Melhor em Casa por estado e região.}
-\label{fig:cobertura}
-\end{figure}
 
 \subsubsection{Caracterização das Habilidades \texorpdfstring{$S_k$}{Sk} (PARTE 2)}
 
@@ -514,11 +504,26 @@ O requisito de enfermeiro para EMAD I foi aumentado de 40h (Portaria 825/2016) p
 
 \begin{figure}[H]
 \centering
-% Substituir pelo arquivo de imagem:
-% \includegraphics[width=0.9\textwidth]{conformidade_legal_brasil_v2.png}
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{2.5cm}\textbf{Conformidade Legal}\\Inserir: \texttt{conformidade\_legal\_brasil\_v2.png}\vspace{2.5cm}}}
-\caption{Análise de conformidade legal por tipo de equipe (Portaria 3.005/2024).}
-\label{fig:conformidade}
+% Inserir: Outputs&Codigo/PARTE4/visualizacoes/nacional/cobertura_municipal/top15_cobertura_percentual.png
+\includegraphics[width=0.85\textwidth]{top15_cobertura_percentual.png}
+\caption{Top 15 UFs por cobertura percentual do Programa Melhor em Casa.}
+\label{fig:cobertura}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+% Inserir: Outputs&Codigo/PARTE4/visualizacoes/nacional/conformidade_legal/conformidade_por_tipo.png
+\includegraphics[width=0.85\textwidth]{conformidade_por_tipo.png}
+\caption{Conformidade legal por tipo de equipe (Portaria GM/MS nº 3.005/2024).}
+\label{fig:conformidade_tipo}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+% Inserir: Outputs&Codigo/PARTE4/visualizacoes/nacional/conformidade_legal/conformidade_por_regiao.png
+\includegraphics[width=0.85\textwidth]{conformidade_por_regiao.png}
+\caption{Conformidade legal por região do Brasil.}
+\label{fig:conformidade_regiao}
 \end{figure}
 
 Foram geradas visualizações detalhadas para cada um dos 27 estados, incluindo gráficos de distribuição de equipes por município e conformidade legal (barras empilhadas verde/vermelho).
