@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metodologia — HHC-RSP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      HHC-RSP
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="panorama.html">Panorama Nacional</a></li>
+      <li><a href="conformidade.html">Conformidade</a></li>
+      <li><a href="estados.html">Estados</a></li>
+      <li><a href="mapas.html">Mapas Interativos</a></li>
+      <li><a href="metodologia.html">Metodologia</a></li>
+      <li><button class="theme-toggle" aria-label="Alternar tema">🌙</button></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+
+    <!-- Objetivo -->
+    <section>
+      <div class="section-header">
+        <h2>Objetivo do Projeto</h2>
+      </div>
+      <p>
+        Estudar métodos de otimização para a determinação de rotas e agendamentos das equipes de Atenção Domiciliar no contexto do Programa Melhor em Casa. A modelagem segue o <strong>Home Health Care Routing and Scheduling Problem (HHC-RSP)</strong>, e o método principal de solução é o <strong>BRKGA</strong> (Biased Random-Key Genetic Algorithm).
+      </p>
+    </section>
+
+    <!-- Pipeline de Dados -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Pipeline de Processamento</h2>
+        <p>O projeto está organizado em 4 etapas sequenciais.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <h3>PARTE 1 — Identificação e Mapeamento</h3>
+          <p>Identificação das equipes do Programa Melhor em Casa a partir do CNES/DATASUS. Filtro por códigos de equipe (22, 46, 23, 77), georreferenciamento e geração do mapa interativo de SP.</p>
+          <div>
+            <span class="tag">1-visuazacaoMapa.py</span>
+            <span class="tag">2-equipes_por_estado.py</span>
+            <span class="tag">3-pizza.py</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <h3>PARTE 2 — Capacidade (Q<sub>k</sub>) e Habilidades (S<sub>k</sub>)</h3>
+          <p>Cálculo da Carga Horária Semanal total (Q<sub>k</sub>) e mapeamento CBO → categorias profissionais (S<sub>k</sub>) para cada equipe. Integração de 4 tabelas CNES via joins relacionais.</p>
+          <div>
+            <span class="tag">4-capacidade.py</span>
+            <span class="tag">5-heatMap.py</span>
+            <span class="tag">6-sunburst.py</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <h3>PARTE 3 — Geração de Instâncias</h3>
+          <p>Geração de 6 instâncias sintéticas (10 a 500 pacientes) para validação do BRKGA. Pacientes com modalidades AD2/AD3, janelas de tempo e tempos de serviço baseados na Portaria 3.005/2024. Distâncias via fórmula de Haversine.</p>
+          <div>
+            <span class="tag">15-gerador_instancias.py</span>
+            <span class="tag">JSON + CSV</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <h3>PARTE 4 — Cobertura e Conformidade Legal</h3>
+          <p>Análise nacional, regional e estadual da cobertura municipal e verificação de conformidade com a Portaria 3.005/2024. Geração de 39 visualizações e 7 datasets processados.</p>
+          <div>
+            <span class="tag">analise_nacional_brasil.py</span>
+            <span class="tag">gerar_visualizacoes_estados.py</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fontes de Dados -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Fontes de Dados</h2>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-body">
+            <h3>CNES/DATASUS</h3>
+            <p>Cadastro Nacional de Estabelecimentos de Saúde. Informações sobre estabelecimentos, equipes e profissionais. Competência: 08/2025.</p>
+            <a href="https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp" target="_blank">Download →</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>CBO</h3>
+            <p>Classificação Brasileira de Ocupações. Dicionário de códigos profissionais (6 dígitos). Edição 2024.</p>
+            <a href="https://cbo.mte.gov.br/cbosite/pages/downloads.jsf" target="_blank">Download →</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>IBGE — Censo 2022</h3>
+            <p>Dados demográficos por setor censitário, incluindo população idosa (60+) e geometrias geográficas.</p>
+            <a href="https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/" target="_blank">Download →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabelas principais -->
+      <div class="table-wrapper mt-3">
+        <table>
+          <thead>
+            <tr>
+              <th>Arquivo CNES</th>
+              <th>Descrição</th>
+              <th>Chaves Principais</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>tbEstabelecimento</td><td>Cadastro de estabelecimentos de saúde</td><td>CO_UNIDADE, NU_LATITUDE, NU_LONGITUDE</td></tr>
+            <tr><td>tbEquipe</td><td>Equipes vinculadas aos estabelecimentos</td><td>CO_UNIDADE, SEQ_EQUIPE, TP_EQUIPE</td></tr>
+            <tr><td>rlEstabEquipeProf</td><td>Tabela-ponte: profissionais ↔ equipes</td><td>SEQ_EQUIPE, CO_PROFISSIONAL_SUS, CO_CBO</td></tr>
+            <tr><td>tbCargaHorariaSus</td><td>Carga horária de cada profissional</td><td>CO_PROFISSIONAL_SUS, QT_CARGA_HORARIA_*</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Parâmetros do Modelo -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Parâmetros Extraídos para o HHC-RSP</h2>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-body">
+            <h3>Capacidade Q<sub>k</sub></h3>
+            <p>Soma das CHS de todos os profissionais de cada equipe:</p>
+            <p style="text-align:center;font-style:italic;font-size:.95rem;">
+              Q<sub>k</sub> = Σ CHS<sub>p</sub> , onde CHS<sub>p</sub> = CH<sub>amb.</sub> + CH<sub>hosp.</sub> + CH<sub>outros</sub>
+            </p>
+            <p>Integração de 4 tabelas: <code>tbEquipe ⋈ rlEstabEquipeProf ⋈ tbCargaHorariaSus ⋈ tbEstabelecimento</code></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>Habilidades S<sub>k</sub></h3>
+            <p>Conjunto de categorias profissionais disponíveis na equipe, mapeadas via prefixos CBO:</p>
+            <p style="text-align:center;font-style:italic;font-size:.95rem;">
+              S<sub>k</sub> = { c ∈ C : ∃ p ∈ equipe<sub>k</sub> tal que categoria(p) = c }
+            </p>
+            <p>17.776 profissionais mapeados em 9 categorias: Téc. Enfermagem (33,4%), Enfermeiro (16,2%), Fisioterapeuta (14,8%), Médico (12,4%) e outras.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Referências -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Referências Bibliográficas</h2>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Referência</th>
+              <th>Contribuição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Dantzig e Ramser (1959)</td><td>Formulação original do Vehicle Routing Problem (VRP)</td></tr>
+            <tr><td>Mankowska, Meisel e Bierwirth (2014)</td><td>Modelo de referência para HHC-RSP com serviços interdependentes</td></tr>
+            <tr><td>Fikar e Hirsch (2017)</td><td>Revisão sistemática do HHC-RSP (41 artigos classificados)</td></tr>
+            <tr><td>Gonçalves e Resende (2011)</td><td>Introdução do BRKGA para otimização combinatória</td></tr>
+            <tr><td>Kummer, Santos e Arenales (2024)</td><td>Aplicação do BRKGA ao HHC-RSP brasileiro</td></tr>
+            <tr><td>Portaria GM/MS nº 825/2016</td><td>Instituição do Programa Melhor em Casa</td></tr>
+            <tr><td>Portaria GM/MS nº 3.005/2024</td><td>Atualização dos requisitos de composição das equipes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Informações do Projeto -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Informações do Projeto</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-body">
+            <h3>Pesquisador</h3>
+            <p><strong>Fernando Alee Suaiden</strong><br>
+            Graduando em Ciências de Computação<br>
+            ICMC — Universidade de São Paulo</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>Orientadora</h3>
+            <p><strong>Maristela Oliveira dos Santos</strong><br>
+            ICMC — Universidade de São Paulo</p>
+            <p>Processo FAPESP: 2025/21835-0</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Fernando Alee Suaiden · Orientadora: Maristela Oliveira dos Santos · ICMC-USP</p>
+    <p>FAPESP 2025/21835-0 · <a href="https://github.com/fersuaiden/IC" target="_blank">GitHub</a></p>
+  </footer>
+
+  <div id="lightbox" class="lightbox-overlay"><img src="" alt="" /></div>
+  <button class="scroll-top" aria-label="Voltar ao topo">↑</button>
+  <script src="js/main.js"></script>
+</body>
+</html>

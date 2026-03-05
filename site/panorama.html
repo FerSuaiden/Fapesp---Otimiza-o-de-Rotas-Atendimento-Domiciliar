@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panorama Nacional — HHC-RSP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      HHC-RSP
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="panorama.html">Panorama Nacional</a></li>
+      <li><a href="conformidade.html">Conformidade</a></li>
+      <li><a href="estados.html">Estados</a></li>
+      <li><a href="mapas.html">Mapas Interativos</a></li>
+      <li><a href="metodologia.html">Metodologia</a></li>
+      <li><button class="theme-toggle" aria-label="Alternar tema">🌙</button></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+
+    <!-- Composição Nacional -->
+    <section>
+      <div class="section-header">
+        <h2>Composição Nacional das Equipes</h2>
+        <p>Distribuição percentual dos 4 tipos de equipe de Atenção Domiciliar no Brasil.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <img src="../Outputs%26Codigo/PARTE1/composicao_nacional_pizza.png" alt="Composição nacional - pizza" />
+          <div class="card-body">
+            <h3>Composição por Tipo</h3>
+            <p>As EMAD I representam 41% das equipes, seguidas por EMAP (34,9%), EMAD II (17,3%) e EMAP-R (6,8%).</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="../Outputs%26Codigo/PARTE1/distribuicao_equipes_por_estado_empilhado.png" alt="Distribuição por estado - empilhado" />
+          <div class="card-body">
+            <h3>Distribuição por Estado</h3>
+            <p>Gráfico de barras empilhado mostrando a quantidade de equipes por estado, divididas por tipo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cobertura Municipal -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Cobertura Municipal</h2>
+        <p>Análise da penetração do Programa Melhor em Casa nos municípios brasileiros.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/nacional/cobertura_municipal/distribuicao_por_regiao.png" alt="Distribuição por região" />
+          <div class="card-body">
+            <h3>Distribuição por Região</h3>
+            <p>O Nordeste lidera em cobertura (31,4%), enquanto o Sul apresenta a menor penetração (9,0%).</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/nacional/cobertura_municipal/top15_cobertura_percentual.png" alt="Top 15 UFs por cobertura" />
+          <div class="card-body">
+            <h3>Top 15 UFs por Cobertura</h3>
+            <p>De 16,1% (AM) a 100% (DF), com variação significativa entre estados.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela Cobertura por Região -->
+      <div class="table-wrapper mt-3">
+        <table>
+          <thead>
+            <tr>
+              <th>Região</th>
+              <th>Mun. Cobertos</th>
+              <th>Cobertura (%)</th>
+              <th>Equipes</th>
+              <th>Eq./100k hab.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Nordeste</td><td>564</td><td>31,4%</td><td>1.104</td><td>2,02</td></tr>
+            <tr><td>Norte</td><td>99</td><td>22,0%</td><td>237</td><td>1,35</td></tr>
+            <tr><td>Sudeste</td><td>359</td><td>21,5%</td><td>892</td><td>1,05</td></tr>
+            <tr><td>Centro-Oeste</td><td>89</td><td>19,1%</td><td>216</td><td>1,33</td></tr>
+            <tr><td>Sul</td><td>107</td><td>9,0%</td><td>215</td><td>0,72</td></tr>
+            <tr style="font-weight:700;"><td>Brasil</td><td>1.218</td><td>21,9%</td><td>2.664</td><td>1,31</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Densidade por 100k habitantes -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Densidade de Equipes por 100 mil Habitantes</h2>
+        <p>Taxa de equipes normalizada pela população de cada região e estado.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/nacional/analise_densidade_100k_habitantes/densidade_por_regiao.png" alt="Densidade por região" />
+          <div class="card-body">
+            <h3>Densidade por Região</h3>
+            <p>O Nordeste possui 2,02 equipes por 100 mil habitantes, quase o triplo do Sul (0,72).</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/nacional/analise_densidade_100k_habitantes/top15_taxa_100k_ufs.png" alt="Top 15 UFs por taxa" />
+          <div class="card-body">
+            <h3>Top 15 UFs por Taxa/100k</h3>
+            <p>Ranking das unidades federativas por número de equipes por 100 mil habitantes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Composição Regional -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Composição por Região</h2>
+        <p>Diferenças regionais na distribuição dos tipos de equipe.</p>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Região</th>
+              <th>EMAD I</th>
+              <th>EMAD II</th>
+              <th>EMAP</th>
+              <th>EMAP-R</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Nordeste (1.104 eq.)</td><td>27,9%</td><td>23,8%</td><td>37,8%</td><td>10,5%</td></tr>
+            <tr><td>Norte (237 eq.)</td><td>45,6%</td><td>13,1%</td><td>40,1%</td><td>1,3%</td></tr>
+            <tr><td>Centro-Oeste (216 eq.)</td><td>38,4%</td><td>19,9%</td><td>40,3%</td><td>1,4%</td></tr>
+            <tr><td>Sudeste (892 eq.)</td><td>53,0%</td><td>9,8%</td><td>31,2%</td><td>6,1%</td></tr>
+            <tr><td>Sul (215 eq.)</td><td>56,3%</td><td>16,7%</td><td>24,2%</td><td>2,8%</td></tr>
+            <tr style="font-weight:700;"><td>Brasil (2.664 eq.)</td><td>41,0%</td><td>17,3%</td><td>34,9%</td><td>6,8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-muted">O Nordeste se diferencia com maior presença de EMAD II e EMAP-R (tipos com requisitos mais leves). Sudeste e Sul concentram mais de 50% das equipes no tipo EMAD I.</p>
+    </section>
+
+    <!-- Capacidade -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Capacidade das Equipes (Q<sub>k</sub>)</h2>
+        <p>Carga Horária Semanal total por equipe e por estado.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <img src="../Outputs%26Codigo/PARTE2/distribuicao_capacidade_Qk_histograma.png" alt="Histograma de capacidade" />
+          <div class="card-body">
+            <h3>Distribuição da Capacidade</h3>
+            <p>Mediana de 230h/semana, média de 224,7h, com alta variabilidade (DP = 169,8h).</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="../Outputs%26Codigo/PARTE2/capacidade_total_chs_por_estado.png" alt="Capacidade por estado" />
+          <div class="card-body">
+            <h3>Capacidade Total por Estado</h3>
+            <p>São Paulo lidera com 100.929h, seguido por MG (67.752h), BA (57.125h), RJ (51.390h) e CE (36.164h).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Fernando Alee Suaiden · Orientadora: Maristela Oliveira dos Santos · ICMC-USP</p>
+    <p>FAPESP 2025/21835-0 · <a href="https://github.com/fersuaiden/IC" target="_blank">GitHub</a></p>
+  </footer>
+
+  <div id="lightbox" class="lightbox-overlay"><img src="" alt="" /></div>
+  <button class="scroll-top" aria-label="Voltar ao topo">↑</button>
+  <script src="js/main.js"></script>
+</body>
+</html>

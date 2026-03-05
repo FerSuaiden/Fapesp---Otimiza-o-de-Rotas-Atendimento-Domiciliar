@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapas Interativos — HHC-RSP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      HHC-RSP
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="panorama.html">Panorama Nacional</a></li>
+      <li><a href="conformidade.html">Conformidade</a></li>
+      <li><a href="estados.html">Estados</a></li>
+      <li><a href="mapas.html">Mapas Interativos</a></li>
+      <li><a href="metodologia.html">Metodologia</a></li>
+      <li><button class="theme-toggle" aria-label="Alternar tema">🌙</button></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+
+    <section>
+      <div class="section-header">
+        <h2>Mapas Interativos</h2>
+        <p>Visualizações interativas geradas com Folium (Leaflet.js) e Plotly.</p>
+      </div>
+
+      <p>
+        Os mapas abaixo são gerados pelos scripts de análise e permitem explorar interativamente a distribuição espacial das equipes, a capacidade (CHS) por região e a composição profissional.
+      </p>
+    </section>
+
+    <!-- Mapa de Equipes SP -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Mapa de Equipes — São Paulo</h2>
+        <p>Distribuição espacial das equipes de Atenção Domiciliar no estado de São Paulo.</p>
+      </div>
+      <div class="iframe-wrapper" style="padding-bottom:65%;">
+        <iframe src="../map_server/htdocs/index.html" title="Mapa de Equipes AD em SP" loading="lazy"></iframe>
+      </div>
+      <p class="text-muted">
+        Círculos numerados são agrupamentos automáticos (clusters). Cores: <strong style="color:#8a2be2;">Roxo</strong> = EMAD+EMAP, <strong style="color:#3366cc;">Azul</strong> = apenas EMAD, <strong style="color:#2ca02c;">Verde</strong> = apenas EMAP. Clique nos clusters para expandir.
+      </p>
+    </section>
+
+    <!-- Mapa de Calor CHS -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Mapa de Calor — Capacidade (CHS)</h2>
+        <p>Heatmap da Carga Horária Semanal das equipes em todo o Brasil.</p>
+      </div>
+      <div class="iframe-wrapper" style="padding-bottom:65%;">
+        <iframe src="../map_server/htdocs/mapa_calor_chs_brasil.html" title="Mapa de calor CHS Brasil" loading="lazy"></iframe>
+      </div>
+      <p class="text-muted">
+        A intensidade do calor representa a concentração de capacidade (CHS total) das equipes de Atenção Domiciliar em cada localidade.
+      </p>
+    </section>
+
+    <!-- Sunburst de Habilidades -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Sunburst — Composição Profissional (S<sub>k</sub>)</h2>
+        <p>Gráfico hierárquico interativo das habilidades disponíveis nas equipes.</p>
+      </div>
+      <div class="iframe-wrapper" style="padding-bottom:70%;">
+        <iframe src="../map_server/htdocs/habilidades_sunburst.html" title="Sunburst de habilidades" loading="lazy"></iframe>
+      </div>
+      <p class="text-muted">
+        O gráfico sunburst mostra a composição profissional hierárquica das equipes de Atenção Domiciliar. Clique nos segmentos para navegar pela hierarquia.
+      </p>
+    </section>
+
+    <!-- Nota técnica -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Nota Técnica</h2>
+      </div>
+      <p>
+        Os mapas interativos são arquivos HTML autocontidos gerados com as bibliotecas <strong>Folium</strong> (Leaflet.js) e <strong>Plotly</strong>. Para uso local, abra diretamente os arquivos na pasta <code>map_server/htdocs/</code>, ou utilize o Dockerfile fornecido para servir via Apache.
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Fernando Alee Suaiden · Orientadora: Maristela Oliveira dos Santos · ICMC-USP</p>
+    <p>FAPESP 2025/21835-0 · <a href="https://github.com/fersuaiden/IC" target="_blank">GitHub</a></p>
+  </footer>
+
+  <div id="lightbox" class="lightbox-overlay"><img src="" alt="" /></div>
+  <button class="scroll-top" aria-label="Voltar ao topo">↑</button>
+  <script src="js/main.js"></script>
+</body>
+</html>
