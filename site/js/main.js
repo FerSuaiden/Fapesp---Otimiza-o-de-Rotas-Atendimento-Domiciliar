@@ -226,6 +226,19 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
+  /* ---------- Iframe Fullscreen ---------- */
+  document.querySelectorAll('.iframe-expand').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wrapper = btn.closest('.iframe-wrapper');
+      if (!wrapper) return;
+      if (!document.fullscreenElement) {
+        wrapper.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    });
+  });
+
   /* ---------- State Selector (estadual page) ---------- */
   const stateSelect = document.getElementById('state-select');
   const stateDisplay = document.getElementById('state-display');

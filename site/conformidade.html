@@ -19,9 +19,8 @@
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
       <li><a href="index.html">Início</a></li>
-      <li><a href="nacional.html">Nacional</a></li>
-      <li><a href="regional.html">Regional</a></li>
-      <li><a href="estadual.html">Estadual</a></li>
+      <li><a href="oferta.html">Oferta</a></li>
+      <li><a href="composicao.html">Composição</a></li>
       <li><a href="conformidade.html">Conformidade</a></li>
     </ul>
   </nav>
@@ -35,11 +34,17 @@
       </div>
 
       <p>
-        A conformidade legal é avaliada em três escalas — <a href="nacional.html">nacional</a>, <a href="regional.html">regional</a> e <a href="estadual.html">estadual</a> — permitindo identificar onde e por que as equipes não atendem aos critérios mínimos da legislação vigente.
+        A conformidade legal é avaliada em múltiplas perspectivas — por tipo de equipe, por região e por estado — permitindo identificar onde e por que as equipes não atendem aos critérios mínimos da legislação vigente.
       </p>
 
       <p>
-        A <strong>Portaria GM/MS nº 3.005/2024</strong> estabelece os requisitos mínimos de carga horária e categorias profissionais para cada tipo de equipe de Atenção Domiciliar. A verificação consistiu em agregar as CHS por categoria profissional (via prefixos CBO) para cada equipe, descartar profissionais com CHS inferior a 20h, e comparar os valores com os requisitos mínimos.
+        A <strong>Portaria GM/MS nº 3.005/2024</strong> estabelece os requisitos mínimos de
+        <abbr title="Carga Horária Semanal — total de horas semanais que cada profissional dedica à equipe">CHS</abbr>
+        e categorias profissionais para cada tipo de equipe de
+        <abbr title="Atenção Domiciliar — modalidade de cuidado em saúde prestada no domicílio do paciente">Atenção Domiciliar</abbr>.
+        A verificação consistiu em agregar as CHS por categoria profissional
+        (via prefixos <abbr title="Classificação Brasileira de Ocupações — código que identifica a profissão de cada trabalhador">CBO</abbr>)
+        para cada equipe, descartar profissionais com CHS inferior a 20h, e comparar os valores com os requisitos mínimos.
       </p>
 
       <!-- Requisitos por tipo -->
@@ -185,6 +190,89 @@
         </table>
       </div>
       <p class="text-muted">Regiões com maior proporção de EMAD I tendem a menor conformidade geral, pois a taxa desse tipo é baixa em todas as regiões.</p>
+    </section>
+
+    <!-- Explorador por Estado -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Conformidade por Estado</h2>
+        <p>Selecione um estado para visualizar a conformidade das equipes.</p>
+      </div>
+
+      <div class="state-selector">
+        <label for="state-select">Escolha o estado:</label>
+        <select id="state-select">
+          <option value="AC">Acre (AC)</option>
+          <option value="AL">Alagoas (AL)</option>
+          <option value="AM">Amazonas (AM)</option>
+          <option value="AP">Amapá (AP)</option>
+          <option value="BA">Bahia (BA)</option>
+          <option value="CE">Ceará (CE)</option>
+          <option value="DF">Distrito Federal (DF)</option>
+          <option value="ES">Espírito Santo (ES)</option>
+          <option value="GO">Goiás (GO)</option>
+          <option value="MA">Maranhão (MA)</option>
+          <option value="MG">Minas Gerais (MG)</option>
+          <option value="MS">Mato Grosso do Sul (MS)</option>
+          <option value="MT">Mato Grosso (MT)</option>
+          <option value="PA">Pará (PA)</option>
+          <option value="PB">Paraíba (PB)</option>
+          <option value="PE">Pernambuco (PE)</option>
+          <option value="PI">Piauí (PI)</option>
+          <option value="PR">Paraná (PR)</option>
+          <option value="RJ">Rio de Janeiro (RJ)</option>
+          <option value="RN">Rio Grande do Norte (RN)</option>
+          <option value="RO">Rondônia (RO)</option>
+          <option value="RR">Roraima (RR)</option>
+          <option value="RS">Rio Grande do Sul (RS)</option>
+          <option value="SC">Santa Catarina (SC)</option>
+          <option value="SE">Sergipe (SE)</option>
+          <option value="SP" selected>São Paulo (SP)</option>
+          <option value="TO">Tocantins (TO)</option>
+        </select>
+      </div>
+
+      <!-- Grid de botões rápidos -->
+      <div class="state-grid">
+        <button class="state-btn" data-uf="AC">AC</button>
+        <button class="state-btn" data-uf="AL">AL</button>
+        <button class="state-btn" data-uf="AM">AM</button>
+        <button class="state-btn" data-uf="AP">AP</button>
+        <button class="state-btn" data-uf="BA">BA</button>
+        <button class="state-btn" data-uf="CE">CE</button>
+        <button class="state-btn" data-uf="DF">DF</button>
+        <button class="state-btn" data-uf="ES">ES</button>
+        <button class="state-btn" data-uf="GO">GO</button>
+        <button class="state-btn" data-uf="MA">MA</button>
+        <button class="state-btn" data-uf="MG">MG</button>
+        <button class="state-btn" data-uf="MS">MS</button>
+        <button class="state-btn" data-uf="MT">MT</button>
+        <button class="state-btn" data-uf="PA">PA</button>
+        <button class="state-btn" data-uf="PB">PB</button>
+        <button class="state-btn" data-uf="PE">PE</button>
+        <button class="state-btn" data-uf="PI">PI</button>
+        <button class="state-btn" data-uf="PR">PR</button>
+        <button class="state-btn" data-uf="RJ">RJ</button>
+        <button class="state-btn" data-uf="RN">RN</button>
+        <button class="state-btn" data-uf="RO">RO</button>
+        <button class="state-btn" data-uf="RR">RR</button>
+        <button class="state-btn" data-uf="RS">RS</button>
+        <button class="state-btn" data-uf="SC">SC</button>
+        <button class="state-btn" data-uf="SE">SE</button>
+        <button class="state-btn active" data-uf="SP">SP</button>
+        <button class="state-btn" data-uf="TO">TO</button>
+      </div>
+
+      <!-- Display dinâmico -->
+      <div id="state-display" class="grid-2">
+        <div class="card card-full">
+          <img src="Outputs%26Codigo/PARTE4/visualizacoes/estados/SP/SP_equipes_conformidade.png" alt="Conformidade SP" />
+          <div class="card-body">
+            <h3>SP — Conformidade das Equipes</h3>
+            <p>Distribuição de equipes conformes e não-conformes no estado, por tipo de equipe (Portaria 3.005/2024).</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Conclusão -->

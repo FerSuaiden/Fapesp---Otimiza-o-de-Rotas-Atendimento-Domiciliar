@@ -320,6 +320,28 @@ tbody tr:hover {
   min-width: 200px;
 }
 
+/* ---------- Info box ---------- */
+.info-box {
+  background: var(--accent-light);
+  border-left: 4px solid var(--accent);
+  padding: 1rem 1.25rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 1rem 0;
+  font-size: .9rem;
+  line-height: 1.8;
+}
+
+.info-box strong {
+  color: var(--accent);
+}
+
+/* ---------- Abbreviation tooltips ---------- */
+abbr[title] {
+  text-decoration: underline dotted var(--accent);
+  text-underline-offset: 3px;
+  cursor: help;
+}
+
 /* ---------- Iframe wrapper ---------- */
 .iframe-wrapper {
   position: relative;
@@ -339,6 +361,50 @@ tbody tr:hover {
   width: 100%;
   height: 100%;
   border: none;
+}
+
+/* Iframe expand/fullscreen button */
+.iframe-expand {
+  position: absolute;
+  top: .6rem;
+  right: .6rem;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition), background var(--transition);
+  backdrop-filter: blur(4px);
+}
+
+.iframe-wrapper:hover .iframe-expand {
+  opacity: 1;
+}
+
+.iframe-expand:hover {
+  background: rgba(0,0,0,.75);
+}
+
+/* Iframe fullscreen mode */
+.iframe-wrapper:fullscreen {
+  height: 100vh;
+  padding-bottom: 0;
+  border: none;
+  border-radius: 0;
+}
+
+.iframe-wrapper:fullscreen .iframe-expand {
+  opacity: 1;
+  top: 1rem;
+  right: 1rem;
 }
 
 /* ---------- Lightbox / Image Viewer ---------- */

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Análise Regional — Melhor em Casa</title>
+  <title>Oferta — Melhor em Casa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
@@ -19,9 +19,8 @@
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
       <li><a href="index.html">Início</a></li>
-      <li><a href="nacional.html">Nacional</a></li>
-      <li><a href="regional.html">Regional</a></li>
-      <li><a href="estadual.html">Estadual</a></li>
+      <li><a href="oferta.html">Oferta</a></li>
+      <li><a href="composicao.html">Composição</a></li>
       <li><a href="conformidade.html">Conformidade</a></li>
     </ul>
   </nav>
@@ -31,19 +30,46 @@
     <!-- Contexto -->
     <section>
       <div class="section-header">
-        <h2>Visão Regional</h2>
-        <p>Análise comparativa entre as cinco regiões do Brasil.</p>
+        <h2>Oferta de Atenção Domiciliar</h2>
+        <p>Distribuição, cobertura e presença das equipes no território brasileiro.</p>
       </div>
       <p>
-        As regiões brasileiras apresentam diferenças marcantes na estruturação do Programa Melhor em Casa. Enquanto o Nordeste concentra o maior número absoluto de equipes e a maior cobertura relativa, o Sul tem a menor penetração e menor taxa per capita. Aqui detalhamos essas assimetrias.
+        O Brasil conta com <strong>2.664 equipes</strong> de
+        <abbr title="Atenção Domiciliar — modalidade de cuidado em saúde prestada no domicílio do paciente">Atenção Domiciliar</abbr>
+        distribuídas em <strong>1.218 municípios</strong> (21,9% do total), abrangendo todas as 27
+        <abbr title="Unidades Federativas — estados brasileiros e Distrito Federal">UFs</abbr>.
+        Esta seção apresenta <em>onde</em> e <em>quantas</em> equipes atuam no programa Melhor em Casa.
       </p>
+      <div class="info-box">
+        <strong>Tipos de equipe:</strong> o programa opera com quatro tipos —
+        <abbr title="Equipe Multiprofissional de Atenção Domiciliar tipo I — equipe de referência com dedicação integral">EMAD&nbsp;I</abbr> (equipe principal, dedicação integral),
+        <abbr title="Equipe Multiprofissional de Atenção Domiciliar tipo II — equipe de referência com carga horária reduzida">EMAD&nbsp;II</abbr> (carga horária menor),
+        <abbr title="Equipe Multiprofissional de Apoio — equipe que complementa as EMADs com profissionais especializados">EMAP</abbr> (apoio multiprofissional) e
+        <abbr title="Equipe Multiprofissional de Apoio Rural — equipe de apoio para áreas rurais e remotas">EMAP-R</abbr> (apoio rural).
+        Detalhes sobre composição e capacidade estão na aba <a href="composicao.html">Composição</a>.
+      </div>
     </section>
 
-    <!-- Cobertura Municipal por Região -->
+    <!-- Distribuição por Estado -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Distribuição por Estado</h2>
+        <p>Quantidade de equipes em cada UF, por tipo.</p>
+      </div>
+      <div class="card" style="max-width:800px;margin:0 auto;">
+        <img src="Outputs%26Codigo/PARTE1/distribuicao_equipes_por_estado_empilhado.png" alt="Distribuição por estado - empilhado" />
+        <div class="card-body">
+          <h3>Equipes por Estado</h3>
+          <p>São Paulo (412), Minas Gerais (317) e Bahia (282) concentram as maiores quantidades. As cores diferenciam os quatro tipos de equipe.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cobertura Municipal -->
     <section class="mt-3">
       <div class="section-header">
         <h2>Cobertura Municipal por Região</h2>
-        <p>Penetração do Programa Melhor em Casa nos municípios de cada região.</p>
+        <p>Percentual de municípios atendidos pelo programa em cada região.</p>
       </div>
       <div class="grid-2">
         <div class="card">
@@ -62,7 +88,6 @@
         </div>
       </div>
 
-      <!-- Tabela Cobertura por Região -->
       <div class="table-wrapper mt-3">
         <table>
           <thead>
@@ -86,11 +111,11 @@
       </div>
     </section>
 
-    <!-- Densidade por 100k habitantes -->
+    <!-- Densidade -->
     <section class="mt-3">
       <div class="section-header">
-        <h2>Densidade de Equipes por 100 mil Habitantes</h2>
-        <p>Taxa de equipes normalizada pela população de cada região e estado.</p>
+        <h2>Densidade de Equipes</h2>
+        <p>Número de equipes por 100 mil habitantes em cada região e estado.</p>
       </div>
       <div class="grid-2">
         <div class="card">
@@ -110,43 +135,56 @@
       </div>
     </section>
 
-    <!-- Composição por Região -->
+    <!-- Principais Estados -->
     <section class="mt-3">
       <div class="section-header">
-        <h2>Composição por Região</h2>
-        <p>Diferenças regionais na distribuição dos tipos de equipe.</p>
+        <h2>Principais Estados</h2>
+        <p>Os cinco estados com maior número de equipes.</p>
       </div>
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>Região</th>
-              <th>EMAD I</th>
-              <th>EMAD II</th>
-              <th>EMAP</th>
-              <th>EMAP-R</th>
+              <th>Estado</th>
+              <th>Equipes</th>
+              <th>Eq./100k</th>
+              <th>Cobertura (%)</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Nordeste (1.104 eq.)</td><td>27,9%</td><td>23,8%</td><td>37,8%</td><td>10,5%</td></tr>
-            <tr><td>Norte (237 eq.)</td><td>45,6%</td><td>13,1%</td><td>40,1%</td><td>1,3%</td></tr>
-            <tr><td>Centro-Oeste (216 eq.)</td><td>38,4%</td><td>19,9%</td><td>40,3%</td><td>1,4%</td></tr>
-            <tr><td>Sudeste (892 eq.)</td><td>53,0%</td><td>9,8%</td><td>31,2%</td><td>6,1%</td></tr>
-            <tr><td>Sul (215 eq.)</td><td>56,3%</td><td>16,7%</td><td>24,2%</td><td>2,8%</td></tr>
-            <tr style="font-weight:700;"><td>Brasil (2.664 eq.)</td><td>41,0%</td><td>17,3%</td><td>34,9%</td><td>6,8%</td></tr>
+            <tr><td>São Paulo</td><td>412</td><td>0,93</td><td>24,0%</td></tr>
+            <tr><td>Minas Gerais</td><td>317</td><td>1,54</td><td>18,3%</td></tr>
+            <tr><td>Bahia</td><td>282</td><td>1,99</td><td>33,8%</td></tr>
+            <tr><td>Ceará</td><td>181</td><td>2,06</td><td>44,6%</td></tr>
+            <tr><td>Pará</td><td>154</td><td>1,90</td><td>49,3%</td></tr>
+            <tr style="font-weight:700;"><td>Brasil</td><td>2.664</td><td>1,31</td><td>21,9%</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="text-muted">O Nordeste se diferencia com maior presença de EMAD II e EMAP-R (tipos com requisitos mais leves). Sudeste e Sul concentram mais de 50% das equipes no tipo EMAD I.</p>
     </section>
 
-    <!-- Conclusão -->
+    <!-- Mapa SP -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Mapa de Equipes — São Paulo</h2>
+        <p>Distribuição espacial das equipes no estado mais populoso.</p>
+      </div>
+      <div class="iframe-wrapper" style="padding-bottom:65%;">
+        <iframe src="map_server/htdocs/index.html" title="Mapa de Equipes AD em SP" loading="lazy"></iframe>
+        <button class="iframe-expand" title="Tela cheia">⛶</button>
+      </div>
+      <p class="text-muted">
+        Mapa interativo — use o zoom e arraste para navegar. Círculos numerados são agrupamentos automáticos (clusters). Cores: <strong style="color:#8a2be2;">Roxo</strong> = EMAD+EMAP, <strong style="color:#3366cc;">Azul</strong> = apenas EMAD, <strong style="color:#2ca02c;">Verde</strong> = apenas EMAP. Clique nos clusters para expandir.
+      </p>
+    </section>
+
+    <!-- Síntese -->
     <section class="mt-3">
       <div class="section-header">
         <h2>Síntese</h2>
       </div>
       <p>
-        A análise regional revela um <strong>desequilíbrio importante</strong>: o Nordeste concentra 41,4% das equipes e atinge a maior taxa per capita (2,02/100k), enquanto o Sul, apesar de seu alto IDH, opera com apenas 0,72 equipes por 100 mil habitantes. A composição também varia — o Sudeste e o Sul dependem fortemente de EMAD I (>50%), enquanto o Nordeste diversifica com mais EMAD II e EMAP-R. Essas diferenças estruturais impactam diretamente a <a href="conformidade.html">conformidade legal</a> e a capacidade de atendimento em cada região.
+        A oferta de Atenção Domiciliar alcança 21,9% dos municípios brasileiros, com marcada concentração no Nordeste (31,4% de cobertura, 2,02 eq./100k hab.) e baixa penetração no Sul (9,0%, 0,72 eq./100k). São Paulo tem o maior número absoluto de equipes (412), mas uma das menores taxas per capita (0,93/100k). Essas assimetrias refletem diferenças populacionais e de adesão ao programa entre regiões e estados.
       </p>
     </section>
 
