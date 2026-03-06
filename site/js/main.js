@@ -1,27 +1,8 @@
 /* ============================================
-   HHC-RSP Site — Main JavaScript
+   Melhor em Casa — Main JavaScript
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-
-  /* ---------- Theme Toggle ---------- */
-  const toggle = document.querySelector('.theme-toggle');
-  const saved = localStorage.getItem('theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
-
-  if (toggle) {
-    const update = () => {
-      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-      toggle.textContent = dark ? '☀️' : '🌙';
-    };
-    update();
-    toggle.addEventListener('click', () => {
-      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      update();
-    });
-  }
 
   /* ---------- Mobile Nav ---------- */
   const navToggle = document.querySelector('.nav-toggle');

@@ -1,5 +1,5 @@
 /* ============================================
-   HHC-RSP — Visualizações do Programa Melhor em Casa
+   Melhor em Casa — Visualizações
    ============================================ */
 
 /* ---------- Reset & Variables ---------- */
@@ -20,18 +20,7 @@
   --transition: .25s ease;
 }
 
-[data-theme="dark"] {
-  --bg: #0d1117;
-  --bg-card: #161b22;
-  --text: #e6edf3;
-  --text-muted: #8b949e;
-  --accent: #58a6ff;
-  --accent-light: #1a2332;
-  --border: #30363d;
-  --shadow: 0 2px 8px rgba(0,0,0,.3);
-  --nav-bg: #161b22;
-  --hero-bg: linear-gradient(135deg, #1a2332 0%, #0d1117 100%);
-}
+
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -109,20 +98,7 @@ a:hover { opacity: .8; }
   opacity: 1;
 }
 
-.theme-toggle {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: .4rem .6rem;
-  cursor: pointer;
-  font-size: 1.1rem;
-  color: var(--text);
-  transition: background var(--transition);
-}
 
-.theme-toggle:hover {
-  background: var(--accent-light);
-}
 
 /* Mobile nav toggle */
 .nav-toggle {

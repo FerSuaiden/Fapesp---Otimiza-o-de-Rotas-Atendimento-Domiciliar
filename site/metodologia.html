@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Metodologia — HHC-RSP</title>
+  <title>Metodologia — Melhor em Casa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
@@ -14,7 +14,7 @@
   <nav class="navbar">
     <a href="index.html" class="logo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      HHC-RSP
+      Melhor em Casa
     </a>
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
@@ -24,7 +24,6 @@
       <li><a href="estados.html">Estados</a></li>
       <li><a href="mapas.html">Mapas Interativos</a></li>
       <li><a href="metodologia.html">Metodologia</a></li>
-      <li><button class="theme-toggle" aria-label="Alternar tema">🌙</button></li>
     </ul>
   </nav>
 
@@ -33,10 +32,10 @@
     <!-- Objetivo -->
     <section>
       <div class="section-header">
-        <h2>Objetivo do Projeto</h2>
+        <h2>Objetivo</h2>
       </div>
       <p>
-        Estudar métodos de otimização para a determinação de rotas e agendamentos das equipes de Atenção Domiciliar no contexto do Programa Melhor em Casa. A modelagem segue o <strong>Home Health Care Routing and Scheduling Problem (HHC-RSP)</strong>, e o método principal de solução é o <strong>BRKGA</strong> (Biased Random-Key Genetic Algorithm).
+        Caracterizar as equipes de Atenção Domiciliar do Programa Melhor em Casa a partir de dados públicos, quantificando sua distribuição geográfica, composição profissional, capacidade operacional e conformidade com a legislação vigente.
       </p>
     </section>
 
@@ -68,7 +67,7 @@
         </div>
         <div class="timeline-item">
           <h3>PARTE 3 — Geração de Instâncias</h3>
-          <p>Geração de 6 instâncias sintéticas (10 a 500 pacientes) para validação do BRKGA. Pacientes com modalidades AD2/AD3, janelas de tempo e tempos de serviço baseados na Portaria 3.005/2024. Distâncias via fórmula de Haversine.</p>
+          <p>Geração de 6 instâncias sintéticas (10 a 500 pacientes) com modalidades AD2/AD3, janelas de tempo e tempos de serviço baseados na Portaria 3.005/2024. Distâncias via fórmula de Haversine.</p>
           <div>
             <span class="tag">15-gerador_instancias.py</span>
             <span class="tag">JSON + CSV</span>
@@ -135,10 +134,10 @@
       </div>
     </section>
 
-    <!-- Parâmetros do Modelo -->
+    <!-- Parâmetros Extraídos -->
     <section class="mt-3">
       <div class="section-header">
-        <h2>Parâmetros Extraídos para o HHC-RSP</h2>
+        <h2>Parâmetros Extraídos da Análise</h2>
       </div>
 
       <div class="grid-2">
@@ -179,11 +178,6 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Dantzig e Ramser (1959)</td><td>Formulação original do Vehicle Routing Problem (VRP)</td></tr>
-            <tr><td>Mankowska, Meisel e Bierwirth (2014)</td><td>Modelo de referência para HHC-RSP com serviços interdependentes</td></tr>
-            <tr><td>Fikar e Hirsch (2017)</td><td>Revisão sistemática do HHC-RSP (41 artigos classificados)</td></tr>
-            <tr><td>Gonçalves e Resende (2011)</td><td>Introdução do BRKGA para otimização combinatória</td></tr>
-            <tr><td>Kummer, Santos e Arenales (2024)</td><td>Aplicação do BRKGA ao HHC-RSP brasileiro</td></tr>
             <tr><td>Portaria GM/MS nº 825/2016</td><td>Instituição do Programa Melhor em Casa</td></tr>
             <tr><td>Portaria GM/MS nº 3.005/2024</td><td>Atualização dos requisitos de composição das equipes</td></tr>
           </tbody>
