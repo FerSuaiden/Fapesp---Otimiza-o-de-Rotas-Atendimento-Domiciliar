@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showState(uf) {
     if (!stateDisplay) return;
-    const imgPath = `../Outputs%26Codigo/PARTE4/visualizacoes/estados/${uf}/${uf}_equipes_conformidade.png`;
+    const imgPath = `Outputs%26Codigo/PARTE4/visualizacoes/estados/${uf}/${uf}_equipes_conformidade.png`;
     stateDisplay.innerHTML = `
       <div class="card card-full">
         <img src="${imgPath}" alt="Conformidade ${uf}" class="zoomable" />

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Análise por Estado — Melhor em Casa</title>
+  <title>Análise Estadual — Melhor em Casa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
@@ -19,23 +19,31 @@
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
       <li><a href="index.html">Início</a></li>
-      <li><a href="panorama.html">Panorama Nacional</a></li>
+      <li><a href="nacional.html">Nacional</a></li>
+      <li><a href="regional.html">Regional</a></li>
+      <li><a href="estadual.html">Estadual</a></li>
       <li><a href="conformidade.html">Conformidade</a></li>
-      <li><a href="estados.html">Estados</a></li>
-      <li><a href="mapas.html">Mapas Interativos</a></li>
-      <li><a href="metodologia.html">Metodologia</a></li>
     </ul>
   </nav>
 
   <main class="container">
 
+    <!-- Contexto -->
     <section>
       <div class="section-header">
-        <h2>Análise por Estado</h2>
-        <p>Selecione um estado para visualizar a conformidade das equipes de Atenção Domiciliar.</p>
+        <h2>Visão Estadual</h2>
+        <p>Análise detalhada por unidade federativa.</p>
       </div>
+      <p>
+        Cada estado possui realidades distintas em relação ao Programa Melhor em Casa. A tabela abaixo resume os cinco estados com maior número de equipes, e o seletor interativo permite explorar a conformidade de cada UF individualmente.
+      </p>
+    </section>
 
-      <!-- Top 5 estados -->
+    <!-- Top 5 estados -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Principais Estados</h2>
+      </div>
       <div class="table-wrapper mb-3">
         <table>
           <thead>
@@ -59,8 +67,15 @@
           </tbody>
         </table>
       </div>
+    </section>
 
-      <!-- Seletor de Estado -->
+    <!-- Seletor de Estado -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Conformidade por Estado</h2>
+        <p>Selecione um estado para visualizar a conformidade das equipes.</p>
+      </div>
+
       <div class="state-selector">
         <label for="state-select">Escolha o estado:</label>
         <select id="state-select">
@@ -128,7 +143,7 @@
       <!-- Display dinâmico -->
       <div id="state-display" class="grid-2">
         <div class="card card-full">
-          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/estados/SP/SP_equipes_conformidade.png" alt="Conformidade SP" />
+          <img src="Outputs%26Codigo/PARTE4/visualizacoes/estados/SP/SP_equipes_conformidade.png" alt="Conformidade SP" />
           <div class="card-body">
             <h3>SP — Conformidade das Equipes</h3>
             <p>Distribuição de equipes conformes e não-conformes no estado, por tipo de equipe (Portaria 3.005/2024).</p>
@@ -137,16 +152,27 @@
       </div>
     </section>
 
-    <!-- Observação -->
+    <!-- Mapa de Equipes SP -->
     <section class="mt-3">
       <div class="section-header">
-        <h2>Observações</h2>
+        <h2>Mapa de Equipes — São Paulo</h2>
+        <p>Distribuição espacial das equipes de Atenção Domiciliar no estado de São Paulo.</p>
+      </div>
+      <div class="iframe-wrapper" style="padding-bottom:65%;">
+        <iframe src="map_server/htdocs/index.html" title="Mapa de Equipes AD em SP" loading="lazy"></iframe>
+      </div>
+      <p class="text-muted">
+        Círculos numerados são agrupamentos automáticos (clusters). Cores: <strong style="color:#8a2be2;">Roxo</strong> = EMAD+EMAP, <strong style="color:#3366cc;">Azul</strong> = apenas EMAD, <strong style="color:#2ca02c;">Verde</strong> = apenas EMAP. Clique nos clusters para expandir.
+      </p>
+    </section>
+
+    <!-- Conclusão -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Síntese</h2>
       </div>
       <p>
-        A análise estadual revela que <strong>número absoluto de equipes e cobertura relativa são indicadores dissociados</strong>: São Paulo lidera em equipes (412), mas tem a pior taxa per capita entre os cinco maiores estados. O Ceará, com menos da metade, atinge mais que o dobro por habitante.
-      </p>
-      <p>
-        Essa heterogeneidade evidencia a importância de considerar os <strong>dados reais de cada localidade</strong> para uma compreensão precisa do programa.
+        A análise estadual evidencia que <strong>número absoluto de equipes e cobertura relativa são indicadores dissociados</strong>: São Paulo lidera em equipes (412), mas tem a pior taxa per capita entre os cinco maiores estados. O Ceará, com menos da metade das equipes, atinge mais que o dobro por habitante. A conformidade também varia drasticamente — de 61,9% (CE) a 82,6% (MG) entre os cinco maiores. Essa heterogeneidade reforça a importância de analisar os dados reais de cada localidade.
       </p>
     </section>
 
@@ -154,7 +180,7 @@
 
   <footer class="footer">
     <p>Fernando Alee Suaiden · Orientadora: Maristela Oliveira dos Santos · ICMC-USP</p>
-    <p>FAPESP 2025/21835-0 · <a href="https://github.com/fersuaiden/IC" target="_blank">GitHub</a></p>
+    <p>FAPESP 2025/21835-0 · <a href="https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar" target="_blank">GitHub</a></p>
   </footer>
 
   <div id="lightbox" class="lightbox-overlay"><img src="" alt="" /></div>

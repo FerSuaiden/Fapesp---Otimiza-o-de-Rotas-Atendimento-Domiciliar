@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panorama Nacional — Melhor em Casa</title>
+  <title>Análise Regional — Melhor em Casa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
@@ -19,56 +19,42 @@
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
       <li><a href="index.html">Início</a></li>
-      <li><a href="panorama.html">Panorama Nacional</a></li>
+      <li><a href="nacional.html">Nacional</a></li>
+      <li><a href="regional.html">Regional</a></li>
+      <li><a href="estadual.html">Estadual</a></li>
       <li><a href="conformidade.html">Conformidade</a></li>
-      <li><a href="estados.html">Estados</a></li>
-      <li><a href="mapas.html">Mapas Interativos</a></li>
-      <li><a href="metodologia.html">Metodologia</a></li>
     </ul>
   </nav>
 
   <main class="container">
 
-    <!-- Composição Nacional -->
+    <!-- Contexto -->
     <section>
       <div class="section-header">
-        <h2>Composição Nacional das Equipes</h2>
-        <p>Distribuição percentual dos 4 tipos de equipe de Atenção Domiciliar no Brasil.</p>
+        <h2>Visão Regional</h2>
+        <p>Análise comparativa entre as cinco regiões do Brasil.</p>
       </div>
-      <div class="grid-2">
-        <div class="card">
-          <img src="../Outputs%26Codigo/PARTE1/composicao_nacional_pizza.png" alt="Composição nacional - pizza" />
-          <div class="card-body">
-            <h3>Composição por Tipo</h3>
-            <p>As EMAD I representam 41% das equipes, seguidas por EMAP (34,9%), EMAD II (17,3%) e EMAP-R (6,8%).</p>
-          </div>
-        </div>
-        <div class="card">
-          <img src="../Outputs%26Codigo/PARTE1/distribuicao_equipes_por_estado_empilhado.png" alt="Distribuição por estado - empilhado" />
-          <div class="card-body">
-            <h3>Distribuição por Estado</h3>
-            <p>Gráfico de barras empilhado mostrando a quantidade de equipes por estado, divididas por tipo.</p>
-          </div>
-        </div>
-      </div>
+      <p>
+        As regiões brasileiras apresentam diferenças marcantes na estruturação do Programa Melhor em Casa. Enquanto o Nordeste concentra o maior número absoluto de equipes e a maior cobertura relativa, o Sul tem a menor penetração e menor taxa per capita. Aqui detalhamos essas assimetrias.
+      </p>
     </section>
 
-    <!-- Cobertura Municipal -->
+    <!-- Cobertura Municipal por Região -->
     <section class="mt-3">
       <div class="section-header">
-        <h2>Cobertura Municipal</h2>
-        <p>Análise da penetração do Programa Melhor em Casa nos municípios brasileiros.</p>
+        <h2>Cobertura Municipal por Região</h2>
+        <p>Penetração do Programa Melhor em Casa nos municípios de cada região.</p>
       </div>
       <div class="grid-2">
         <div class="card">
-          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/nacional/cobertura_municipal/distribuicao_por_regiao.png" alt="Distribuição por região" />
+          <img src="Outputs%26Codigo/PARTE4/visualizacoes/nacional/cobertura_municipal/distribuicao_por_regiao.png" alt="Distribuição por região" />
           <div class="card-body">
             <h3>Distribuição por Região</h3>
             <p>O Nordeste lidera em cobertura (31,4%), enquanto o Sul apresenta a menor penetração (9,0%).</p>
           </div>
         </div>
         <div class="card">
-          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/nacional/cobertura_municipal/top15_cobertura_percentual.png" alt="Top 15 UFs por cobertura" />
+          <img src="Outputs%26Codigo/PARTE4/visualizacoes/nacional/cobertura_municipal/top15_cobertura_percentual.png" alt="Top 15 UFs por cobertura" />
           <div class="card-body">
             <h3>Top 15 UFs por Cobertura</h3>
             <p>De 16,1% (AM) a 100% (DF), com variação significativa entre estados.</p>
@@ -108,14 +94,14 @@
       </div>
       <div class="grid-2">
         <div class="card">
-          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/nacional/analise_densidade_100k_habitantes/densidade_por_regiao.png" alt="Densidade por região" />
+          <img src="Outputs%26Codigo/PARTE4/visualizacoes/nacional/analise_densidade_100k_habitantes/densidade_por_regiao.png" alt="Densidade por região" />
           <div class="card-body">
             <h3>Densidade por Região</h3>
             <p>O Nordeste possui 2,02 equipes por 100 mil habitantes, quase o triplo do Sul (0,72).</p>
           </div>
         </div>
         <div class="card">
-          <img src="../Outputs%26Codigo/PARTE4/visualizacoes/nacional/analise_densidade_100k_habitantes/top15_taxa_100k_ufs.png" alt="Top 15 UFs por taxa" />
+          <img src="Outputs%26Codigo/PARTE4/visualizacoes/nacional/analise_densidade_100k_habitantes/top15_taxa_100k_ufs.png" alt="Top 15 UFs por taxa" />
           <div class="card-body">
             <h3>Top 15 UFs por Taxa/100k</h3>
             <p>Ranking das unidades federativas por número de equipes por 100 mil habitantes.</p>
@@ -124,7 +110,7 @@
       </div>
     </section>
 
-    <!-- Composição Regional -->
+    <!-- Composição por Região -->
     <section class="mt-3">
       <div class="section-header">
         <h2>Composição por Região</h2>
@@ -154,35 +140,21 @@
       <p class="text-muted">O Nordeste se diferencia com maior presença de EMAD II e EMAP-R (tipos com requisitos mais leves). Sudeste e Sul concentram mais de 50% das equipes no tipo EMAD I.</p>
     </section>
 
-    <!-- Capacidade -->
+    <!-- Conclusão -->
     <section class="mt-3">
       <div class="section-header">
-        <h2>Capacidade das Equipes (Q<sub>k</sub>)</h2>
-        <p>Carga Horária Semanal total por equipe e por estado.</p>
+        <h2>Síntese</h2>
       </div>
-      <div class="grid-2">
-        <div class="card">
-          <img src="../Outputs%26Codigo/PARTE2/distribuicao_capacidade_Qk_histograma.png" alt="Histograma de capacidade" />
-          <div class="card-body">
-            <h3>Distribuição da Capacidade</h3>
-            <p>Mediana de 230h/semana, média de 224,7h, com alta variabilidade (DP = 169,8h).</p>
-          </div>
-        </div>
-        <div class="card">
-          <img src="../Outputs%26Codigo/PARTE2/capacidade_total_chs_por_estado.png" alt="Capacidade por estado" />
-          <div class="card-body">
-            <h3>Capacidade Total por Estado</h3>
-            <p>São Paulo lidera com 100.929h, seguido por MG (67.752h), BA (57.125h), RJ (51.390h) e CE (36.164h).</p>
-          </div>
-        </div>
-      </div>
+      <p>
+        A análise regional revela um <strong>desequilíbrio importante</strong>: o Nordeste concentra 41,4% das equipes e atinge a maior taxa per capita (2,02/100k), enquanto o Sul, apesar de seu alto IDH, opera com apenas 0,72 equipes por 100 mil habitantes. A composição também varia — o Sudeste e o Sul dependem fortemente de EMAD I (>50%), enquanto o Nordeste diversifica com mais EMAD II e EMAP-R. Essas diferenças estruturais impactam diretamente a <a href="conformidade.html">conformidade legal</a> e a capacidade de atendimento em cada região.
+      </p>
     </section>
 
   </main>
 
   <footer class="footer">
     <p>Fernando Alee Suaiden · Orientadora: Maristela Oliveira dos Santos · ICMC-USP</p>
-    <p>FAPESP 2025/21835-0 · <a href="https://github.com/fersuaiden/IC" target="_blank">GitHub</a></p>
+    <p>FAPESP 2025/21835-0 · <a href="https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar" target="_blank">GitHub</a></p>
   </footer>
 
   <div id="lightbox" class="lightbox-overlay"><img src="" alt="" /></div>

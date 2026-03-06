@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Análise Nacional — Melhor em Casa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Melhor em Casa
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="nacional.html">Nacional</a></li>
+      <li><a href="regional.html">Regional</a></li>
+      <li><a href="estadual.html">Estadual</a></li>
+      <li><a href="conformidade.html">Conformidade</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+
+    <!-- Contexto -->
+    <section>
+      <div class="section-header">
+        <h2>Visão Nacional</h2>
+        <p>Panorama geral das equipes de Atenção Domiciliar em todo o Brasil.</p>
+      </div>
+      <p>
+        O Brasil conta com <strong>2.664 equipes</strong> de Atenção Domiciliar distribuídas em <strong>1.218 municípios</strong> (21,9% do total), abrangendo as cinco regiões do país. Nesta seção, apresentamos a composição, capacidade operacional e distribuição geográfica no nível nacional.
+      </p>
+    </section>
+
+    <!-- Composição Nacional -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Composição Nacional das Equipes</h2>
+        <p>Distribuição percentual dos 4 tipos de equipe de Atenção Domiciliar.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <img src="Outputs%26Codigo/PARTE1/composicao_nacional_pizza.png" alt="Composição nacional - pizza" />
+          <div class="card-body">
+            <h3>Composição por Tipo</h3>
+            <p>As EMAD I representam 41% das equipes, seguidas por EMAP (34,9%), EMAD II (17,3%) e EMAP-R (6,8%).</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="Outputs%26Codigo/PARTE1/distribuicao_equipes_por_estado_empilhado.png" alt="Distribuição por estado - empilhado" />
+          <div class="card-body">
+            <h3>Distribuição por Estado</h3>
+            <p>Gráfico de barras empilhado mostrando a quantidade de equipes por estado, divididas por tipo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Capacidade -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Capacidade das Equipes (Q<sub>k</sub>)</h2>
+        <p>Carga Horária Semanal total por equipe e por estado.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <img src="Outputs%26Codigo/PARTE2/distribuicao_capacidade_Qk_histograma.png" alt="Histograma de capacidade" />
+          <div class="card-body">
+            <h3>Distribuição da Capacidade</h3>
+            <p>Mediana de 230h/semana, média de 224,7h, com alta variabilidade (DP = 169,8h).</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="Outputs%26Codigo/PARTE2/capacidade_total_chs_por_estado.png" alt="Capacidade por estado" />
+          <div class="card-body">
+            <h3>Capacidade Total por Estado</h3>
+            <p>São Paulo lidera com 100.929h, seguido por MG (67.752h), BA (57.125h), RJ (51.390h) e CE (36.164h).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mapa de Calor CHS -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Mapa de Calor — Capacidade (CHS)</h2>
+        <p>Heatmap da Carga Horária Semanal das equipes em todo o Brasil.</p>
+      </div>
+      <div class="iframe-wrapper" style="padding-bottom:65%;">
+        <iframe src="map_server/htdocs/mapa_calor_chs_brasil.html" title="Mapa de calor CHS Brasil" loading="lazy"></iframe>
+      </div>
+      <p class="text-muted">
+        A intensidade do calor representa a concentração de capacidade (CHS total) das equipes de Atenção Domiciliar em cada localidade.
+      </p>
+    </section>
+
+    <!-- Sunburst -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Composição Profissional</h2>
+        <p>Gráfico hierárquico interativo das categorias profissionais nas equipes.</p>
+      </div>
+      <div class="iframe-wrapper" style="padding-bottom:70%;">
+        <iframe src="map_server/htdocs/habilidades_sunburst.html" title="Sunburst de habilidades" loading="lazy"></iframe>
+      </div>
+      <p class="text-muted">
+        O gráfico sunburst mostra a composição profissional hierárquica das equipes. Clique nos segmentos para navegar pela hierarquia. São 17.776 profissionais mapeados em 9 categorias: Téc. Enfermagem (33,4%), Enfermeiro (16,2%), Fisioterapeuta (14,8%), Médico (12,4%) e outras.
+      </p>
+    </section>
+
+    <!-- Conclusão -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Síntese</h2>
+      </div>
+      <p>
+        Em escala nacional, o programa apresenta cobertura moderada (21,9% dos municípios) com uma taxa de 1,31 equipes por 100 mil habitantes. A composição é dominada por EMAD I (41%) e EMAP (34,9%), e a capacidade operacional varia significativamente entre os estados — São Paulo concentra a maior carga horária absoluta, mas não a maior taxa per capita. Essa heterogeneidade motiva uma análise mais detalhada nas escalas <a href="regional.html">regional</a> e <a href="estadual.html">estadual</a>.
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Fernando Alee Suaiden · Orientadora: Maristela Oliveira dos Santos · ICMC-USP</p>
+    <p>FAPESP 2025/21835-0 · <a href="https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar" target="_blank">GitHub</a></p>
+  </footer>
+
+  <div id="lightbox" class="lightbox-overlay"><img src="" alt="" /></div>
+  <button class="scroll-top" aria-label="Voltar ao topo">↑</button>
+  <script src="js/main.js"></script>
+</body>
+</html>
