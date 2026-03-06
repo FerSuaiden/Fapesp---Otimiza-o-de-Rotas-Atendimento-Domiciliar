@@ -31,10 +31,10 @@
     <h1>Programa Melhor em Casa</h1>
     <p>Visualizações da Análise Exploratória de Dados — Equipes de Atenção Domiciliar no Brasil</p>
     <div class="hero-badges">
-      <span class="badge">📊 CNES/DATASUS</span>
-      <span class="badge">🏥 Melhor em Casa</span>
-      <span class="badge">📋 CBO</span>
-      <span class="badge">🗺️ IBGE</span>
+      <span class="badge">CNES/DATASUS</span>
+      <span class="badge">Melhor em Casa</span>
+      <span class="badge">CBO</span>
+      <span class="badge">IBGE</span>
     </div>
   </header>
 
@@ -62,25 +62,25 @@
       <div class="grid-2">
         <a href="nacional.html" class="card" style="text-decoration:none;color:inherit;">
           <div class="card-body text-center" style="padding:2rem;">
-            <h3>📊 Nacional</h3>
+            <h3>Nacional</h3>
             <p>Composição, capacidade e distribuição das 2.664 equipes em todo o Brasil.</p>
           </div>
         </a>
         <a href="regional.html" class="card" style="text-decoration:none;color:inherit;">
           <div class="card-body text-center" style="padding:2rem;">
-            <h3>🗺️ Regional</h3>
+            <h3>Regional</h3>
             <p>Cobertura, densidade e composição comparadas entre as cinco regiões.</p>
           </div>
         </a>
         <a href="estadual.html" class="card" style="text-decoration:none;color:inherit;">
           <div class="card-body text-center" style="padding:2rem;">
-            <h3>📍 Estadual</h3>
+            <h3>Estadual</h3>
             <p>Indicadores e conformidade detalhada para cada uma das 27 UFs.</p>
           </div>
         </a>
         <a href="conformidade.html" class="card" style="text-decoration:none;color:inherit;">
           <div class="card-body text-center" style="padding:2rem;">
-            <h3>⚖️ Conformidade Legal</h3>
+            <h3>Conformidade Legal</h3>
             <p>Verificação dos requisitos da Portaria 3.005/2024 por tipo e região.</p>
           </div>
         </a>
@@ -95,8 +95,22 @@
     <p>FAPESP 2025/21835-0 · <a href="https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar" target="_blank">GitHub</a></p>
   </footer>
 
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox-overlay"><img src="" alt="" /></div>
+  <!-- Image Viewer -->
+  <div id="lightbox" class="lightbox-overlay">
+    <div class="lb-toolbar">
+      <span class="lb-zoom-level">100%</span>
+      <button id="lb-zoom-in" title="Ampliar">+</button>
+      <button id="lb-zoom-out" title="Reduzir">−</button>
+      <button id="lb-reset" title="Resetar zoom">↺</button>
+      <button id="lb-fullscreen" title="Tela cheia">⛶</button>
+      <button id="lb-download" title="Download">⤓</button>
+      <button id="lb-close" title="Fechar">✕</button>
+    </div>
+    <div class="lb-img-container">
+      <img src="" alt="" />
+    </div>
+    <div class="lb-hint">Scroll para zoom · Arraste para mover · ESC para fechar</div>
+  </div>
 
   <!-- Scroll-to-top -->
   <button class="scroll-top" aria-label="Voltar ao topo">↑</button>
