@@ -36,7 +36,8 @@
       <p>
         As equipes de Atenção Domiciliar são classificadas em quatro tipos, cada um com composição e funções distintas.
         Esta seção detalha <em>o que</em> compõe cada equipe — seus tipos, profissionais e capacidade operacional
-        medida pela <abbr title="Carga Horária Semanal — total de horas semanais que cada profissional dedica à equipe">CHS</abbr>.
+        medida pela <abbr title="Carga Horária Semanal — total de horas semanais que cada profissional dedica à equipe">CHS</abbr>
+        (Carga Horária Semanal).
       </p>
     </section>
 
@@ -108,7 +109,7 @@
       </div>
       <div class="iframe-wrapper" style="padding-bottom:70%;">
         <iframe src="map_server/htdocs/habilidades_sunburst.html" title="Sunburst de habilidades" loading="lazy"></iframe>
-        <button class="iframe-expand" title="Tela cheia">⛶</button>
+        <button class="iframe-expand" title="Expandir">⛶</button>
       </div>
       <p class="text-muted">
         Este gráfico sunburst é interativo — clique nos segmentos para navegar pela hierarquia profissional.
@@ -127,7 +128,8 @@
       <div class="info-box">
         <strong>Q<sub>k</sub></strong> representa a capacidade total de uma equipe <em>k</em>, calculada como a soma das
         <abbr title="Carga Horária Semanal">CHS</abbr> de todos os seus profissionais.
-        Quanto maior o Q<sub>k</sub>, mais horas semanais a equipe tem disponível para atendimentos domiciliares.
+        Quanto maior o Q<sub>k</sub>, mais horas semanais a equipe tem disponível para atendimentos de
+        <abbr title="Atenção Domiciliar — modalidade de cuidado em saúde prestada no domicílio do paciente">Atenção Domiciliar</abbr>.
       </div>
       <div class="grid-2 mt-2">
         <div class="card">
@@ -140,7 +142,7 @@
         <div class="card">
           <img src="Outputs%26Codigo/PARTE2/capacidade_total_chs_por_estado.png" alt="Capacidade por estado" />
           <div class="card-body">
-            <h3>CHS Total por Estado</h3>
+            <h3><abbr title="Carga Horária Semanal">CHS</abbr> Total por Estado</h3>
             <p>São Paulo lidera com 100.929h, seguido por MG (67.752h), BA (57.125h), RJ (51.390h) e CE (36.164h).</p>
           </div>
         </div>
@@ -150,12 +152,12 @@
     <!-- Mapa de Calor CHS -->
     <section class="mt-3">
       <div class="section-header">
-        <h2>Mapa de Calor — CHS</h2>
+        <h2>Mapa de Calor — <abbr title="Carga Horária Semanal">CHS</abbr></h2>
         <p>Concentração geográfica da capacidade operacional das equipes.</p>
       </div>
       <div class="iframe-wrapper" style="padding-bottom:65%;">
         <iframe src="map_server/htdocs/mapa_calor_chs_brasil.html" title="Mapa de calor CHS Brasil" loading="lazy"></iframe>
-        <button class="iframe-expand" title="Tela cheia">⛶</button>
+        <button class="iframe-expand" title="Expandir">⛶</button>
       </div>
       <p class="text-muted">
         Mapa interativo — use o zoom e arraste para navegar. A intensidade do calor representa a concentração de CHS total das equipes em cada localidade.

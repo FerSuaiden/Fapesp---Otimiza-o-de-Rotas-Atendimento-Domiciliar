@@ -226,17 +226,29 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
-  /* ---------- Iframe Fullscreen ---------- */
+  /* ---------- Iframe Expand/Collapse ---------- */
   document.querySelectorAll('.iframe-expand').forEach(btn => {
     btn.addEventListener('click', () => {
       const wrapper = btn.closest('.iframe-wrapper');
       if (!wrapper) return;
-      if (!document.fullscreenElement) {
-        wrapper.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen();
-      }
+      const isExpanded = wrapper.classList.toggle('iframe-fullscreen');
+      btn.textContent = isExpanded ? '✕' : '⛶';
+      btn.title = isExpanded ? 'Fechar' : 'Expandir';
+      document.body.style.overflow = isExpanded ? 'hidden' : '';
     });
+  });
+
+  // ESC to close expanded iframe
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const expanded = document.querySelector('.iframe-wrapper.iframe-fullscreen');
+      if (expanded) {
+        expanded.classList.remove('iframe-fullscreen');
+        const btn = expanded.querySelector('.iframe-expand');
+        if (btn) { btn.textContent = '⛶'; btn.title = 'Expandir'; }
+        document.body.style.overflow = '';
+      }
+    }
   });
 
   /* ---------- State Selector (estadual page) ---------- */

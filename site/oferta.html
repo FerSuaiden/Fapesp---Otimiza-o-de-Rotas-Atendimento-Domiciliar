@@ -38,7 +38,8 @@
         <abbr title="Atenção Domiciliar — modalidade de cuidado em saúde prestada no domicílio do paciente">Atenção Domiciliar</abbr>
         distribuídas em <strong>1.218 municípios</strong> (21,9% do total), abrangendo todas as 27
         <abbr title="Unidades Federativas — estados brasileiros e Distrito Federal">UFs</abbr>.
-        Esta seção apresenta <em>onde</em> e <em>quantas</em> equipes atuam no programa Melhor em Casa.
+        Esta seção apresenta <em>onde</em> e <em>quantas</em> equipes atuam no programa Melhor em Casa,
+        incluindo um mapa interativo das equipes de São Paulo.
       </p>
       <div class="info-box">
         <strong>Tipos de equipe:</strong> o programa opera com quatro tipos —
@@ -48,6 +49,21 @@
         <abbr title="Equipe Multiprofissional de Apoio Rural — equipe de apoio para áreas rurais e remotas">EMAP-R</abbr> (apoio rural).
         Detalhes sobre composição e capacidade estão na aba <a href="composicao.html">Composição</a>.
       </div>
+    </section>
+
+    <!-- Mapa de Equipes SP -->
+    <section class="mt-3">
+      <div class="section-header">
+        <h2>Mapa de Equipes — São Paulo</h2>
+        <p>Distribuição espacial das equipes de <abbr title="Atenção Domiciliar — modalidade de cuidado em saúde prestada no domicílio do paciente">AD</abbr> no estado mais populoso.</p>
+      </div>
+      <div class="iframe-wrapper" style="padding-bottom:65%;">
+        <iframe src="map_server/htdocs/index.html" title="Mapa de Equipes AD em SP" loading="lazy"></iframe>
+        <button class="iframe-expand" title="Expandir">⛶</button>
+      </div>
+      <p class="text-muted">
+        Mapa interativo — use o zoom e arraste para navegar. Círculos numerados são agrupamentos automáticos (clusters). Cores: <strong style="color:#8a2be2;">Roxo</strong> = <abbr title="Equipe Multiprofissional de Atenção Domiciliar">EMAD</abbr>+<abbr title="Equipe Multiprofissional de Apoio">EMAP</abbr>, <strong style="color:#3366cc;">Azul</strong> = apenas EMAD, <strong style="color:#2ca02c;">Verde</strong> = apenas EMAP. Clique nos clusters para expandir.
+      </p>
     </section>
 
     <!-- Distribuição por Estado -->
@@ -161,21 +177,6 @@
           </tbody>
         </table>
       </div>
-    </section>
-
-    <!-- Mapa SP -->
-    <section class="mt-3">
-      <div class="section-header">
-        <h2>Mapa de Equipes — São Paulo</h2>
-        <p>Distribuição espacial das equipes no estado mais populoso.</p>
-      </div>
-      <div class="iframe-wrapper" style="padding-bottom:65%;">
-        <iframe src="map_server/htdocs/index.html" title="Mapa de Equipes AD em SP" loading="lazy"></iframe>
-        <button class="iframe-expand" title="Tela cheia">⛶</button>
-      </div>
-      <p class="text-muted">
-        Mapa interativo — use o zoom e arraste para navegar. Círculos numerados são agrupamentos automáticos (clusters). Cores: <strong style="color:#8a2be2;">Roxo</strong> = EMAD+EMAP, <strong style="color:#3366cc;">Azul</strong> = apenas EMAD, <strong style="color:#2ca02c;">Verde</strong> = apenas EMAP. Clique nos clusters para expandir.
-      </p>
     </section>
 
     <!-- Síntese -->
