@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="card card-full">
         <img src="${imgPath}" alt="Conformidade ${uf}" class="zoomable" />
         <div class="card-body">
-          <h3>${uf} — Conformidade das Equipes</h3>
+          <h3>${uf}: Conformidade das Equipes</h3>
           <p>Distribuição de equipes conformes e não-conformes no estado, por tipo de equipe (Portaria 3.005/2024).</p>
         </div>
       </div>
