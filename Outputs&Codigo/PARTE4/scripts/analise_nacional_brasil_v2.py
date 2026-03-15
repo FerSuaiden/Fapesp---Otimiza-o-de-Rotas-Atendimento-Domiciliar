@@ -105,7 +105,10 @@ REGRAS_EMAP = {
 PROF_NS_EMAP = ['FISIOTERAPEUTA', 'ASSISTENTE_SOCIAL', 'FONOAUDIOLOGO', 
                 'NUTRICIONISTA', 'PSICOLOGO', 'TERAPEUTA_OCUPACIONAL',
                 'ODONTOLOGO', 'FARMACEUTICO']
-PROF_NS_EMAP_R = PROF_NS_EMAP + ['ENFERMEIRO']
+PROF_NS_EMAP_R = [
+    'FISIOTERAPEUTA', 'FONOAUDIOLOGO', 'NUTRICIONISTA',
+    'TERAPEUTA_OCUPACIONAL', 'PSICOLOGO', 'ENFERMEIRO'
+]
 
 
 def categorizar_cbo(cbo):
@@ -129,6 +132,15 @@ def extrair_uf(codigo_municipio):
     """Extrai sigla UF do código IBGE do município."""
     prefixo = str(codigo_municipio).strip()[:2]
     return IBGE_UF_MAP.get(prefixo, 'DESCONHECIDO')
+
+
+def validar_colunas(df, obrigatorias, nome_tabela):
+    """Valida se uma tabela possui todas as colunas esperadas."""
+    faltando = [col for col in obrigatorias if col not in df.columns]
+    if faltando:
+        raise ValueError(
+            f"Tabela {nome_tabela} sem colunas obrigatórias: {faltando}"
+        )
 
 
 def verificar_conformidade_equipe(df_prof, tipo_equipe):
@@ -180,6 +192,12 @@ def main():
         os.path.join(CNES_DIR, "tbEquipe202508.csv"),
         sep=';', encoding='latin-1', low_memory=False
     )
+    validar_colunas(
+        df_equipes,
+        ['SEQ_EQUIPE', 'TP_EQUIPE', 'CO_MUNICIPIO', 'DT_DESATIVACAO'],
+        'tbEquipe202508.csv'
+    )
+    df_equipes['TP_EQUIPE'] = pd.to_numeric(df_equipes['TP_EQUIPE'], errors='coerce')
     
     df_equipes_ad = df_equipes[df_equipes['TP_EQUIPE'].isin(TIPOS_EQUIPE_AD.keys())].copy()
     df_equipes_ad['DT_DESATIVACAO'] = pd.to_datetime(
@@ -206,15 +224,15 @@ def main():
     municipios_ad.columns = ['UF', 'MUN_COM_AD', 'N_EQUIPES']
     municipios_ad['MUN_TOTAL'] = municipios_ad['UF'].map(MUNICIPIOS_POR_UF)
     municipios_ad['POPULACAO'] = municipios_ad['UF'].map(POPULACAO_POR_UF)
-    municipios_ad['COBERTURA_%'] = (municipios_ad['MUN_COM_AD'] / municipios_ad['MUN_TOTAL'] * 100).round(1)
-    municipios_ad['EQUIPES_POR_100K'] = (municipios_ad['N_EQUIPES'] / municipios_ad['POPULACAO'] * 100).round(2)
+    municipios_ad['COBERTURA_%'] = (municipios_ad['MUN_COM_AD'] / municipios_ad['MUN_TOTAL'] * 100)
+    municipios_ad['EQUIPES_POR_100K'] = (municipios_ad['N_EQUIPES'] / municipios_ad['POPULACAO'] * 100)
     municipios_ad['REGIAO'] = municipios_ad['UF'].map(UF_REGIAO)
     
     total_mun_ad = df_ativas['CO_MUNICIPIO'].nunique()
     total_equipes = len(df_ativas)
     cobertura_nacional = (total_mun_ad / TOTAL_MUNICIPIOS_BRASIL) * 100
     
-    print(f"    Municípios com AD: {total_mun_ad:,} de {TOTAL_MUNICIPIOS_BRASIL:,} ({cobertura_nacional:.1f}%)")
+    print(f"    Municípios com AD: {total_mun_ad:,} de {TOTAL_MUNICIPIOS_BRASIL:,} ({cobertura_nacional:.2f}%)")
     
     # Por região
     cobertura_regiao = df_ativas.groupby('REGIAO').agg({
@@ -232,8 +250,8 @@ def main():
     
     cobertura_regiao['MUN_TOTAL'] = cobertura_regiao['REGIAO'].map(mun_por_regiao)
     cobertura_regiao['POPULACAO'] = cobertura_regiao['REGIAO'].map(pop_por_regiao)
-    cobertura_regiao['COBERTURA_%'] = (cobertura_regiao['MUN_COM_AD'] / cobertura_regiao['MUN_TOTAL'] * 100).round(1)
-    cobertura_regiao['EQUIPES_POR_100K'] = (cobertura_regiao['N_EQUIPES'] / cobertura_regiao['POPULACAO'] * 100).round(2)
+    cobertura_regiao['COBERTURA_%'] = (cobertura_regiao['MUN_COM_AD'] / cobertura_regiao['MUN_TOTAL'] * 100)
+    cobertura_regiao['EQUIPES_POR_100K'] = (cobertura_regiao['N_EQUIPES'] / cobertura_regiao['POPULACAO'] * 100)
     
     # =========================================================================
     # ETAPA 3-5: CARREGAR PROFISSIONAIS, CHS E VERIFICAR CONFORMIDADE
@@ -245,12 +263,15 @@ def main():
     chunks_prof = []
     for chunk in pd.read_csv(
         os.path.join(CNES_DIR, "rlEstabEquipeProf202508.csv"),
-        sep=';', encoding='latin-1', chunksize=100000, low_memory=False
+        sep=';', encoding='latin-1', chunksize=100000, low_memory=False,
+        usecols=['SEQ_EQUIPE', 'CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 'DT_DESLIGAMENTO']
     ):
         filtered = chunk[chunk['SEQ_EQUIPE'].isin(seq_equipes_ad)]
         if len(filtered) > 0:
             chunks_prof.append(filtered)
-    
+    if not chunks_prof:
+        raise ValueError("Nenhum profissional encontrado para equipes AD ativas em rlEstabEquipeProf202508.csv")
+
     df_prof = pd.concat(chunks_prof, ignore_index=True)
     df_prof['DT_DESLIGAMENTO'] = pd.to_datetime(
         df_prof['DT_DESLIGAMENTO'], format='%d/%m/%Y', errors='coerce'
@@ -263,27 +284,41 @@ def main():
     chunks_chs = []
     for chunk in pd.read_csv(
         os.path.join(CNES_DIR, "tbCargaHorariaSus202508.csv"),
-        sep=';', encoding='latin-1', chunksize=500000, low_memory=False
+        sep=';', encoding='latin-1', chunksize=500000, low_memory=False,
+        usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'QT_CARGA_HORARIA_AMBULATORIAL',
+                 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
     ):
+        if 'CO_UNIDADE' in chunk.columns:
+            chunk['CO_UNIDADE'] = chunk['CO_UNIDADE'].astype(str)
         filtered = chunk[chunk['CO_PROFISSIONAL_SUS'].isin(prof_ids)]
         if len(filtered) > 0:
             chunks_chs.append(filtered)
+    if not chunks_chs:
+        raise ValueError("Nenhum registro de CHS encontrado para profissionais das equipes AD em tbCargaHorariaSus202508.csv")
     
     df_chs = pd.concat(chunks_chs, ignore_index=True)
     for col in ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']:
         if col in df_chs.columns:
             df_chs[col] = pd.to_numeric(df_chs[col], errors='coerce').fillna(0)
     
+    if 'CO_UNIDADE' in df_chs.columns:
+        df_chs['CO_UNIDADE'] = df_chs['CO_UNIDADE'].astype(str)
+
     df_chs['CHS_TOTAL'] = (
         df_chs.get('QT_CARGA_HORARIA_AMBULATORIAL', 0) + 
         df_chs.get('QT_CARGA_HORARIA_OUTROS', 0) + 
         df_chs.get('QT_CARGA_HOR_HOSP_SUS', 0)
     )
-    df_chs = df_chs.groupby('CO_PROFISSIONAL_SUS')['CHS_TOTAL'].sum().reset_index()
+    df_chs = df_chs.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['CHS_TOTAL'].sum().reset_index()
     
-    df_prof = df_prof.merge(df_chs, on='CO_PROFISSIONAL_SUS', how='left')
+    df_prof['CO_UNIDADE'] = df_prof['CO_UNIDADE'].astype(str)
+    df_prof = df_prof.merge(df_chs, on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'], how='left')
     df_prof['CHS_TOTAL'] = df_prof['CHS_TOTAL'].fillna(0)
     df_prof['CATEGORIA'] = df_prof['CO_CBO'].apply(categorizar_cbo)
+
+    profissionais_com_chs = (df_prof['CHS_TOTAL'] > 0).sum()
+    taxa_match = 100 * profissionais_com_chs / len(df_prof) if len(df_prof) > 0 else 0
+    print(f"    Match CHS (CHS>0): {profissionais_com_chs:,} de {len(df_prof):,} vínculos ({taxa_match:.2f}%)")
     
     print("\n[5] Verificando conformidade...")
     resultados = []
@@ -313,7 +348,7 @@ def main():
     total_conformes = df_resultados['CONFORME'].sum()
     taxa_nacional = 100 * total_conformes / total_equipes
     
-    print(f"    Conformidade: {total_conformes:,} de {total_equipes:,} ({taxa_nacional:.1f}%)")
+    print(f"    Conformidade: {total_conformes:,} de {total_equipes:,} ({taxa_nacional:.2f}%)")
     
     # =========================================================================
     # ETAPA 6: VISUALIZAÇÕES MELHORADAS
@@ -331,7 +366,7 @@ def main():
     
     fig1a, ax1 = plt.subplots(figsize=(10, 9))
     fig1a.suptitle('Programa Melhor em Casa - Cobertura Municipal no Brasil\n'
-                  f'{total_mun_ad:,} municípios com equipes AD ({cobertura_nacional:.1f}% do Brasil)',
+                  f'{total_mun_ad:,} municípios com equipes AD ({cobertura_nacional:.2f}% do Brasil)',
                   fontsize=14, fontweight='bold', y=1.02)
     
     # Ordenar por PORCENTAGEM de cobertura (não por números brutos)
@@ -345,13 +380,13 @@ def main():
     
     for i, (_, row) in enumerate(top_ufs_pct.iterrows()):
         ax1.text(row['COBERTURA_%'] + 1.5, i, 
-                 f"{row['COBERTURA_%']:.1f}%  ({int(row['MUN_COM_AD'])}/{int(row['MUN_TOTAL'])})", 
+                 f"{row['COBERTURA_%']:.2f}%  ({int(row['MUN_COM_AD'])}/{int(row['MUN_TOTAL'])})", 
                  va='center', fontsize=9, fontweight='bold', color='#2c3e50')
     
     # Linha de média nacional
     ax1.axvline(cobertura_nacional, color='red', linestyle='--', linewidth=1.5, alpha=0.7)
     ax1.text(cobertura_nacional + 0.5, len(top_ufs_pct) - 0.5, 
-             f'Média Brasil\n{cobertura_nacional:.1f}%', fontsize=8, color='red', va='top')
+             f'Média Brasil\n{cobertura_nacional:.2f}%', fontsize=8, color='red', va='top')
     
     ax1.set_yticks(y_pos)
     ax1.set_yticklabels(top_ufs_pct['UF'], fontsize=10)
@@ -475,7 +510,7 @@ def main():
     
     fig3a, ax5 = plt.subplots(figsize=(9, 7))
     fig3a.suptitle('Programa Melhor em Casa - Conformidade Legal (Portaria 3.005/2024)\n'
-                  f'{total_conformes:,} de {total_equipes:,} equipes em conformidade ({taxa_nacional:.1f}%)',
+                  f'{total_conformes:,} de {total_equipes:,} equipes em conformidade ({taxa_nacional:.2f}%)',
                   fontsize=14, fontweight='bold', y=1.02)
     
     # Por tipo
@@ -484,10 +519,15 @@ def main():
     }).reset_index()
     stats_tipo.columns = ['TIPO', 'TOTAL', 'CONFORMES']
     stats_tipo['NAO_CONFORMES'] = stats_tipo['TOTAL'] - stats_tipo['CONFORMES']
-    stats_tipo['TAXA_%'] = (100 * stats_tipo['CONFORMES'] / stats_tipo['TOTAL']).round(1)
+    stats_tipo['TAXA_%'] = (100 * stats_tipo['CONFORMES'] / stats_tipo['TOTAL'])
     
     tipos_ordem = ['EMAD I', 'EMAD II', 'EMAP', 'EMAP-R']
-    stats_tipo = stats_tipo.set_index('TIPO').loc[tipos_ordem].reset_index()
+    stats_tipo = (
+        stats_tipo
+        .set_index('TIPO')
+        .reindex(tipos_ordem, fill_value=0)
+        .reset_index()
+    )
     
     x_pos = np.arange(len(stats_tipo))
     ax5.bar(x_pos, stats_tipo['CONFORMES'], 0.6, label='Conformes', color='#27ae60')
@@ -501,7 +541,7 @@ def main():
     ax5.legend(loc='upper right')
     
     for i, row in stats_tipo.iterrows():
-        ax5.text(i, row['TOTAL'] + 15, f"{int(row['TOTAL'])}\n({row['TAXA_%']:.0f}%)", 
+        ax5.text(i, row['TOTAL'] + 15, f"{int(row['TOTAL'])}\n({row['TAXA_%']:.2f}%)", 
                 ha='center', fontsize=9, fontweight='bold')
     
     ax5.grid(True, alpha=0.3, axis='y')
@@ -522,7 +562,7 @@ def main():
     
     fig3b, ax6 = plt.subplots(figsize=(9, 7))
     fig3b.suptitle('Programa Melhor em Casa - Conformidade Legal (Portaria 3.005/2024)\n'
-                  f'{total_conformes:,} de {total_equipes:,} equipes em conformidade ({taxa_nacional:.1f}%)',
+                  f'{total_conformes:,} de {total_equipes:,} equipes em conformidade ({taxa_nacional:.2f}%)',
                   fontsize=14, fontweight='bold', y=1.02)
     
     # Por região
@@ -530,7 +570,7 @@ def main():
         'CONFORME': ['count', 'sum']
     }).reset_index()
     stats_regiao.columns = ['REGIAO', 'TOTAL', 'CONFORMES']
-    stats_regiao['TAXA_%'] = (100 * stats_regiao['CONFORMES'] / stats_regiao['TOTAL']).round(1)
+    stats_regiao['TAXA_%'] = (100 * stats_regiao['CONFORMES'] / stats_regiao['TOTAL'])
     stats_regiao = stats_regiao.sort_values('TOTAL', ascending=False)
     
     x_pos = np.arange(len(stats_regiao))
@@ -545,7 +585,7 @@ def main():
     
     # CORRIGIDO: usar enumerate para posição correta
     for idx, (_, row) in enumerate(stats_regiao.iterrows()):
-        ax6.text(idx + 0.2, row['CONFORMES'] + 10, f"{row['TAXA_%']:.0f}%", 
+        ax6.text(idx + 0.2, row['CONFORMES'] + 10, f"{row['TAXA_%']:.2f}%", 
                 ha='center', fontsize=9, fontweight='bold', color='#27ae60')
     
     ax6.grid(True, alpha=0.3, axis='y')
@@ -565,6 +605,11 @@ def main():
     # =========================================================================
     
     print("\n[7] Salvando CSVs...")
+
+    municipios_ad['COBERTURA_%'] = municipios_ad['COBERTURA_%'].round(2)
+    municipios_ad['EQUIPES_POR_100K'] = municipios_ad['EQUIPES_POR_100K'].round(2)
+    cobertura_regiao['COBERTURA_%'] = cobertura_regiao['COBERTURA_%'].round(2)
+    cobertura_regiao['EQUIPES_POR_100K'] = cobertura_regiao['EQUIPES_POR_100K'].round(2)
     
     municipios_ad.to_csv(os.path.join(OUTPUT_CSV_DIR, 'cobertura_municipal_brasil_v2.csv'), sep=';', index=False)
     cobertura_regiao.to_csv(os.path.join(OUTPUT_CSV_DIR, 'cobertura_regiao_brasil_v2.csv'), sep=';', index=False)
@@ -580,15 +625,15 @@ def main():
     
     print(f"""
     COBERTURA MUNICIPAL:
-      Municípios com AD: {total_mun_ad:,} de {TOTAL_MUNICIPIOS_BRASIL:,} ({cobertura_nacional:.1f}%)
+        Municípios com AD: {total_mun_ad:,} de {TOTAL_MUNICIPIOS_BRASIL:,} ({cobertura_nacional:.2f}%)
       Total de equipes: {total_equipes:,}
     
     TAXA POR 100 MIL HABITANTES:
-      Média nacional: {media_nacional:.2f} equipes por 100 mil habitantes
-      Melhor região: {cobertura_regiao.loc[cobertura_regiao['EQUIPES_POR_100K'].idxmax(), 'REGIAO']} ({cobertura_regiao['EQUIPES_POR_100K'].max():.2f}/100k)
+        Média nacional: {media_nacional:.2f} equipes por 100 mil habitantes
+        Melhor região: {cobertura_regiao.loc[cobertura_regiao['EQUIPES_POR_100K'].idxmax(), 'REGIAO']} ({cobertura_regiao['EQUIPES_POR_100K'].max():.2f}/100k)
     
     CONFORMIDADE LEGAL (Portaria 3.005/2024):
-      Equipes conformes: {total_conformes:,} de {total_equipes:,} ({taxa_nacional:.1f}%)
+        Equipes conformes: {total_conformes:,} de {total_equipes:,} ({taxa_nacional:.2f}%)
     """)
     
     print("Arquivos gerados em:", OUTPUT_DIR)

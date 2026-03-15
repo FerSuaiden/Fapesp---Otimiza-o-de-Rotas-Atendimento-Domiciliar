@@ -2,9 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import sys
+from pathlib import Path
 
 # Caminhos dos arquivos (Fonte: CNES/DataSUS - competência 2025/08)
-arquivo_equipes = '../../CNES_DATA/tbEquipe202508.csv' 
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+arquivo_equipes = PROJECT_ROOT / 'CNES_DATA' / 'tbEquipe202508.csv'
 
 # --- Dicionários de Mapeamento ---
 MAP_EQUIPES = {
@@ -22,11 +25,16 @@ try:
         sep=';', 
         encoding='latin-1', 
         dtype=str, 
-        usecols=['CO_UNIDADE', 'TP_EQUIPE']
+        usecols=['CO_UNIDADE', 'TP_EQUIPE', 'DT_DESATIVACAO']
     )
 
     # Filtragem e mapeamento
-    df_equipes_filtradas = df_equipes[df_equipes['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)].copy()
+    df_equipes['DT_DESATIVACAO'] = pd.to_datetime(
+        df_equipes['DT_DESATIVACAO'], format='%d/%m/%Y', errors='coerce'
+    )
+    df_equipes_ativas = df_equipes[df_equipes['DT_DESATIVACAO'].isna()].copy()
+
+    df_equipes_filtradas = df_equipes_ativas[df_equipes_ativas['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)].copy()
     df_equipes_filtradas['Tipo_Equipe'] = df_equipes_filtradas['TP_EQUIPE'].map(MAP_EQUIPES)
 
     # Gráfico de pizza (composição nacional)
@@ -38,9 +46,8 @@ try:
     
     wedges, texts, autotexts = ax_pie.pie(
         df_composicao_nacional, 
-        autopct='%1.1f%%',  # Formato da porcentagem
         startangle=90,
-        pctdistance=0.85,   # Posição do texto de porcentagem
+        autopct=lambda p: f'{p:.1f}%',
         colors=cores[:len(df_composicao_nacional)]
     )
     
@@ -48,18 +55,15 @@ try:
     centre_circle = plt.Circle((0,0),0.70,fc='white')
     fig_pie.gca().add_artist(centre_circle)
     
-    # Formatação do texto
-    plt.setp(autotexts, size=12, weight="bold", color="white")
-    
     ax_pie.axis('equal')  # Garante que a pizza seja um círculo
     ax_pie.set_title('Composição Nacional das Equipes de Atenção Domiciliar', fontsize=16, pad=20, weight='bold')
     
     # Adiciona legenda com descrições detalhadas
     legend_labels_map = {
-        'EMAD I': 'EMAD I - Equipe Multidisciplinar (maior porte)',
-        'EMAD II': 'EMAD II - Equipe Multidisciplinar (menor porte)',
+        'EMAD I': 'EMAD I - Equipe Multiprofissional (maior porte)',
+        'EMAD II': 'EMAD II - Equipe Multiprofissional (menor porte)',
         'EMAP': 'EMAP - Equipe Multiprofissional de Apoio',
-        'EMAP-R': 'EMAP-R - EMAP para Reabilitação'
+        'EMAP-R': 'EMAP-R - Equipe Multiprofissional de Apoio para Reabilitação'
     }
     detailed_labels = [legend_labels_map.get(label, label) for label in df_composicao_nacional.index]
     
@@ -85,11 +89,11 @@ try:
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")
     print("Por favor, verifique se os caminhos e nomes dos arquivos estão corretos.")
-    sys.exit()
+    sys.exit(1)
 except KeyError as e:
     print(f"\nERRO: A coluna {e} não foi encontrada.")
     print("Verifique se os nomes das colunas ('CO_UNIDADE', 'CO_UF', 'TP_EQUIPE') estão corretos nos seus arquivos CSV.")
-    sys.exit()
+    sys.exit(1)
 except Exception as e:
     print(f"\nOcorreu um erro inesperado: {e}")
-    sys.exit()
+    sys.exit(1)

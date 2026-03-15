@@ -2,10 +2,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import sys
+from pathlib import Path
 
 # Caminhos dos arquivos (Fonte: CNES/DataSUS - competência 2025/08)
-arquivo_estabelecimentos = '../../CNES_DATA/tbEstabelecimento202508.csv'
-arquivo_equipes = '../../CNES_DATA/tbEquipe202508.csv' 
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+arquivo_estabelecimentos = PROJECT_ROOT / 'CNES_DATA' / 'tbEstabelecimento202508.csv'
+arquivo_equipes = PROJECT_ROOT / 'CNES_DATA' / 'tbEquipe202508.csv'
 
 # --- Dicionários de Mapeamento ---
 MAP_EQUIPES = {
@@ -39,11 +42,16 @@ try:
         sep=';', 
         encoding='latin-1', 
         dtype=str, 
-        usecols=['CO_UNIDADE', 'TP_EQUIPE']
+        usecols=['CO_UNIDADE', 'TP_EQUIPE', 'DT_DESATIVACAO']
     )
 
     # Filtragem e mapeamento
-    df_equipes_filtradas = df_equipes[df_equipes['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)].copy()
+    df_equipes['DT_DESATIVACAO'] = pd.to_datetime(
+        df_equipes['DT_DESATIVACAO'], format='%d/%m/%Y', errors='coerce'
+    )
+    df_equipes_ativas = df_equipes[df_equipes['DT_DESATIVACAO'].isna()].copy()
+
+    df_equipes_filtradas = df_equipes_ativas[df_equipes_ativas['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)].copy()
     df_equipes_filtradas['Tipo_Equipe'] = df_equipes_filtradas['TP_EQUIPE'].map(MAP_EQUIPES)
     
     df_merged = pd.merge(
@@ -87,10 +95,10 @@ try:
     
     # Legenda com descrições detalhadas
     legend_labels = [
-        'EMAD I - Equipe Multidisciplinar (maior porte)',
-        'EMAD II - Equipe Multidisciplinar (menor porte)',  
+        'EMAD I - Equipe Multiprofissional (maior porte)',
+        'EMAD II - Equipe Multiprofissional (menor porte)',  
         'EMAP - Equipe Multiprofissional de Apoio',
-        'EMAP-R - EMAP para Reabilitação'
+        'EMAP-R - Equipe Multiprofissional de Apoio para Reabilitação'
     ]
     handles, _ = ax_bar.get_legend_handles_labels()
     ax_bar.legend(handles, legend_labels, title='Tipo de Equipe', title_fontsize='13', fontsize='10', loc='upper right')
@@ -127,11 +135,11 @@ try:
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")
     print("Por favor, verifique se os caminhos e nomes dos arquivos estão corretos.")
-    sys.exit()
+    sys.exit(1)
 except KeyError as e:
     print(f"\nERRO: A coluna {e} não foi encontrada.")
     print("Verifique se os nomes das colunas ('CO_UNIDADE', 'CO_UF', 'TP_EQUIPE') estão corretos nos seus arquivos CSV.")
-    sys.exit()
+    sys.exit(1)
 except Exception as e:
     print(f"\nOcorreu um erro inesperado: {e}")
-    sys.exit()
+    sys.exit(1)

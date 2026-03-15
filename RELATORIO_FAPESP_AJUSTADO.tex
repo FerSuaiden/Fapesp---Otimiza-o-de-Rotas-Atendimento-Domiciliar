@@ -256,6 +256,8 @@ A capacidade $Q_k$ é definida como a soma das Cargas Horárias Semanais (CHS) d
 Q_k = \sum_{p \in \text{equipe}_k} \text{CHS}_p, \quad \text{onde} \quad \text{CHS}_p = \text{CH}_{\text{amb.}} + \text{CH}_{\text{hosp.}} + \text{CH}_{\text{outros}}
 \end{equation}
 
+Nesta etapa, $Q_k$ deve ser interpretado como capacidade potencial baseada em CHS SUS; essa métrica não representa, necessariamente, dedicação exclusiva dos profissionais à Atenção Domiciliar.
+
 O cálculo exigiu a integração de quatro tabelas do CNES: \texttt{tbEquipe} $\bowtie$ \texttt{rlEstabEquipeProf} $\bowtie$ \texttt{tbCargaHorariaSus} $\bowtie$ \texttt{tbEstabelecimento}. A distribuição resultante apresenta mediana de 230h/semana e média de 224,7h, com alta variabilidade (desvio padrão de 169,8h), refletindo a heterogeneidade entre os tipos de equipe. Os cinco estados com maior capacidade total são: São Paulo (100.929h), Minas Gerais (67.752h), Bahia (57.125h), Rio de Janeiro (51.390h) e Ceará (36.164h).
 
 O conjunto de habilidades $S_k$ de cada equipe foi obtido mapeando códigos CBO em categorias profissionais:
