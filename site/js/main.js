@@ -347,41 +347,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const stateDisplay = document.getElementById('state-display');
   const stateButtons = document.querySelectorAll('.state-btn');
 
-  async function showState(uf) {
+  function showState(uf) {
     if (!stateDisplay) return;
     const imgPath = `Outputs%26Codigo/PARTE4/visualizacoes/estados/${uf}/${uf}_equipes_conformidade.png`;
-    const mapPath = `Outputs%26Codigo/PARTE1/mapas_Equipes_Atencao_Domiciliar_por_estado/mapa_Equipes_Atencao_Domiciliar_${uf}.html`;
-    let hasMap = false;
-
-    try {
-      const response = await fetch(mapPath, { method: 'HEAD' });
-      hasMap = response.ok;
-    } catch (error) {
-      hasMap = false;
-    }
-
-    const mapCard = hasMap
-      ? `
-      <div class="card card-full">
-        <div class="iframe-wrapper" style="padding-bottom:62%;">
-          <iframe src="${mapPath}" title="Mapa interativo ${uf}" loading="lazy"></iframe>
-          <button class="iframe-expand" title="Expandir">⛶</button>
-        </div>
-        <div class="card-body">
-          <h3>${uf}: Mapa Interativo das Equipes</h3>
-          <p>Mapa georreferenciado com clusters e classificação por presença de EMAD/EMAP no estado.</p>
-        </div>
-      </div>
-      `
-      : `
-      <div class="card card-full">
-        <div class="card-body">
-          <h3>${uf}: Mapa Interativo</h3>
-          <p>O mapa interativo deste estado não foi encontrado na pasta esperada.</p>
-          <p class="text-muted">Caminho esperado: ${mapPath}</p>
-        </div>
-      </div>
-      `;
 
     stateDisplay.innerHTML = `
       <div class="card card-full">
@@ -391,11 +359,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <p>Distribuição de equipes conformes e não-conformes no estado, por tipo de equipe (Portaria 3.005/2024).</p>
         </div>
       </div>
-      ${mapCard}
     `;
     if (window.__bindLightbox) window.__bindLightbox();
-
-    bindIframeExpandButtons(stateDisplay);
 
     stateButtons.forEach(b => b.classList.toggle('active', b.dataset.uf === uf));
     if (stateSelect) stateSelect.value = uf;

@@ -58,7 +58,7 @@ Processo FAPESP: 2025/21835-0
 
 \vspace{0.5cm}
 \noindent
-\textbf{RESUMO:} A otimização de rotas e agendamentos das equipes de Atenção Domiciliar do Programa Melhor em Casa é modelada como um Home Health Care Routing and Scheduling Problem (HHC-RSP). Foi realizada uma Análise Exploratória de Dados utilizando bases públicas do CNES/DATASUS, CBO e IBGE, permitindo caracterizar o cenário operacional do programa e extrair os parâmetros fundamentais para modelagem. Foram identificadas 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com distribuição desigual entre regiões e composição heterogênea por tipo de equipe. A análise de conformidade legal revelou que 76,7\% das equipes atendem à Portaria GM/MS nº 3.005/2024, mas a EMAD~I, tipo mais numeroso, apresenta apenas 64,6\% de conformidade, com a maioria dos déficits concentrados no requisito de enfermagem. Foram quantificados os parâmetros de capacidade ($Q_k$) e habilidades ($S_k$) de cada equipe e geradas instâncias sintéticas para testes do algoritmo BRKGA.
+\textbf{RESUMO:} A otimização de rotas e agendamentos das equipes de Atenção Domiciliar do Programa Melhor em Casa é modelada como um Home Health Care Routing and Scheduling Problem (HHC-RSP). Foi realizada uma Análise Exploratória de Dados utilizando bases públicas do CNES/DATASUS, CBO e IBGE, permitindo caracterizar o cenário operacional do programa e extrair os parâmetros fundamentais para modelagem. Foram identificadas 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com distribuição desigual entre regiões e composição heterogênea por tipo de equipe. A análise de conformidade legal revelou que 67,61\% das equipes atendem à Portaria GM/MS nº 3.005/2024, mas a EMAD~I, tipo mais numeroso, apresenta apenas 48,9\% de conformidade. Foram quantificados os parâmetros de capacidade ($Q_k$) e habilidades ($S_k$) de cada equipe e geradas instâncias sintéticas para testes do algoritmo BRKGA.
 
 \vspace{0.3cm}
 \noindent
@@ -173,9 +173,9 @@ Essa diferença de composição é relevante tanto para a conformidade legal, po
 
 \subsubsection{Conformidade com a Portaria GM/MS nº 3.005/2024}
 
-A caracterização por tipo de equipe torna possível a verificação de conformidade com os requisitos legais de composição. A \citelink{portaria3005}{Portaria GM/MS nº 3.005/2024} estabelece requisitos mínimos para cada tipo de equipe. As EMAD~I exigem no mínimo 40h de médico, 60h de enfermeiro, 120h de técnico de enfermagem e 30h de fisioterapeuta ou assistente social. As EMAD~II possuem requisitos reduzidos pela metade para médico (20h) e enfermeiro (30h). As EMAP e EMAP-R devem ter pelo menos três categorias de nível superior, com CHS total mínima de 90h e 60h, respectivamente. Além disso, nenhum profissional de EMAD pode ter CHS inferior a 20h (Art. 547, §1º).
+A caracterização por tipo de equipe torna possível a verificação de conformidade com os requisitos legais de composição. A \citelink{portaria3005}{Portaria GM/MS nº 3.005/2024} estabelece requisitos mínimos para cada tipo de equipe. As EMAD~I exigem no mínimo 40h de médico, 60h de enfermeiro, 120h de técnico de enfermagem e 30h de fisioterapeuta ou assistente social. As EMAD~II possuem requisitos reduzidos pela metade para médico (20h) e enfermeiro (30h). As EMAP e EMAP-R devem ter pelo menos três categorias de nível superior, com CHS total mínima de 90h e 60h, respectivamente. No pipeline computacional desta etapa, foi aplicado um corte mínimo de 20h por profissional para todas as equipes (EMAD~I, EMAD~II, EMAP e EMAP-R), como regra de padronização analítica para o cálculo de conformidade.
 
-A verificação consistiu em agregar as CHS por categoria profissional (via prefixos CBO) para cada equipe, descartar profissionais com CHS inferior a 20h, e comparar os valores resultantes com os requisitos mínimos. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 76,7\% das equipes estão em conformidade, mas essa média esconde uma diferença importante.
+A verificação consistiu em agregar as CHS por categoria profissional (via prefixos CBO) para cada equipe, descartar profissionais com CHS inferior a 20h, e comparar os valores resultantes com os requisitos mínimos. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 67,61\% das equipes estão em conformidade, mas essa média esconde uma diferença importante.
 
 \begin{figure}[H]
 \centering
@@ -184,9 +184,9 @@ A verificação consistiu em agregar as CHS por categoria profissional (via pref
 \label{fig:conformidade_tipo}
 \end{figure}
 
-A EMAD~I, tipo mais numeroso e central para o atendimento direto, é justamente o que apresenta a menor taxa de conformidade (64,6\%). As EMAD~II e EMAP, com requisitos menos exigentes, atingem taxas superiores a 86\%.
+A EMAD~I, tipo mais numeroso e central para o atendimento direto, é justamente o que apresenta a menor taxa de conformidade (48,9\%). As EMAD~II e EMAP apresentam taxas mais altas (83,7\% e 81,8\%, respectivamente), enquanto a EMAP-R alcança 66,5\%.
 
-A decomposição das 387 EMAD~I não conformes revela uma causa predominante: 298 equipes (77,0\% das não conformes) possuem carga horária de enfermeiro inferior a 60h, seguidas por déficit de técnico de enfermagem em 84 equipes (21,7\%), de fisioterapeuta ou assistente social em 33 (8,5\%) e de médico em 20 (5,2\%). A explicação é legislativa: a Portaria 3.005/2024 elevou o requisito de enfermeiro para EMAD~I de 40h (\citelink{portaria825}{Portaria 825/2016}) para 60h. Muitas equipes possuem exatamente 40h de enfermagem, configuração que era conforme pela legislação anterior. Três em cada quatro EMAD~I não conformes no país falham especificamente neste critério.
+No cenário atual do pipeline, 558 EMAD~I estão não conformes (51,1\% do total desse tipo), indicando que este permanece sendo o principal gargalo de adequação legal. A interpretação normativa permanece a mesma: a elevação do requisito de enfermagem para 60h pela Portaria 3.005/2024 aumenta a dificuldade de conformidade das equipes EMAD~I em comparação com o cenário regulatório anterior.
 
 A análise regional, ilustrada na Figura~\ref{fig:conformidade_regiao}, complementa e reforça o padrão identificado na composição das equipes.
 
@@ -230,13 +230,13 @@ A Figura~\ref{fig:cobertura} evidencia a amplitude da variação entre estados: 
 \hline
 \textbf{Estado} & \textbf{Equipes} & \textbf{Eq./100k} & \textbf{Cob. (\%)} & \textbf{\% EMAD I} & \textbf{Conf. Geral} & \textbf{Conf. EMAD I} \\
 \hline
-São Paulo & 412 & 0,93 & 24,0\% & 60,9\% & 70,9\% & 59,8\% \\
-Minas Gerais & 317 & 1,54 & 18,3\% & 38,8\% & 82,6\% & 82,9\% \\
-Bahia & 282 & 1,99 & 33,8\% & 30,1\% & 78,7\% & 70,6\% \\
-Ceará & 181 & 2,06 & 44,6\% & 40,3\% & 61,9\% & 42,5\% \\
-Pará & 154 & 1,90 & 49,3\% & 37,0\% & 77,3\% & 49,1\% \\
+São Paulo & 412 & 0,93 & 24,0\% & 60,9\% & 58,5\% & 41,8\% \\
+Minas Gerais & 317 & 1,54 & 18,3\% & 38,8\% & 67,5\% & 56,9\% \\
+Bahia & 282 & 1,99 & 33,8\% & 30,1\% & 73,0\% & 60,0\% \\
+Ceará & 181 & 2,06 & 44,6\% & 40,3\% & 50,3\% & 24,7\% \\
+Pará & 154 & 1,90 & 49,3\% & 37,0\% & 71,4\% & 35,1\% \\
 \hline
-\textbf{Brasil} & \textbf{2.664} & \textbf{1,31} & \textbf{21,9\%} & \textbf{41,0\%} & \textbf{76,7\%} & \textbf{64,6\%} \\
+\textbf{Brasil} & \textbf{2.664} & \textbf{1,31} & \textbf{21,9\%} & \textbf{41,0\%} & \textbf{67,61\%} & \textbf{48,9\%} \\
 \hline
 \end{tabular}
 \caption{Indicadores dos cinco estados com mais equipes de AD.}
@@ -258,7 +258,7 @@ Q_k = \sum_{p \in \text{equipe}_k} \text{CHS}_p, \quad \text{onde} \quad \text{C
 
 Nesta etapa, $Q_k$ deve ser interpretado como capacidade potencial baseada em CHS SUS; essa métrica não representa, necessariamente, dedicação exclusiva dos profissionais à Atenção Domiciliar.
 
-O cálculo exigiu a integração de quatro tabelas do CNES: \texttt{tbEquipe} $\bowtie$ \texttt{rlEstabEquipeProf} $\bowtie$ \texttt{tbCargaHorariaSus} $\bowtie$ \texttt{tbEstabelecimento}. A distribuição resultante apresenta mediana de 230h/semana e média de 224,7h, com alta variabilidade (desvio padrão de 169,8h), refletindo a heterogeneidade entre os tipos de equipe. Os cinco estados com maior capacidade total são: São Paulo (100.929h), Minas Gerais (67.752h), Bahia (57.125h), Rio de Janeiro (51.390h) e Ceará (36.164h).
+O cálculo exigiu a integração de quatro tabelas do CNES: \texttt{tbEquipe} $\bowtie$ \texttt{rlEstabEquipeProf} $\bowtie$ \texttt{tbCargaHorariaSus} $\bowtie$ \texttt{tbEstabelecimento}. A distribuição resultante apresenta mediana de 230h/semana e média de 224,0h, com alta variabilidade (desvio padrão de 169,7h), refletindo a heterogeneidade entre os tipos de equipe. Os cinco estados com maior capacidade total são: São Paulo (100.510h), Minas Gerais (67.351h), Bahia (57.304h), Rio de Janeiro (50.951h) e Ceará (36.060h).
 
 O conjunto de habilidades $S_k$ de cada equipe foi obtido mapeando códigos CBO em categorias profissionais:
 
@@ -266,7 +266,7 @@ O conjunto de habilidades $S_k$ de cada equipe foi obtido mapeando códigos CBO 
 S_k = \{c \in \mathcal{C} : \exists \, p \in \text{equipe}_k \text{ tal que } \text{categoria}(p) = c\}
 \end{equation}
 
-A análise identificou 17.776 profissionais únicos vinculados às equipes AD. O contingente é dominado por quatro categorias que juntas compõem 76,8\% do total: Técnico de Enfermagem (33,4\%), Enfermeiro (16,2\%), Fisioterapeuta (14,8\%) e Médico (12,4\%). As demais categorias presentes são Nutricionista, Assistente Social, Psicólogo, Fonoaudiólogo e Terapeuta Ocupacional.
+A análise identificou 17.677 vínculos profissional--CBO nas equipes AD (isto é, pares únicos \texttt{CO\_PROFISSIONAL\_SUS} + \texttt{CO\_CBO}). O contingente é dominado por quatro categorias que juntas compõem 76,8\% do total: Técnico de Enfermagem (33,4\%), Enfermeiro (16,2\%), Fisioterapeuta (14,8\%) e Médico (12,4\%). As demais categorias presentes são Nutricionista, Assistente Social, Psicólogo, Fonoaudiólogo e Terapeuta Ocupacional.
 
 Essa heterogeneidade de composição é diretamente relevante para a otimização: equipes de tipos distintos possuem capacidades ($Q_k$) e habilidades ($S_k$) diferentes, configurando um problema de frota heterogênea no qual a alocação de pacientes depende não apenas de proximidade geográfica, mas da compatibilidade $R_i \subseteq S_k$ e da capacidade residual, justificando a parametrização individualizada das instâncias.
 
