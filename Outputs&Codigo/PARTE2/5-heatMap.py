@@ -2,15 +2,18 @@ import pandas as pd
 import folium
 from folium.plugins import HeatMap
 import sys
+from pathlib import Path
 
-print("Iniciando geração do MAPA DE CALOR de Carga Horária (CHS) - Brasil...")
+print("Iniciando geração do MAPA DE CALOR de Capacidade Potencial (CHS SUS) - Brasil...")
 
 # --- Nomes dos arquivos ---
 # Fonte: CNES/DataSUS (competência 2025/08)
-arquivo_estabelecimentos = '../../CNES_DATA/tbEstabelecimento202508.csv'
-arquivo_equipes = '../../CNES_DATA/tbEquipe202508.csv'
-arquivo_profissionais_equipe = '../../CNES_DATA/rlEstabEquipeProf202508.csv'
-arquivo_cargas_horarias = '../../CNES_DATA/tbCargaHorariaSus202508.csv'
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+arquivo_estabelecimentos = PROJECT_ROOT / 'CNES_DATA' / 'tbEstabelecimento202508.csv'
+arquivo_equipes = PROJECT_ROOT / 'CNES_DATA' / 'tbEquipe202508.csv'
+arquivo_profissionais_equipe = PROJECT_ROOT / 'CNES_DATA' / 'rlEstabEquipeProf202508.csv'
+arquivo_cargas_horarias = PROJECT_ROOT / 'CNES_DATA' / 'tbCargaHorariaSus202508.csv'
 
 # Códigos das equipes AD (EMAD I/II, EMAP, EMAP-R)
 CODIGOS_RELEVANTES = ['22', '46', '23', '77']
@@ -26,13 +29,13 @@ try:
     # Base de Equipes (para filtrar EMAD/EMAP)
     df_equipes = pd.read_csv(
         arquivo_equipes, sep=';', encoding='latin-1', dtype=str,
-        usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'TP_EQUIPE']
+        usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'TP_EQUIPE', 'DT_DESATIVACAO']
     )
     
     # Base de Profissionais por Equipe
     df_prof_equipe = pd.read_csv(
         arquivo_profissionais_equipe, sep=';', encoding='latin-1', dtype=str,
-        usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'CO_PROFISSIONAL_SUS', 'CO_CBO']
+        usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 'DT_DESLIGAMENTO']
     )
     
     # Base de Carga Horária
@@ -42,12 +45,23 @@ try:
                  'QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
     )
 
+    # Filtragem de atividade
+    df_equipes['DT_DESATIVACAO'] = pd.to_datetime(
+        df_equipes['DT_DESATIVACAO'], format='%d/%m/%Y', errors='coerce'
+    )
+    df_equipes_ativas = df_equipes[df_equipes['DT_DESATIVACAO'].isna()].copy()
+
+    df_prof_equipe['DT_DESLIGAMENTO'] = pd.to_datetime(
+        df_prof_equipe['DT_DESLIGAMENTO'], format='%d/%m/%Y', errors='coerce'
+    )
+    df_prof_ativos = df_prof_equipe[df_prof_equipe['DT_DESLIGAMENTO'].isna()].copy()
+
     # Filtragem e merge
-    df_equipes_filtradas = df_equipes[df_equipes['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)]
+    df_equipes_filtradas = df_equipes_ativas[df_equipes_ativas['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)]
 
     df_merge1 = pd.merge(
         df_equipes_filtradas,
-        df_prof_equipe,
+        df_prof_ativos,
         on=['CO_UNIDADE', 'SEQ_EQUIPE'],
         how='inner'
     )
@@ -94,7 +108,7 @@ try:
     # Adiciona a camada de Mapa de Calor
     HeatMap(
         heatmap_list,
-        name='Capacidade (CHS) de Atenção Domiciliar',
+        name='Capacidade Potencial (CHS SUS) de Atenção Domiciliar',
         min_opacity=0.2,
         radius=15,
         blur=10
@@ -108,18 +122,19 @@ try:
                 background-color:white; opacity: .92; padding: 14px;
                 line-height: 1.6;
                 ">
-                <b style="font-size:16px;">Mapa de Calor &mdash; Capacidade (CHS)</b><br><br>
+                <b style="font-size:16px;">Mapa de Calor &mdash; Capacidade Potencial (CHS SUS)</b><br><br>
                 <div style="display:flex; align-items:center; margin-bottom:8px;">
                     <div style="width:200px; height:18px; background: linear-gradient(to right, #0000ff, #00ff00, #ffff00, #ff0000); border-radius:3px;"></div>
                     <span style="margin-left:10px; font-size:13px;">Menor &rarr; Maior</span>
                 </div>
                 <span style="font-size:13px; line-height:1.7;">
-                A intensidade da cor indica a <b>Carga Horária Semanal (CHS)</b><br>
+                A intensidade da cor indica a <b>Carga Horária Semanal CHS SUS</b><br>
                 total dos profissionais de Atenção Domiciliar vinculados<br>
                 a cada estabelecimento de saúde (EMAD + EMAP).<br>
                 <b>Azul:</b> Baixa capacidade &nbsp;|&nbsp; <b>Vermelho:</b> Alta capacidade<br>
                 <hr style="margin: 8px 0;">
-                <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
+                <i>Fonte: CNES/DataSUS - Competência 2025/08</i><br>
+                <i>Nota: CHS SUS não implica dedicação exclusiva à AD.</i>
                 </span>
     </div>
     """
@@ -132,11 +147,11 @@ try:
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")
     print("Por favor, verifique se os caminhos e nomes dos arquivos estão corretos.")
-    sys.exit()
+    sys.exit(1)
 except KeyError as e:
     print(f"\nERRO: A coluna {e} não foi encontrada.")
     print("Verifique se os nomes das colunas estão corretos nos seus arquivos CSV.")
-    sys.exit()
+    sys.exit(1)
 except Exception as e:
     print(f"\nOcorreu um erro inesperado: {e}")
-    sys.exit()
+    sys.exit(1)

@@ -1,12 +1,23 @@
 import pandas as pd
 import folium
 from folium.plugins import MarkerCluster
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+CNES_DIR = PROJECT_ROOT / 'CNES_DATA'
 
 try:
     # Carregamento das bases de dados
     # Fonte: CNES/DataSUS (competência 2025/08)
-    df_estabelecimentos = pd.read_csv('../../CNES_DATA/tbEstabelecimento202508.csv', sep=';', encoding='latin-1', dtype=str)    
-    df_equipes = pd.read_csv('../../CNES_DATA/tbEquipe202508.csv', sep=';', encoding='latin-1', dtype=str)
+    df_estabelecimentos = pd.read_csv(CNES_DIR / 'tbEstabelecimento202508.csv', sep=';', encoding='latin-1', dtype=str)
+    df_equipes = pd.read_csv(CNES_DIR / 'tbEquipe202508.csv', sep=';', encoding='latin-1', dtype=str)
+
+    # Filtrar apenas equipes ativas
+    df_equipes['DT_DESATIVACAO'] = pd.to_datetime(
+        df_equipes['DT_DESATIVACAO'], format='%d/%m/%Y', errors='coerce'
+    )
+    df_equipes = df_equipes[df_equipes['DT_DESATIVACAO'].isna()].copy()
 
     # Identificação das equipes AD por categoria
     codigos_atendimento = ['22', '46']  # EMAD I e EMAD II
@@ -72,9 +83,9 @@ try:
                 <i class="fa fa-map-marker fa-2x" style="color:green"></i>&nbsp; <b>Apenas EMAP</b> (Equipe de Apoio)<br>
                 <hr style="margin: 10px 0;">
                 <span style="line-height: 1.7; font-size: 13px;">
-                <b>EMAD I/II:</b> Equipe Multidisciplinar de Atenção Domiciliar<br>
+                <b>EMAD I/II:</b> Equipe Multiprofissional de Atenção Domiciliar<br>
                 <b>EMAP:</b> Equipe Multiprofissional de Apoio<br>
-                <b>EMAP-R:</b> EMAP para Reabilitação<br>
+                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação<br>
                 <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
                 </span>
     </div>
@@ -87,7 +98,10 @@ try:
 
 except FileNotFoundError as e:
     print(f"ERRO: O arquivo {e.filename} não foi encontrado.")
+    raise SystemExit(1)
 except KeyError as e:
     print(f"ERRO: A coluna {e} não foi encontrada.")
+    raise SystemExit(1)
 except Exception as e:
     print(f"Ocorreu um erro inesperado: {e}")
+    raise SystemExit(1)

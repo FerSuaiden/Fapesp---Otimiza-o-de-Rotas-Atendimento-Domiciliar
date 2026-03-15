@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ===============================================================================
-GERADOR DE VISUALIZAÇÕES POR ESTADO - V3 (CONFORMIDADE POR MUNICÍPIO)
+GERADOR DE VISUALIZAÇÕES POR ESTADO - V2 (CONFORMIDADE POR MUNICÍPIO)
 ===============================================================================
 
 Para cada um dos 27 estados brasileiros, gera:
@@ -97,6 +97,23 @@ def extrair_uf(codigo_municipio):
     return IBGE_UF_MAP.get(prefixo, 'DESCONHECIDO')
 
 
+def validar_colunas(df, obrigatorias, nome_tabela):
+    """Valida se uma tabela possui todas as colunas esperadas."""
+    faltando = [col for col in obrigatorias if col not in df.columns]
+    if faltando:
+        raise ValueError(
+            f"Tabela {nome_tabela} sem colunas obrigatórias: {faltando}"
+        )
+
+
+def normalizar_booleano_serie(serie):
+    """Normaliza série com valores booleanos em formatos mistos (bool/str/int)."""
+    valores_true = {'true', '1', 'sim', 's', 'yes', 'y'}
+    return serie.apply(
+        lambda x: str(x).strip().lower() in valores_true if pd.notna(x) else False
+    )
+
+
 def main():
     print("=" * 80)
     print("GERADOR DE VISUALIZAÇÕES POR ESTADO - V2 (COM CONFORMIDADE)")
@@ -113,6 +130,12 @@ def main():
         os.path.join(CNES_DIR, "tbEquipe202508.csv"),
         sep=';', encoding='latin-1', low_memory=False
     )
+    validar_colunas(
+        df_equipes,
+        ['SEQ_EQUIPE', 'TP_EQUIPE', 'CO_MUNICIPIO', 'DT_DESATIVACAO'],
+        'tbEquipe202508.csv'
+    )
+    df_equipes['TP_EQUIPE'] = pd.to_numeric(df_equipes['TP_EQUIPE'], errors='coerce')
     
     df_equipes_ad = df_equipes[df_equipes['TP_EQUIPE'].isin(TIPOS_EQUIPE_AD.keys())].copy()
     df_equipes_ad['DT_DESATIVACAO'] = pd.to_datetime(
@@ -130,6 +153,12 @@ def main():
     if os.path.exists(arquivo_conformidade):
         print("    Carregando dados de conformidade...")
         df_conformidade = pd.read_csv(arquivo_conformidade, sep=';')
+        validar_colunas(
+            df_conformidade,
+            ['SEQ_EQUIPE', 'UF', 'CONFORME'],
+            'conformidade_legal_brasil_v2.csv'
+        )
+        df_conformidade['CONFORME'] = normalizar_booleano_serie(df_conformidade['CONFORME'])
         print(f"    Equipes com dados de conformidade: {len(df_conformidade):,}")
         
         # Adicionar informação de município ao df_conformidade
@@ -142,10 +171,12 @@ def main():
         # Contagem de conformidade por município e UF
         conformidade_match = df_conformidade['CO_MUNICIPIO'].notna().sum()
         print(f"    Equipes de conformidade com município identificado: {conformidade_match:,}")
+        tem_conformidade = True
     else:
-        print("    ERRO: Arquivo de conformidade não encontrado!")
-        print(f"    Execute primeiro: analise_nacional_brasil_v2.py")
-        return
+        print("    AVISO: Arquivo de conformidade não encontrado.")
+        print("    O script seguirá apenas com visualizações de cobertura/equipes.")
+        df_conformidade = pd.DataFrame(columns=['SEQ_EQUIPE', 'UF', 'CONFORME', 'CO_MUNICIPIO'])
+        tem_conformidade = False
     
     # Carregar tabela de municípios do IBGE
     arquivo_mun_ibge = os.path.join(IBGE_DIR, 'municipios_ibge.csv')
@@ -154,6 +185,7 @@ def main():
     if os.path.exists(arquivo_mun_ibge):
         print("    Carregando tabela de municípios IBGE...")
         df_municipios = pd.read_csv(arquivo_mun_ibge, sep=';', dtype=str, encoding='utf-8')
+        validar_colunas(df_municipios, ['CO_MUNICIPIO', 'NO_MUNICIPIO'], 'municipios_ibge.csv')
     
     # =========================================================================
     # ETAPA 2: AGREGAR DADOS POR MUNICÍPIO
@@ -187,9 +219,9 @@ def main():
     
     # Estatísticas nacionais
     total_equipes = len(df_conformidade)
-    equipes_conformes = df_conformidade['CONFORME'].sum()
+    equipes_conformes = df_conformidade['CONFORME'].sum() if total_equipes > 0 else 0
     equipes_nao_conformes = total_equipes - equipes_conformes
-    taxa_conformidade_equipes = 100 * equipes_conformes / total_equipes
+    taxa_conformidade_equipes = 100 * equipes_conformes / total_equipes if total_equipes > 0 else 0
     
     total_municipios_brasil = TOTAL_MUNICIPIOS_BRASIL
     municipios_com_ad = len(df_por_mun)
@@ -200,41 +232,44 @@ def main():
     os.makedirs(resumo_dir, exist_ok=True)
     
     # ----- GRÁFICO 1: % Equipes Conformes -----
-    fig1, ax1 = plt.subplots(figsize=(8, 7))
-    fig1.suptitle('Programa Melhor em Casa - Indicadores Nacionais\n'
-                 f'Brasil - {total_equipes:,} equipes AD em {municipios_com_ad:,} municípios',
-                 fontsize=14, fontweight='bold', y=1.02)
-    
-    sizes1 = [equipes_conformes, equipes_nao_conformes]
-    labels1 = ['Conformes', 'Não Conformes']
-    colors1 = ['#27ae60', '#e74c3c']
-    explode1 = (0.03, 0)
-    
-    wedges1, texts1, autotexts1 = ax1.pie(
-        sizes1, explode=explode1, labels=labels1, colors=colors1,
-        autopct='%1.1f%%', startangle=90, pctdistance=0.75,
-        wedgeprops=dict(width=0.5, edgecolor='white')
-    )
-    
-    # Centro do donut
-    ax1.text(0, 0, f'{taxa_conformidade_equipes:.1f}%\nConformes', 
-             ha='center', va='center', fontsize=14, fontweight='bold')
-    
-    ax1.set_title(f'Conformidade das Equipes AD\n({equipes_conformes:,} de {total_equipes:,} equipes)',
-                  fontsize=12, fontweight='bold', pad=15)
-    
-    ax1.legend([f'Conformes: {equipes_conformes:,}', f'Não Conformes: {equipes_nao_conformes:,}'],
-               loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=10)
-    
-    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    fig1.text(0.5, 0.01, 
-             f'Fonte: CNES/DATASUS (Agosto 2025) | Portaria GM/MS nº 3.005/2024',
-             ha='center', fontsize=9, style='italic', color='gray')
-    
-    output_conformidade = os.path.join(resumo_dir, 'conformidade_nacional_donut.png')
-    plt.savefig(output_conformidade, dpi=150, bbox_inches='tight', facecolor='white')
-    plt.close(fig1)
-    print(f"    Conformidade nacional: {output_conformidade}")
+    if total_equipes > 0:
+        fig1, ax1 = plt.subplots(figsize=(8, 7))
+        fig1.suptitle('Programa Melhor em Casa - Indicadores Nacionais\n'
+                     f'Brasil - {total_equipes:,} equipes AD em {municipios_com_ad:,} municípios',
+                     fontsize=14, fontweight='bold', y=1.02)
+        
+        sizes1 = [equipes_conformes, equipes_nao_conformes]
+        labels1 = ['Conformes', 'Não Conformes']
+        colors1 = ['#27ae60', '#e74c3c']
+        explode1 = (0.03, 0)
+        
+        wedges1, texts1, autotexts1 = ax1.pie(
+            sizes1, explode=explode1, labels=labels1, colors=colors1,
+            autopct=lambda pct: f'{pct:.2f}%', startangle=90, pctdistance=0.75,
+            wedgeprops=dict(width=0.5, edgecolor='white')
+        )
+        
+        # Centro do donut
+        ax1.text(0, 0, f'{taxa_conformidade_equipes:.2f}%\nConformes', 
+                 ha='center', va='center', fontsize=14, fontweight='bold')
+        
+        ax1.set_title(f'Conformidade das Equipes AD\n({equipes_conformes:,} de {total_equipes:,} equipes)',
+                      fontsize=12, fontweight='bold', pad=15)
+        
+        ax1.legend([f'Conformes: {equipes_conformes:,}', f'Não Conformes: {equipes_nao_conformes:,}'],
+                   loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=10)
+        
+        plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+        fig1.text(0.5, 0.01, 
+                 f'Fonte: CNES/DATASUS (Agosto 2025) | Portaria GM/MS nº 3.005/2024',
+                 ha='center', fontsize=9, style='italic', color='gray')
+        
+        output_conformidade = os.path.join(resumo_dir, 'conformidade_nacional_donut.png')
+        plt.savefig(output_conformidade, dpi=150, bbox_inches='tight', facecolor='white')
+        plt.close(fig1)
+        print(f"    Conformidade nacional: {output_conformidade}")
+    else:
+        print("    Sem dados de conformidade para donut nacional.")
     
     # ----- GRÁFICO 2: % Municípios com Cobertura -----
     fig2, ax2 = plt.subplots(figsize=(8, 7))
@@ -250,12 +285,12 @@ def main():
     
     wedges2, texts2, autotexts2 = ax2.pie(
         sizes2, explode=explode2, labels=labels2, colors=colors2,
-        autopct='%1.1f%%', startangle=90, pctdistance=0.75,
+        autopct=lambda pct: f'{pct:.2f}%', startangle=90, pctdistance=0.75,
         wedgeprops=dict(width=0.5, edgecolor='white')
     )
     
     # Centro do donut
-    ax2.text(0, 0, f'{taxa_cobertura_municipal:.1f}%\nCobertos', 
+    ax2.text(0, 0, f'{taxa_cobertura_municipal:.2f}%\nCobertos', 
              ha='center', va='center', fontsize=14, fontweight='bold')
     
     ax2.set_title(f'Cobertura Municipal do Programa\n({municipios_com_ad:,} de {total_municipios_brasil:,} municípios)',
@@ -311,7 +346,7 @@ def main():
         fig, axes = plt.subplots(1, 2, figsize=(16, 8))
         fig.suptitle(f'{nome_estado} ({uf}) - Equipes de Atenção Domiciliar\n'
                      f'{total_equipes_uf} equipes em {total_municipios_uf} municípios | Região {regiao} | '
-                     f'Taxa de Conformidade: {taxa_conf_uf:.1f}%',
+                     f'Taxa de Conformidade: {taxa_conf_uf:.2f}%',
                      fontsize=13, fontweight='bold', y=1.02)
         
         # ----- GRÁFICO 1: Top 15 municípios por número de equipes (HORIZONTAL) -----
@@ -356,7 +391,7 @@ def main():
             }).reset_index()
             stats_mun.columns = ['CO_MUNICIPIO', 'TOTAL', 'CONFORMES']
             stats_mun['NAO_CONFORMES'] = stats_mun['TOTAL'] - stats_mun['CONFORMES']
-            stats_mun['TAXA_%'] = (100 * stats_mun['CONFORMES'] / stats_mun['TOTAL']).round(1)
+            stats_mun['TAXA_%'] = (100 * stats_mun['CONFORMES'] / stats_mun['TOTAL'])
             
             # Adicionar nome do município
             if df_municipios is not None:
@@ -392,7 +427,7 @@ def main():
             # Anotações
             for i, (_, row) in enumerate(stats_mun.iterrows()):
                 ax2.text(row['TOTAL'] + 0.3, i, 
-                        f"{int(row['TOTAL'])} eq. ({row['TAXA_%']:.0f}% conf.)", 
+                        f"{int(row['TOTAL'])} eq. ({row['TAXA_%']:.2f}% conf.)", 
                         va='center', fontsize=9, fontweight='bold')
             
             ax2.grid(True, alpha=0.3, axis='x')
@@ -414,7 +449,7 @@ def main():
         df_uf_conf.to_csv(os.path.join(pasta_uf, f'{uf}_conformidade.csv'), sep=';', index=False)
         df_uf_mun.to_csv(os.path.join(pasta_uf, f'{uf}_dados_municipios.csv'), sep=';', index=False)
         
-        print(f"    {uf}: {total_municipios_uf} mun., {total_equipes_uf} eq., {taxa_conf_uf:.1f}% conf. → {pasta_uf}/")
+        print(f"    {uf}: {total_municipios_uf} mun., {total_equipes_uf} eq., {taxa_conf_uf:.2f}% conf. → {pasta_uf}/")
     
     # =========================================================================
     # ETAPA 5: GERAR RESUMO CONSOLIDADO
@@ -440,13 +475,15 @@ def main():
             'TOTAL_EQUIPES': total_eq,
             'MUNICIPIOS_COM_AD': total_mun,
             'MUNICIPIOS_TOTAL': MUNICIPIOS_POR_UF.get(uf, 0),
-            'COBERTURA_%': round(100 * total_mun / MUNICIPIOS_POR_UF.get(uf, 1), 1),
+            'COBERTURA_%': (100 * total_mun / MUNICIPIOS_POR_UF.get(uf, 1)),
             'EQUIPES_CONFORMES': total_conf,
-            'TAXA_CONFORMIDADE_%': round(taxa_conf, 1)
+            'TAXA_CONFORMIDADE_%': taxa_conf
         })
     
     df_resumo = pd.DataFrame(resumo_estados)
     df_resumo = df_resumo.sort_values('TOTAL_EQUIPES', ascending=False)
+    df_resumo['COBERTURA_%'] = df_resumo['COBERTURA_%'].round(2)
+    df_resumo['TAXA_CONFORMIDADE_%'] = df_resumo['TAXA_CONFORMIDADE_%'].round(2)
     df_resumo.to_csv(os.path.join(OUTPUT_ESTADOS_DIR, 'resumo_por_estado_v2.csv'), sep=';', index=False)
     
     print(f"    Resumo salvo em: {OUTPUT_ESTADOS_DIR}/resumo_por_estado_v2.csv")
@@ -461,8 +498,8 @@ def main():
     
     print(f"""
     RESUMO NACIONAL:
-      Equipes conformes: {equipes_conformes:,} de {total_equipes:,} ({taxa_conformidade_equipes:.1f}%)
-      Municípios cobertos: {municipios_com_ad:,} de {total_municipios_brasil:,} ({taxa_cobertura_municipal:.1f}%)
+    Equipes conformes: {equipes_conformes:,} de {total_equipes:,} ({taxa_conformidade_equipes:.2f}%)
+    Municípios cobertos: {municipios_com_ad:,} de {total_municipios_brasil:,} ({taxa_cobertura_municipal:.2f}%)
     
     Visualizações geradas para {len(ufs_ordenadas)} estados.
     

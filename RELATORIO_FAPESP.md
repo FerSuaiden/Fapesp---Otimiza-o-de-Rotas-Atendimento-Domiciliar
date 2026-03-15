@@ -345,7 +345,7 @@ O processamento dos dados seguiu um pipeline estruturado:
 
 #### 4.1.1 Distribuição Nacional das Equipes AD
 
-A análise dos dados do CNES (competência Agosto/2025) identificou um total de **2.664 equipes de Atenção Domiciliar** ativas em todo o Brasil, distribuídas da seguinte forma:
+A análise dos dados do CNES (competência Agosto/2025) identificou um total de **2.664 equipes de Atenção Domiciliar** ativas em todo o Brasil (filtro por `DT_DESATIVACAO` nula), distribuídas da seguinte forma:
 
 | Tipo de Equipe | Quantidade | Percentual |
 |:--------------|:----------:|:----------:|
@@ -427,12 +427,14 @@ O mapa revela:
 
 #### 4.2.1 Cálculo da Capacidade ($Q_k$)
 
-A capacidade de cada equipe foi quantificada através da soma das Cargas Horárias Semanais (CHS) de todos os seus membros:
+A capacidade de cada equipe foi quantificada como **capacidade potencial (CHS SUS)**, através da soma das Cargas Horárias Semanais (CHS) de todos os seus membros ativos (filtro por `DT_DESLIGAMENTO` nula):
 
 $$Q_k = \sum_{p \in \text{equipe}_k} \text{CHS}_p$$
 
 Onde:
 $$\text{CHS}_p = \text{CHS}_{\text{ambulatorial}} + \text{CHS}_{\text{hospitalar}} + \text{CHS}_{\text{outros}}$$
+
+**Observação metodológica:** essa métrica representa capacidade potencial baseada em CHS no SUS e **não** implica dedicação exclusiva à Atenção Domiciliar.
 
 **Estatísticas Descritivas da Capacidade ($Q_k$):**
 
