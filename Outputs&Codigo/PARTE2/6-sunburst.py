@@ -35,7 +35,7 @@ try:
     
     df_chs = pd.read_csv(
         arquivo_cargas_horarias, sep=';', encoding='latin-1', dtype=str,
-        usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 
+        usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS',
                  'QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
     )
     
@@ -64,10 +64,28 @@ try:
         df_equipes_filtradas, df_prof_ativos,
         on=['CO_UNIDADE', 'SEQ_EQUIPE'], how='inner'
     )
+
+    # Quantidade de equipes AD ativas por profissional na mesma unidade (para rateio de CHS)
+    df_n_equipes_prof = (
+        df_merge1.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['SEQ_EQUIPE']
+        .nunique()
+        .reset_index(name='N_EQUIPE_PROF_UNIDADE')
+    )
+
+    # CHS por profissional na unidade (mesma lógica da PARTE4)
+    cols_chs = ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
+    for col in cols_chs:
+        df_chs[col] = pd.to_numeric(df_chs[col], errors='coerce').fillna(0)
+    df_chs['CHS_TOTAL'] = df_chs[cols_chs].sum(axis=1)
+    df_chs = df_chs.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['CHS_TOTAL'].sum().reset_index()
     
     df_merge2 = pd.merge(
         df_merge1, df_chs,
-        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO'], how='left'
+        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'], how='left'
+    )
+    df_merge2 = pd.merge(
+        df_merge2, df_n_equipes_prof,
+        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'], how='left'
     )
     
     df_final = pd.merge(
@@ -76,12 +94,11 @@ try:
     )
 
     # Cálculo da CHS e limpeza de dados
-    cols_chs = ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
-    
-    for col in cols_chs:
-        df_final[col] = pd.to_numeric(df_final[col], errors='coerce').fillna(0)
-        
-    df_final['CHS_Profissional'] = df_final[cols_chs].sum(axis=1)
+    df_final['CHS_TOTAL'] = df_final['CHS_TOTAL'].fillna(0)
+    df_final['N_EQUIPE_PROF_UNIDADE'] = df_final['N_EQUIPE_PROF_UNIDADE'].fillna(1)
+    df_final['CHS_Profissional'] = (
+        df_final['CHS_TOTAL'] / df_final['N_EQUIPE_PROF_UNIDADE']
+    )
     df_final['Tipo_Equipe'] = df_final['TP_EQUIPE'].map(MAP_EQUIPES)
     
     df_final = df_final.dropna(subset=['CHS_Profissional', 'Profissao', 'Tipo_Equipe'])
@@ -168,7 +185,7 @@ try:
     fig.write_html(nome_grafico_sunburst)
     print(f"Gráfico salvo: {nome_grafico_sunburst}")
 
-    # === SAÍDA DE VERIFICAÇÃO: Composição profissional por contagem de indivíduos ===
+    # === SAÍDA DE VERIFICAÇÃO: Composição profissional por vínculos profissional-CBO ===
     # Conta pares únicos profissional-CBO (captura profissionais com mais de um CBO)
     df_prof_unicos = df_merge1.drop_duplicates(subset=['CO_PROFISSIONAL_SUS', 'CO_CBO'])[['CO_PROFISSIONAL_SUS', 'CO_CBO']].copy()
     df_prof_unicos = pd.merge(df_prof_unicos, df_cbo, on='CO_CBO', how='left')
@@ -182,7 +199,7 @@ try:
     contagem_final = df_prof_unicos['Profissao'].value_counts()
     
     print("\n" + "=" * 70)
-    print("COMPOSIÇÃO PROFISSIONAL - CONTAGEM DE PROFISSIONAIS ÚNICOS")
+    print("COMPOSIÇÃO PROFISSIONAL - VÍNCULOS ÚNICOS PROFISSIONAL-CBO")
     print("=" * 70)
     print(f"\n{'Categoria':<35} {'Qtde':>8} {'%':>8}")
     print("-" * 55)
@@ -190,7 +207,7 @@ try:
         pct = 100 * qtd / total_prof
         print(f"{prof:<35} {qtd:>8} {pct:>7.1f}%")
     print("-" * 55)
-    print(f"{'TOTAL':<35} {total_prof:>8} {'100.0%':>8}")
+    print(f"{'TOTAL VÍNCULOS':<35} {total_prof:>8} {'100.0%':>8}")
 
 except FileNotFoundError as e:
     print(f"\nERRO: O arquivo '{e.filename}' não foi encontrado.")

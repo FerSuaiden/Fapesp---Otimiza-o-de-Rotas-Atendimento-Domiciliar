@@ -35,13 +35,13 @@ try:
     # Base de Profissionais por Equipe
     df_prof_equipe = pd.read_csv(
         arquivo_profissionais_equipe, sep=';', encoding='latin-1', dtype=str,
-        usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 'DT_DESLIGAMENTO']
+        usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'CO_PROFISSIONAL_SUS', 'DT_DESLIGAMENTO']
     )
     
     # Base de Carga Horária
     df_chs = pd.read_csv(
         arquivo_cargas_horarias, sep=';', encoding='latin-1', dtype=str,
-        usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 
+        usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS',
                  'QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
     )
 
@@ -65,21 +65,40 @@ try:
         on=['CO_UNIDADE', 'SEQ_EQUIPE'],
         how='inner'
     )
+
+    # Quantidade de equipes AD ativas por profissional na mesma unidade (para rateio de CHS)
+    df_n_equipes_prof = (
+        df_merge1.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['SEQ_EQUIPE']
+        .nunique()
+        .reset_index(name='N_EQUIPE_PROF_UNIDADE')
+    )
+
+    # CHS por profissional na unidade (mesma lógica da PARTE4)
+    cols_chs = ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
+    for col in cols_chs:
+        df_chs[col] = pd.to_numeric(df_chs[col], errors='coerce').fillna(0)
+    df_chs['CHS_TOTAL'] = df_chs[cols_chs].sum(axis=1)
+    df_chs = df_chs.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['CHS_TOTAL'].sum().reset_index()
     
     df_completo = pd.merge(
         df_merge1,
         df_chs,
-        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO'],
+        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'],
+        how='left'
+    )
+    df_completo = pd.merge(
+        df_completo,
+        df_n_equipes_prof,
+        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'],
         how='left'
     )
 
-    # Cálculo da CHS por profissional
-    cols_chs = ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
-    
-    for col in cols_chs:
-        df_completo[col] = pd.to_numeric(df_completo[col], errors='coerce').fillna(0)
-        
-    df_completo['CHS_PROFISSIONAL_TOTAL'] = df_completo[cols_chs].sum(axis=1)
+    # Cálculo da CHS por profissional (rateada entre equipes AD ativas na mesma unidade)
+    df_completo['CHS_TOTAL'] = df_completo['CHS_TOTAL'].fillna(0)
+    df_completo['N_EQUIPE_PROF_UNIDADE'] = df_completo['N_EQUIPE_PROF_UNIDADE'].fillna(1)
+    df_completo['CHS_PROFISSIONAL_TOTAL'] = (
+        df_completo['CHS_TOTAL'] / df_completo['N_EQUIPE_PROF_UNIDADE']
+    )
 
     # Agregação por estabelecimento
     df_capacidade_estab = df_completo.groupby('CO_UNIDADE')['CHS_PROFISSIONAL_TOTAL'].sum().reset_index()

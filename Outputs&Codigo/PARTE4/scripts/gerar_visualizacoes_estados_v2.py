@@ -97,23 +97,6 @@ def extrair_uf(codigo_municipio):
     return IBGE_UF_MAP.get(prefixo, 'DESCONHECIDO')
 
 
-def validar_colunas(df, obrigatorias, nome_tabela):
-    """Valida se uma tabela possui todas as colunas esperadas."""
-    faltando = [col for col in obrigatorias if col not in df.columns]
-    if faltando:
-        raise ValueError(
-            f"Tabela {nome_tabela} sem colunas obrigatórias: {faltando}"
-        )
-
-
-def normalizar_booleano_serie(serie):
-    """Normaliza série com valores booleanos em formatos mistos (bool/str/int)."""
-    valores_true = {'true', '1', 'sim', 's', 'yes', 'y'}
-    return serie.apply(
-        lambda x: str(x).strip().lower() in valores_true if pd.notna(x) else False
-    )
-
-
 def main():
     print("=" * 80)
     print("GERADOR DE VISUALIZAÇÕES POR ESTADO - V2 (COM CONFORMIDADE)")
@@ -130,12 +113,6 @@ def main():
         os.path.join(CNES_DIR, "tbEquipe202508.csv"),
         sep=';', encoding='latin-1', low_memory=False
     )
-    validar_colunas(
-        df_equipes,
-        ['SEQ_EQUIPE', 'TP_EQUIPE', 'CO_MUNICIPIO', 'DT_DESATIVACAO'],
-        'tbEquipe202508.csv'
-    )
-    df_equipes['TP_EQUIPE'] = pd.to_numeric(df_equipes['TP_EQUIPE'], errors='coerce')
     
     df_equipes_ad = df_equipes[df_equipes['TP_EQUIPE'].isin(TIPOS_EQUIPE_AD.keys())].copy()
     df_equipes_ad['DT_DESATIVACAO'] = pd.to_datetime(
@@ -153,12 +130,6 @@ def main():
     if os.path.exists(arquivo_conformidade):
         print("    Carregando dados de conformidade...")
         df_conformidade = pd.read_csv(arquivo_conformidade, sep=';')
-        validar_colunas(
-            df_conformidade,
-            ['SEQ_EQUIPE', 'UF', 'CONFORME'],
-            'conformidade_legal_brasil_v2.csv'
-        )
-        df_conformidade['CONFORME'] = normalizar_booleano_serie(df_conformidade['CONFORME'])
         print(f"    Equipes com dados de conformidade: {len(df_conformidade):,}")
         
         # Adicionar informação de município ao df_conformidade
@@ -185,7 +156,6 @@ def main():
     if os.path.exists(arquivo_mun_ibge):
         print("    Carregando tabela de municípios IBGE...")
         df_municipios = pd.read_csv(arquivo_mun_ibge, sep=';', dtype=str, encoding='utf-8')
-        validar_colunas(df_municipios, ['CO_MUNICIPIO', 'NO_MUNICIPIO'], 'municipios_ibge.csv')
     
     # =========================================================================
     # ETAPA 2: AGREGAR DADOS POR MUNICÍPIO

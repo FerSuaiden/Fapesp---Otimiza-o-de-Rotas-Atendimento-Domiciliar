@@ -134,15 +134,6 @@ def extrair_uf(codigo_municipio):
     return IBGE_UF_MAP.get(prefixo, 'DESCONHECIDO')
 
 
-def validar_colunas(df, obrigatorias, nome_tabela):
-    """Valida se uma tabela possui todas as colunas esperadas."""
-    faltando = [col for col in obrigatorias if col not in df.columns]
-    if faltando:
-        raise ValueError(
-            f"Tabela {nome_tabela} sem colunas obrigatórias: {faltando}"
-        )
-
-
 def verificar_conformidade_equipe(df_prof, tipo_equipe):
     """Verifica conformidade de uma equipe com a Portaria 3.005/2024."""
     problemas = []
@@ -192,12 +183,6 @@ def main():
         os.path.join(CNES_DIR, "tbEquipe202508.csv"),
         sep=';', encoding='latin-1', low_memory=False
     )
-    validar_colunas(
-        df_equipes,
-        ['SEQ_EQUIPE', 'TP_EQUIPE', 'CO_MUNICIPIO', 'DT_DESATIVACAO'],
-        'tbEquipe202508.csv'
-    )
-    df_equipes['TP_EQUIPE'] = pd.to_numeric(df_equipes['TP_EQUIPE'], errors='coerce')
     
     df_equipes_ad = df_equipes[df_equipes['TP_EQUIPE'].isin(TIPOS_EQUIPE_AD.keys())].copy()
     df_equipes_ad['DT_DESATIVACAO'] = pd.to_datetime(
@@ -263,14 +248,11 @@ def main():
     chunks_prof = []
     for chunk in pd.read_csv(
         os.path.join(CNES_DIR, "rlEstabEquipeProf202508.csv"),
-        sep=';', encoding='latin-1', chunksize=100000, low_memory=False,
-        usecols=['SEQ_EQUIPE', 'CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 'DT_DESLIGAMENTO']
+        sep=';', encoding='latin-1', chunksize=100000, low_memory=False
     ):
         filtered = chunk[chunk['SEQ_EQUIPE'].isin(seq_equipes_ad)]
         if len(filtered) > 0:
             chunks_prof.append(filtered)
-    if not chunks_prof:
-        raise ValueError("Nenhum profissional encontrado para equipes AD ativas em rlEstabEquipeProf202508.csv")
 
     df_prof = pd.concat(chunks_prof, ignore_index=True)
     df_prof['DT_DESLIGAMENTO'] = pd.to_datetime(
@@ -284,17 +266,13 @@ def main():
     chunks_chs = []
     for chunk in pd.read_csv(
         os.path.join(CNES_DIR, "tbCargaHorariaSus202508.csv"),
-        sep=';', encoding='latin-1', chunksize=500000, low_memory=False,
-        usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'QT_CARGA_HORARIA_AMBULATORIAL',
-                 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
+        sep=';', encoding='latin-1', chunksize=500000, low_memory=False
     ):
         if 'CO_UNIDADE' in chunk.columns:
             chunk['CO_UNIDADE'] = chunk['CO_UNIDADE'].astype(str)
         filtered = chunk[chunk['CO_PROFISSIONAL_SUS'].isin(prof_ids)]
         if len(filtered) > 0:
             chunks_chs.append(filtered)
-    if not chunks_chs:
-        raise ValueError("Nenhum registro de CHS encontrado para profissionais das equipes AD em tbCargaHorariaSus202508.csv")
     
     df_chs = pd.concat(chunks_chs, ignore_index=True)
     for col in ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']:
@@ -312,13 +290,17 @@ def main():
     df_chs = df_chs.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['CHS_TOTAL'].sum().reset_index()
     
     df_prof['CO_UNIDADE'] = df_prof['CO_UNIDADE'].astype(str)
+    df_n_equipes_prof = (
+        df_prof.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['SEQ_EQUIPE']
+        .nunique()
+        .reset_index(name='N_EQUIPE_PROF_UNIDADE')
+    )
     df_prof = df_prof.merge(df_chs, on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'], how='left')
+    df_prof = df_prof.merge(df_n_equipes_prof, on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'], how='left')
     df_prof['CHS_TOTAL'] = df_prof['CHS_TOTAL'].fillna(0)
+    df_prof['N_EQUIPE_PROF_UNIDADE'] = df_prof['N_EQUIPE_PROF_UNIDADE'].fillna(1)
+    df_prof['CHS_TOTAL'] = df_prof['CHS_TOTAL'] / df_prof['N_EQUIPE_PROF_UNIDADE']
     df_prof['CATEGORIA'] = df_prof['CO_CBO'].apply(categorizar_cbo)
-
-    profissionais_com_chs = (df_prof['CHS_TOTAL'] > 0).sum()
-    taxa_match = 100 * profissionais_com_chs / len(df_prof) if len(df_prof) > 0 else 0
-    print(f"    Match CHS (CHS>0): {profissionais_com_chs:,} de {len(df_prof):,} vínculos ({taxa_match:.2f}%)")
     
     print("\n[5] Verificando conformidade...")
     resultados = []
@@ -525,7 +507,7 @@ def main():
     stats_tipo = (
         stats_tipo
         .set_index('TIPO')
-        .reindex(tipos_ordem, fill_value=0)
+        .loc[tipos_ordem]
         .reset_index()
     )
     
