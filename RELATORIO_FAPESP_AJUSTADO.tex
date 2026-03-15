@@ -74,6 +74,10 @@ O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge20
 
 Nesse contexto, o \citelink{portaria825}{Programa Melhor em Casa}, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais que realizam visitas regulares a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa.
 
+Evidências recentes reforçam o potencial sistêmico dessa política. Em análise nacional para 2009--2024, \citelink{albuquerque2025}{Albuquerque (2025)} estimou redução média de 4,45\% na permanência hospitalar dos municípios participantes, com efeito cumulativo que pode atingir 17,71\% após 13 anos. O estudo também indica que o impacto não é imediato: os ganhos tornam-se estatisticamente significativos entre 3 e 5 anos pós-implantação, sugerindo dependência de maturação institucional e integração com a rede assistencial. Para o HHC-RSP, esse resultado é relevante porque ganhos operacionais no uso de equipes domiciliares tendem a se converter em eficiência hospitalar no médio e longo prazo.
+
+Na dimensão espacial, o mesmo estudo reporta dependência espacial moderada na permanência hospitalar ($\rho = 0{,}265$) e efeito indireto médio de $-0{,}23$ dia em municípios vizinhos, quando há implementação local do programa. Além disso, descreve forte assimetria territorial de adesão: 79,46\% nos grandes municípios versus 4,95\% nos pequenos, com chance de adesão 90\% maior em municípios com maior proporção de idosos e 66,5\% maior onde a cobertura da ESF é mais alta. Esses achados sustentam, para trabalhos futuros, estratégias de planejamento regional e coordenação intermunicipal na modelagem de rotas e bases operacionais.
+
 \subsection{O Problema de Otimização (HHC-RSP)}
 
 O Home Health Care Routing and Scheduling Problem (HHC-RSP) é um problema de otimização combinatória que visa determinar as melhores rotas e agendamentos para as equipes de atendimento domiciliar. Pertence à família dos Vehicle Routing Problems (VRP) com características específicas do setor de saúde. Dados um conjunto de pacientes com localização, janelas de tempo e requisitos de habilidades ($R_i$), e um conjunto de equipes com base de operação, capacidade ($Q_k$) e habilidades ($S_k$), o problema busca encontrar rotas e agendamentos que minimizem custos de deslocamento e tempo de espera, sujeito a restrições de capacidade, habilidades, janelas de tempo e cobertura.
@@ -284,6 +288,8 @@ A análise exploratória, ao percorrer as escalas nacional, regional e estadual,
 
 A caracterização completa de $Q_k$ e $S_k$, combinada com o mapeamento geográfico dos depots, fornece os insumos necessários para a modelagem do HHC-RSP. O cenário de recursos escassos, desigualmente distribuídos e parcialmente não conformes torna a otimização de rotas necessária para maximizar o impacto das equipes existentes.
 
+Em diálogo com \citelink{albuquerque2025}{Albuquerque (2025)}, os resultados também sugerem que a formulação futura do problema pode se beneficiar de uma perspectiva regional: como há evidência de transbordamento espacial e de fortes assimetrias de adesão por porte municipal, decisões de alocação e roteamento que considerem fronteiras intermunicipais e heterogeneidade territorial tendem a representar melhor o contexto real de implementação do PMeC.
+
 \section{Estado Atual da Pesquisa}
 
 A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. A AED das bases do CNES/DATASUS, CBO e IBGE forneceu os parâmetros de capacidade ($Q_k$), habilidades ($S_k$) e localização geográfica necessários para a formulação do HHC-RSP, além de seis instâncias sintéticas para validação inicial. A próxima etapa consiste na implementação do modelo de \citelink{mankowska2014}{Mankowska et al. (2014)} no solver Gurobi, no desenvolvimento do BRKGA com as melhorias propostas, e na comparação de desempenho entre os métodos.
@@ -318,6 +324,9 @@ BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 3.005/2024}. Altera re
 
 \bibitem{cnes}
 BRASIL. Ministério da Saúde. \textit{CNES -- Cadastro Nacional de Estabelecimentos de Saúde}. Disponível em: https://cnes.datasus.gov.br/. Acesso em: ago. 2025.
+
+\bibitem{albuquerque2025}
+ALBUQUERQUE, W. M. \textit{Política de atenção domiciliar no Brasil: análises espacial, de cobertura, focalização e impacto do Programa Melhor em Casa}. 2025. Tese (Doutorado em Economia Rural) -- Universidade Federal do Ceará, Fortaleza, 2025.
 
 \end{thebibliography}
 
