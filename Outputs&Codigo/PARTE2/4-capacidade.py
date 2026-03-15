@@ -41,12 +41,12 @@ try:
     
     df_prof_equipe = pd.read_csv(
         arquivo_profissionais_equipe, sep=';', encoding='latin-1', dtype=str,
-        usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 'DT_DESLIGAMENTO']
+        usecols=['CO_UNIDADE', 'SEQ_EQUIPE', 'CO_PROFISSIONAL_SUS', 'DT_DESLIGAMENTO']
     )
     
     df_chs = pd.read_csv(
         arquivo_cargas_horarias, sep=';', encoding='latin-1', dtype=str,
-        usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO', 
+        usecols=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS',
                  'QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
     )
 
@@ -71,25 +71,42 @@ try:
         on=['CO_UNIDADE', 'SEQ_EQUIPE'],
         how='inner'
     )
+
+    # Quantidade de equipes AD ativas por profissional na mesma unidade (para rateio de CHS)
+    df_n_equipes_prof = (
+        df_merge1.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['SEQ_EQUIPE']
+        .nunique()
+        .reset_index(name='N_EQUIPE_PROF_UNIDADE')
+    )
+
+    # CHS por profissional na unidade (mesma lógica da PARTE4)
+    cols_chs = ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
+    for col in cols_chs:
+        df_chs[col] = pd.to_numeric(df_chs[col], errors='coerce').fillna(0)
+    df_chs['CHS_TOTAL'] = df_chs[cols_chs].sum(axis=1)
+    df_chs = df_chs.groupby(['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'])['CHS_TOTAL'].sum().reset_index()
     
     # Profissionais -> Cargas horárias
     df_completo = pd.merge(
         df_merge1,
         df_chs,
-        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS', 'CO_CBO'],
+        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'],
+        how='left'
+    )
+    df_completo = pd.merge(
+        df_completo,
+        df_n_equipes_prof,
+        on=['CO_UNIDADE', 'CO_PROFISSIONAL_SUS'],
         how='left'
     )
 
     # Cálculo da Capacidade (Qk)
-    # CHS = Ambulatorial + Hospitalar + Outros
-    cols_chs = ['QT_CARGA_HORARIA_AMBULATORIAL', 'QT_CARGA_HORARIA_OUTROS', 'QT_CARGA_HOR_HOSP_SUS']
-    
-    # Converte todas para numérico, preenchendo N/A ou erros com 0
-    for col in cols_chs:
-        df_completo[col] = pd.to_numeric(df_completo[col], errors='coerce').fillna(0)
-        
-    # CHS por profissional
-    df_completo['CHS_PROFISSIONAL_TOTAL'] = df_completo[cols_chs].sum(axis=1)
+    # CHS por profissional é rateada entre equipes AD ativas na mesma unidade
+    df_completo['CHS_TOTAL'] = df_completo['CHS_TOTAL'].fillna(0)
+    df_completo['N_EQUIPE_PROF_UNIDADE'] = df_completo['N_EQUIPE_PROF_UNIDADE'].fillna(1)
+    df_completo['CHS_PROFISSIONAL_TOTAL'] = (
+        df_completo['CHS_TOTAL'] / df_completo['N_EQUIPE_PROF_UNIDADE']
+    )
 
     # Agregação por equipe (CO_UNIDADE + SEQ_EQUIPE identificam uma equipe única)
     df_capacidade_equipe = df_completo.groupby(['CO_UNIDADE', 'SEQ_EQUIPE'])['CHS_PROFISSIONAL_TOTAL'].sum().reset_index()
@@ -137,7 +154,8 @@ try:
     plt.savefig(nome_grafico_chs_estado)
 
     # Gráfico 2: Histograma de distribuição de Qk
-    Qk_valores = df_dados_plot[df_dados_plot['Qk_CHS_Equipe'] > 0]['Qk_CHS_Equipe']
+    # Inclui equipes com Qk=0 para manter consistência com as estatísticas globais
+    Qk_valores = df_dados_plot['Qk_CHS_Equipe']
     
     fig, ax2 = plt.subplots(figsize=(12, 7))
     
@@ -146,7 +164,7 @@ try:
     
     media_chs = Qk_valores.mean()
     ax2.axvline(media_chs, color='red', linestyle='dashed', linewidth=2)
-    ax2.text(media_chs * 1.05, ax2.get_ylim()[1] * 0.9, f'Média: {media_chs:.1f} horas', color='red')
+    ax2.text(media_chs * 1.05, ax2.get_ylim()[1] * 0.9, f'Média (inclui Qk=0): {media_chs:.1f} horas', color='red')
 
     ax2.set_title('Distribuição da Capacidade Potencial Semanal (CHS SUS) por Equipe (Qk)', fontsize=16, pad=20, weight='bold')
     ax2.set_xlabel('Capacidade Potencial (Qk) - Total de Horas Semanais CHS SUS da Equipe', fontsize=12)

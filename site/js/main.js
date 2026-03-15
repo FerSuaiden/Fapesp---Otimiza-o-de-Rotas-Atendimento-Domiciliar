@@ -227,16 +227,55 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------- Iframe Expand/Collapse ---------- */
-  document.querySelectorAll('.iframe-expand').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const wrapper = btn.closest('.iframe-wrapper');
-      if (!wrapper) return;
-      const isExpanded = wrapper.classList.toggle('iframe-fullscreen');
-      btn.textContent = isExpanded ? '✕' : '⛶';
-      btn.title = isExpanded ? 'Fechar' : 'Expandir';
-      document.body.style.overflow = isExpanded ? 'hidden' : '';
+  function toggleIframeFullscreen(wrapper, btn) {
+    const supportsNativeFullscreen = !!(
+      wrapper.requestFullscreen ||
+      wrapper.webkitRequestFullscreen ||
+      wrapper.msRequestFullscreen
+    );
+
+    const updateButtonState = (expanded) => {
+      btn.textContent = expanded ? '✕' : '⛶';
+      btn.title = expanded ? 'Fechar' : 'Expandir';
+      document.body.style.overflow = expanded ? 'hidden' : '';
+    };
+
+    if (supportsNativeFullscreen) {
+      const isInNativeFullscreen = document.fullscreenElement === wrapper;
+      if (isInNativeFullscreen) {
+        document.exitFullscreen?.();
+        return;
+      }
+
+      wrapper.requestFullscreen?.().catch(() => {
+        const expanded = wrapper.classList.toggle('iframe-fullscreen');
+        updateButtonState(expanded);
+      });
+      return;
+    }
+
+    const expanded = wrapper.classList.toggle('iframe-fullscreen');
+    updateButtonState(expanded);
+  }
+
+  function bindIframeExpandButtons(scope = document) {
+    scope.querySelectorAll('.iframe-expand').forEach(btn => {
+      if (btn.dataset.expandBound) return;
+      btn.dataset.expandBound = '1';
+      btn.addEventListener('click', () => {
+        const wrapper = btn.closest('.iframe-wrapper');
+        if (!wrapper) return;
+        if (btn.dataset.busy === '1') return;
+        btn.dataset.busy = '1';
+        toggleIframeFullscreen(wrapper, btn);
+        setTimeout(() => {
+          btn.dataset.busy = '0';
+        }, 220);
+      });
     });
-  });
+  }
+
+  bindIframeExpandButtons();
 
   // ESC to close expanded iframe
   document.addEventListener('keydown', (e) => {
@@ -251,14 +290,99 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  document.addEventListener('fullscreenchange', () => {
+    document.querySelectorAll('.iframe-expand').forEach(btn => {
+      const wrapper = btn.closest('.iframe-wrapper');
+      if (!wrapper) return;
+      const expanded = document.fullscreenElement === wrapper || wrapper.classList.contains('iframe-fullscreen');
+      btn.textContent = expanded ? '✕' : '⛶';
+      btn.title = expanded ? 'Fechar' : 'Expandir';
+    });
+
+    if (!document.fullscreenElement) {
+      document.body.style.overflow = '';
+    }
+  });
+
   /* ---------- State Selector (estadual page) ---------- */
+  const ofertaStateSelect = document.getElementById('oferta-state-select');
+  const ofertaMapDisplay = document.getElementById('oferta-map-display');
+  const ofertaStateButtons = document.querySelectorAll('.oferta-state-btn');
+
+  function showOfertaState(uf) {
+    if (!ofertaMapDisplay) return;
+    const mapPath = `Outputs%26Codigo/PARTE1/mapas_Equipes_Atencao_Domiciliar_por_estado/mapa_Equipes_Atencao_Domiciliar_${uf}.html`;
+
+    ofertaMapDisplay.innerHTML = `
+      <div class="card card-full">
+        <div class="iframe-wrapper" style="padding-bottom:65%;">
+          <iframe src="${mapPath}" title="Mapa de Equipes AD em ${uf}" loading="lazy"></iframe>
+          <button class="iframe-expand" title="Expandir">⛶</button>
+        </div>
+        <div class="card-body">
+          <h3>${uf}: Distribuição Espacial das Equipes</h3>
+          <p>Mapa interativo com clusters automáticos e classificação por composição (EMAD/EMAP) dos estabelecimentos.</p>
+        </div>
+      </div>
+    `;
+
+    bindIframeExpandButtons(ofertaMapDisplay);
+    ofertaStateButtons.forEach(b => b.classList.toggle('active', b.dataset.uf === uf));
+    if (ofertaStateSelect) ofertaStateSelect.value = uf;
+  }
+
+  if (ofertaStateSelect) {
+    ofertaStateSelect.addEventListener('change', () => showOfertaState(ofertaStateSelect.value));
+  }
+
+  ofertaStateButtons.forEach(btn => {
+    btn.addEventListener('click', () => showOfertaState(btn.dataset.uf));
+  });
+
+  if (ofertaMapDisplay && (ofertaStateSelect || ofertaStateButtons.length)) {
+    showOfertaState('SP');
+  }
+
   const stateSelect = document.getElementById('state-select');
   const stateDisplay = document.getElementById('state-display');
   const stateButtons = document.querySelectorAll('.state-btn');
 
-  function showState(uf) {
+  async function showState(uf) {
     if (!stateDisplay) return;
     const imgPath = `Outputs%26Codigo/PARTE4/visualizacoes/estados/${uf}/${uf}_equipes_conformidade.png`;
+    const mapPath = `Outputs%26Codigo/PARTE1/mapas_Equipes_Atencao_Domiciliar_por_estado/mapa_Equipes_Atencao_Domiciliar_${uf}.html`;
+    let hasMap = false;
+
+    try {
+      const response = await fetch(mapPath, { method: 'HEAD' });
+      hasMap = response.ok;
+    } catch (error) {
+      hasMap = false;
+    }
+
+    const mapCard = hasMap
+      ? `
+      <div class="card card-full">
+        <div class="iframe-wrapper" style="padding-bottom:62%;">
+          <iframe src="${mapPath}" title="Mapa interativo ${uf}" loading="lazy"></iframe>
+          <button class="iframe-expand" title="Expandir">⛶</button>
+        </div>
+        <div class="card-body">
+          <h3>${uf}: Mapa Interativo das Equipes</h3>
+          <p>Mapa georreferenciado com clusters e classificação por presença de EMAD/EMAP no estado.</p>
+        </div>
+      </div>
+      `
+      : `
+      <div class="card card-full">
+        <div class="card-body">
+          <h3>${uf}: Mapa Interativo</h3>
+          <p>O mapa interativo deste estado não foi encontrado na pasta esperada.</p>
+          <p class="text-muted">Caminho esperado: ${mapPath}</p>
+        </div>
+      </div>
+      `;
+
     stateDisplay.innerHTML = `
       <div class="card card-full">
         <img src="${imgPath}" alt="Conformidade ${uf}" class="zoomable" />
@@ -267,8 +391,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <p>Distribuição de equipes conformes e não-conformes no estado, por tipo de equipe (Portaria 3.005/2024).</p>
         </div>
       </div>
+      ${mapCard}
     `;
     if (window.__bindLightbox) window.__bindLightbox();
+
+    bindIframeExpandButtons(stateDisplay);
+
     stateButtons.forEach(b => b.classList.toggle('active', b.dataset.uf === uf));
     if (stateSelect) stateSelect.value = uf;
   }
