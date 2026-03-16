@@ -74,10 +74,6 @@ O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge20
 
 Nesse contexto, o \citelink{portaria825}{Programa Melhor em Casa}, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais que realizam visitas regulares a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa.
 
-Evidências empíricas recentes reforçam o impacto sistêmico dessa política. Em análise nacional para 2009--2024, \citelink{albuquerque2025}{Albuquerque (2025)} estimou redução média de 4,45\% na permanência hospitalar nos municípios participantes, com efeito cumulativo que pode chegar a 17,71\% após 13 anos de implementação. O estudo também identifica efeito de maturação: os ganhos passam a ser estatisticamente significativos entre 3 e 5 anos, sugerindo que a efetividade plena depende de integração institucional e da consolidação da rede local.
-
-O mesmo estudo aponta interdependência espacial relevante: dependência espacial moderada no tempo de internação ($\rho = 0{,}265$) e efeito indireto médio de aproximadamente $-0{,}23$ dia em municípios vizinhos quando há implementação local do programa. Também evidencia desigualdades estruturais de adesão, com 79,46\% dos grandes municípios participantes contra 4,95\% dos municípios com menos de 20 mil habitantes, além de chance de adesão 90\% maior em municípios com maior proporção de idosos e 66,5\% maior onde a ESF é mais consolidada. Esses resultados reforçam a importância de estratégias de planejamento territorial e coordenação regional no desenho de políticas e, futuramente, na modelagem de roteamento.
-
 
 \section{Análise Exploratória de Dados}
 
@@ -169,7 +165,7 @@ Essa diferença de composição tem implicações diretas para a conformidade le
 
 A caracterização por tipo de equipe torna possível a verificação de conformidade com os requisitos legais de composição. A \citelink{portaria3005}{Portaria GM/MS nº 3.005/2024} estabelece requisitos mínimos para cada tipo de equipe. As EMAD~I exigem no mínimo 40h de médico, 60h de enfermeiro, 120h de técnico de enfermagem e 30h de fisioterapeuta ou assistente social. As EMAD~II possuem requisitos reduzidos pela metade para médico (20h) e enfermeiro (30h). As EMAP e EMAP-R devem ter pelo menos três categorias de nível superior, com CHS total mínima de 90h e 60h, respectivamente.
 
-A verificação consistiu em agregar a carga horária semanal por categoria profissional para cada equipe. A identificação das categorias foi feita a partir dos primeiros dígitos do código CBO de cada profissional: por exemplo, códigos iniciados em "2231" correspondem a médicos, "2235" a enfermeiros, e assim por diante. Profissionais com carga horária inferior a 20h foram descartados conforme a legislação, e os valores resultantes foram comparados com os requisitos mínimos de cada tipo de equipe. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 76,7\% das equipes estão em conformidade. Porém, a EMAD~I, tipo mais numeroso e central para o atendimento direto, apresenta a menor taxa: apenas 64,6\%.
+A verificação consistiu em agregar a carga horária semanal por categoria profissional para cada equipe. A identificação das categorias foi feita a partir dos primeiros dígitos do código CBO de cada profissional: por exemplo, códigos iniciados em "2231" correspondem a médicos, "2235" a enfermeiros, e assim por diante. Profissionais com carga horária inferior a 20h foram descartados conforme a legislação, e os valores resultantes foram comparados com os requisitos mínimos de cada tipo de equipe. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 67,61\% das equipes estão em conformidade. Porém, a EMAD~I, tipo mais numeroso e central para o atendimento direto, apresenta a menor taxa: 48,9\%.
 
 \begin{figure}[H]
 \centering
@@ -178,9 +174,9 @@ A verificação consistiu em agregar a carga horária semanal por categoria prof
 \includegraphics[width=1.00\textwidth]{conformidade_por_tipo.png}
 \end{figure}
 
-A EMAD~II e a EMAP, com requisitos menos exigentes, atingem taxas superiores a 86\%.
+A EMAD~II e a EMAP apresentam taxas mais altas (83,7\% e 81,8\%, respectivamente), enquanto a EMAP-R atinge 66,5\%.
 
-A decomposição das 387 EMAD~I não conformes revela uma causa predominante: 298 equipes (77,0\% das não conformes) possuem carga horária de enfermeiro inferior a 60h, seguidas por déficit de técnico de enfermagem em 84 equipes (21,7\%), de fisioterapeuta ou assistente social em 33 (8,5\%) e de médico em 20 (5,2\%). A explicação é legislativa: a Portaria 3.005/2024 elevou o requisito de enfermeiro para EMAD~I de 40h (Portaria 825/2016) para 60h. Muitas equipes possuem exatamente 40h de enfermagem, configuração que era conforme pela legislação anterior. Três em cada quatro EMAD~I não conformes no país falham especificamente neste critério.
+No recálculo atual do pipeline, 558 equipes EMAD~I estão não conformes (51,1\% do total desse tipo), confirmando esse grupo como principal gargalo regulatório no cenário nacional.
 
 A análise regional, ilustrada na Figura~\ref{fig:conformidade_regiao}, complementa e reforça o padrão identificado na composição das equipes.
 
@@ -228,13 +224,13 @@ A Figura~\ref{fig:cobertura} evidencia a amplitude da variação entre estados: 
 \hline
 \textbf{Estado} & \textbf{Equipes} & \textbf{Eq./100k} & \textbf{Cob. (\%)} & \textbf{\% EMAD I} & \textbf{Conf. Geral} & \textbf{Conf. EMAD I} \\
 \hline
-São Paulo & 412 & 0,93 & 24,0\% & 60,9\% & 70,9\% & 59,8\% \\
-Minas Gerais & 317 & 1,54 & 18,3\% & 38,8\% & 82,6\% & 82,9\% \\
-Bahia & 282 & 1,99 & 33,8\% & 30,1\% & 78,7\% & 70,6\% \\
-Ceará & 181 & 2,06 & 44,6\% & 40,3\% & 61,9\% & 42,5\% \\
-Pará & 154 & 1,90 & 49,3\% & 37,0\% & 77,3\% & 49,1\% \\
+São Paulo & 412 & 0,93 & 24,0\% & 60,9\% & 58,5\% & 41,8\% \\
+Minas Gerais & 317 & 1,54 & 18,3\% & 38,8\% & 67,5\% & 56,9\% \\
+Bahia & 282 & 1,99 & 33,8\% & 30,1\% & 73,0\% & 60,0\% \\
+Ceará & 181 & 2,06 & 44,6\% & 40,3\% & 50,3\% & 24,7\% \\
+Pará & 154 & 1,90 & 49,3\% & 37,0\% & 71,4\% & 35,1\% \\
 \hline
-\textbf{Brasil} & \textbf{2.664} & \textbf{1,31} & \textbf{21,9\%} & \textbf{41,0\%} & \textbf{76,7\%} & \textbf{64,6\%} \\
+\textbf{Brasil} & \textbf{2.664} & \textbf{1,31} & \textbf{21,9\%} & \textbf{41,0\%} & \textbf{67,61\%} & \textbf{48,9\%} \\
 \hline
 \end{tabular}
 \end{table}
@@ -243,6 +239,12 @@ A análise estadual revela que número absoluto de equipes e cobertura relativa 
 
 Essa heterogeneidade reforça a necessidade de utilizar os dados reais de cada estado na formulação do problema, em vez de médias nacionais ou regionais.
 
+Essa leitura em escala territorial é consistente com evidências de impacto sistêmico do programa reportadas por \citelink{albuquerque2025}{Albuquerque (2025)}. Em análise nacional para 2009--2024, o autor estima redução média de 4,45\% na permanência hospitalar nos municípios participantes, com efeito cumulativo que pode atingir 17,71\% após 13 anos de implementação. O estudo também identifica efeito de maturação, com ganhos estatisticamente significativos a partir de 3 a 5 anos, indicando que a efetividade depende da consolidação institucional e da integração com a rede assistencial.
+
+Além disso, os resultados apontam interdependência espacial relevante, com dependência espacial moderada no tempo de internação ($\rho = 0{,}265$) e efeito indireto médio de aproximadamente $-0{,}23$ dia em municípios vizinhos quando há implementação local do programa. A tese também documenta forte assimetria de adesão, com 79,46\% dos grandes municípios participantes contra 4,95\% dos municípios com menos de 20 mil habitantes, além de chance de adesão 90\% maior em municípios com maior proporção de idosos e 66,5\% maior onde a ESF é mais consolidada. Em conjunto, esses achados reforçam a pertinência de incorporar perspectiva regional e coordenação intermunicipal nas próximas etapas de modelagem.
+
+Como aplicação prática desses resultados, propõe-se um \textbf{Indicador de Priorização Territorial (IPT)} para apoiar a próxima etapa de modelagem e planejamento operacional. Em cada território, o IPT pode combinar: (i) \textit{lacuna de cobertura} municipal, (ii) \textit{pressão regulatória} (proporção de EMAD~I não conformes), (iii) \textit{potencial de spillover} regional (vizinhança com baixa cobertura) e (iv) \textit{maturação esperada} da política. Na prática, territórios com alta lacuna de cobertura e alta não conformidade, mas com forte potencial de transbordamento, tornam-se prioritários para estratégias de alocação e coordenação intermunicipal.
+
 
 \subsection{Produtos Desenvolvidos}
 
@@ -250,7 +252,7 @@ Todo o código-fonte está disponível publicamente no repositório GitHub: \url
 
 \subsection{Principais Conclusões}
 
-A análise exploratória, ao percorrer as escalas nacional, regional e estadual, revela um cenário de cobertura insuficiente e desigual, no qual a composição das equipes e a conformidade legal variam de forma inter-relacionada. Regiões que expandiram o programa com tipos de equipe menos exigentes alcançaram maior cobertura, mas o tipo mais numeroso e operacionalmente central, a EMAD~I, apresenta baixa conformidade em todo o país, sobretudo após a elevação dos requisitos pela \citelink{portaria3005}{Portaria 3.005/2024}. Essa heterogeneidade se intensifica na escala estadual, onde estados de uma mesma região apresentam cenários operacionais muito distintos.
+A análise exploratória, ao percorrer as escalas nacional, regional e estadual, revela um cenário de cobertura insuficiente e desigual, no qual a composição das equipes e a conformidade legal variam de forma inter-relacionada. Regiões que expandiram o programa com tipos de equipe menos exigentes alcançaram maior cobertura, mas o tipo mais numeroso e operacionalmente central, a EMAD~I, mantém baixa conformidade no recálculo atual (48,9\%). Essa heterogeneidade se intensifica na escala estadual, onde estados de uma mesma região apresentam cenários operacionais muito distintos.
 
 A caracterização completa da capacidade e composição profissional de cada equipe, combinada com o mapeamento geográfico das bases operacionais, fornece os insumos necessários para a futura modelagem do problema de roteamento e agendamento. O cenário de recursos escassos, desigualmente distribuídos e parcialmente não conformes reforça a importância de planejar o atendimento de forma eficiente para maximizar o impacto das equipes existentes.
 
