@@ -58,49 +58,39 @@ Processo FAPESP: 2025/21835-0
 
 \vspace{0.5cm}
 \noindent
-\textbf{RESUMO:} A otimização de rotas e agendamentos das equipes de Atenção Domiciliar do Programa Melhor em Casa é modelada como um Home Health Care Routing and Scheduling Problem (HHC-RSP). Foi realizada uma Análise Exploratória de Dados utilizando bases públicas do CNES/DATASUS, CBO e IBGE, permitindo caracterizar o cenário operacional do programa e extrair os parâmetros fundamentais para modelagem. Foram identificadas 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com distribuição desigual entre regiões e composição heterogênea por tipo de equipe. A análise de conformidade legal revelou que 67,61\% das equipes atendem à Portaria GM/MS nº 3.005/2024, mas a EMAD~I, tipo mais numeroso, apresenta apenas 48,9\% de conformidade. Foram quantificados os parâmetros de capacidade ($Q_k$) e habilidades ($S_k$) de cada equipe e geradas instâncias sintéticas para testes do algoritmo BRKGA.
+\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, humanizando o atendimento e desafogando hospitais. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma Análise Exploratória de Dados (AED) utilizando bases públicas do CNES/DATASUS, CBO e IBGE. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e futura modelagem do problema.
 
 \vspace{0.3cm}
 \noindent
-\textbf{Palavras-chave:} Atenção Domiciliar; Roteamento de Veículos; HHC-RSP; BRKGA; Programa Melhor em Casa; Otimização Combinatória; SUS.
+\textbf{Palavras-chave:} Atenção Domiciliar; Programa Melhor em Casa; Análise Exploratória de Dados; CNES/DATASUS; Conformidade Legal; SUS.
 
 \newpage
 
-\section{Contextualização e Proposta}
+\section{Introdução}
 
 \subsection{Contexto e Motivação}
 
-O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge2022}{Censo 2022 do IBGE}, a população com 60 anos ou mais atingiu 32,1 milhões de pessoas (15,6\% do total), um crescimento de 56\% em relação a 2010, quando representava 10,8\%. O índice de envelhecimento saltou de 44,8 para 80,0 no período, indicando que há atualmente 80 idosos para cada 100 crianças de 0 a 14 anos. Em estados como Rio Grande do Sul e Rio de Janeiro, o número de idosos já supera o de crianças. Este fenômeno demográfico pressiona diretamente o sistema de saúde, aumentando a demanda por cuidados de longa duração e atendimento domiciliar.
+O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge2022}{Censo 2022 do IBGE}, a população com 60 anos ou mais atingiu 32,1 milhões de pessoas (15,6\% do total), um crescimento de 56\% em relação a 2010, quando representava 10,8\%. O índice de envelhecimento saltou de 44,8 para 80,0 no período, indicando que há atualmente 80 idosos para cada 100 crianças de 0 a 14 anos. Em estados como Rio Grande do Sul e Rio de Janeiro, o número de idosos já supera o de crianças (IBGE, Censo 2022). Este fenômeno demográfico pressiona diretamente o sistema de saúde, aumentando a demanda por cuidados de longa duração e atendimento domiciliar.
 
 Nesse contexto, o \citelink{portaria825}{Programa Melhor em Casa}, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais que realizam visitas regulares a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa.
 
-Evidências recentes reforçam o potencial sistêmico dessa política. Em análise nacional para 2009--2024, \citelink{albuquerque2025}{Albuquerque (2025)} estimou redução média de 4,45\% na permanência hospitalar dos municípios participantes, com efeito cumulativo que pode atingir 17,71\% após 13 anos. O estudo também indica que o impacto não é imediato: os ganhos tornam-se estatisticamente significativos entre 3 e 5 anos pós-implantação, sugerindo dependência de maturação institucional e integração com a rede assistencial. Para o HHC-RSP, esse resultado é relevante porque ganhos operacionais no uso de equipes domiciliares tendem a se converter em eficiência hospitalar no médio e longo prazo.
+Evidências empíricas recentes reforçam o impacto sistêmico dessa política. Em análise nacional para 2009--2024, \citelink{albuquerque2025}{Albuquerque (2025)} estimou redução média de 4,45\% na permanência hospitalar nos municípios participantes, com efeito cumulativo que pode chegar a 17,71\% após 13 anos de implementação. O estudo também identifica efeito de maturação: os ganhos passam a ser estatisticamente significativos entre 3 e 5 anos, sugerindo que a efetividade plena depende de integração institucional e da consolidação da rede local.
 
-Na dimensão espacial, o mesmo estudo reporta dependência espacial moderada na permanência hospitalar ($\rho = 0{,}265$) e efeito indireto médio de $-0{,}23$ dia em municípios vizinhos, quando há implementação local do programa. Além disso, descreve forte assimetria territorial de adesão: 79,46\% nos grandes municípios versus 4,95\% nos pequenos, com chance de adesão 90\% maior em municípios com maior proporção de idosos e 66,5\% maior onde a cobertura da ESF é mais alta. Esses achados sustentam, para trabalhos futuros, estratégias de planejamento regional e coordenação intermunicipal na modelagem de rotas e bases operacionais.
+O mesmo estudo aponta interdependência espacial relevante: dependência espacial moderada no tempo de internação ($\rho = 0{,}265$) e efeito indireto médio de aproximadamente $-0{,}23$ dia em municípios vizinhos quando há implementação local do programa. Também evidencia desigualdades estruturais de adesão, com 79,46\% dos grandes municípios participantes contra 4,95\% dos municípios com menos de 20 mil habitantes, além de chance de adesão 90\% maior em municípios com maior proporção de idosos e 66,5\% maior onde a ESF é mais consolidada. Esses resultados reforçam a importância de estratégias de planejamento territorial e coordenação regional no desenho de políticas e, futuramente, na modelagem de roteamento.
 
-\subsection{O Problema de Otimização (HHC-RSP)}
 
-O Home Health Care Routing and Scheduling Problem (HHC-RSP) é um problema de otimização combinatória que visa determinar as melhores rotas e agendamentos para as equipes de atendimento domiciliar. Pertence à família dos Vehicle Routing Problems (VRP) com características específicas do setor de saúde. Dados um conjunto de pacientes com localização, janelas de tempo e requisitos de habilidades ($R_i$), e um conjunto de equipes com base de operação, capacidade ($Q_k$) e habilidades ($S_k$), o problema busca encontrar rotas e agendamentos que minimizem custos de deslocamento e tempo de espera, sujeito a restrições de capacidade, habilidades, janelas de tempo e cobertura.
+\section{Análise Exploratória de Dados}
 
-\subsection{Objetivo e Metodologia}
+Este relatório cobre o primeiro período de desenvolvimento (outubro/2025 a março/2026), com foco na caracterização do cenário operacional da Atenção Domiciliar no contexto brasileiro.
 
-O objetivo deste projeto é estudar métodos de otimização para a determinação de rotas e agendamentos das equipes de Atenção Domiciliar no contexto do \citelink{portaria825}{Programa Melhor em Casa}. Para isso, utiliza dados públicos do \citelink{cnes}{CNES/DATASUS} (Cadastro Nacional de Estabelecimentos de Saúde), CBO (Classificação Brasileira de Ocupações) e \citelink{ibge2022}{IBGE} para caracterizar as equipes e gerar instâncias realísticas do HHC-RSP. O método de solução adotado é o BRKGA (Biased Random-Key Genetic Algorithm), seguindo a formulação de \citelink{mankowska2014}{Mankowska et al. (2014)} e a abordagem computacional de \citelink{kummer2024}{Kummer et al. (2024)}.
-
-\section{Realizações no Período}
-
-Este relatório cobre o primeiro período de desenvolvimento (outubro/2025 a março/2026), correspondente à revisão bibliográfica e à compreensão do problema no contexto brasileiro.
-
-\subsection{Revisão Bibliográfica}
-
-Foi realizada revisão da literatura sobre VRP, HHC-RSP e métodos de solução. O trabalho seminal de \citelink{dantzig1959}{Dantzig e Ramser (1959)} introduziu o Vehicle Routing Problem, estabelecendo as bases para toda a família de problemas de roteamento. \citelink{mankowska2014}{Mankowska et al. (2014)} propuseram o modelo de referência para HHC-RSP com serviços interdependentes, considerando sincronização entre profissionais, e \citelink{fikar2017}{Fikar e Hirsch (2017)} realizaram uma revisão sistemática da literatura, classificando 41 artigos por características do problema e métodos de solução. \citelink{goncalves2011}{Gonçalves e Resende (2011)} introduziram o BRKGA, meta-heurística evolucionária baseada em chaves aleatórias, posteriormente aplicada ao HHC-RSP brasileiro por \citelink{kummer2024}{Kummer et al. (2024)}, com resultados computacionais em instâncias de médio porte.
 
 \subsection{Análise Exploratória de Dados -- Programa Melhor em Casa}
 
-O principal resultado deste período foi uma Análise Exploratória de Dados (AED) completa das bases públicas do governo. A modelagem do HHC-RSP requer parâmetros realísticos, como capacidade ($Q_k$), habilidades ($S_k$) e localização das equipes, que só podem ser obtidos a partir de uma caracterização detalhada do programa. A análise segue um percurso do panorama nacional à escala estadual, examinando sucessivamente a distribuição geográfica, a composição por tipo de equipe e a conformidade com a legislação vigente.
+O principal resultado deste período foi uma Análise Exploratória de Dados (AED) completa das bases públicas do governo. A análise segue um percurso do panorama nacional à escala estadual, examinando sucessivamente a distribuição geográfica, a composição por tipo de equipe e a conformidade com a legislação vigente.
 
 \subsubsection{Fontes de Dados e Metodologia}
 
-Foram utilizadas três fontes de dados públicas: o \citelink{cnes}{CNES/DATASUS} (competência 08/2025), com informações sobre estabelecimentos de saúde, equipes e profissionais; a Classificação Brasileira de Ocupações (CBO, edição 2024); e dados demográficos e geográficos do \citelink{ibge2022}{Censo 2022 do IBGE}. A partir dessas bases, as equipes de Atenção Domiciliar foram identificadas e filtradas, seus profissionais foram vinculados via tabelas relacionais, e as métricas de capacidade ($Q_k$), habilidades ($S_k$) e conformidade legal foram calculadas para cada equipe. Os detalhes técnicos do processamento estão documentados no repositório do projeto.
+Foram utilizadas três fontes de dados públicas: o \citelink{cnes}{CNES/DATASUS} (competência 08/2025), com informações sobre estabelecimentos de saúde, equipes e profissionais; a Classificação Brasileira de Ocupações (CBO, edição 2024); e dados demográficos e geográficos do \citelink{ibge2022}{Censo 2022 do IBGE}. A partir dessas bases, as equipes de Atenção Domiciliar foram identificadas e filtradas, seus profissionais foram vinculados via tabelas relacionais, e as métricas de capacidade, composição profissional e conformidade legal foram calculadas para cada equipe. Os detalhes técnicos do processamento estão documentados no repositório do projeto.
 
 \subsubsection{Panorama Nacional}
 
@@ -108,6 +98,7 @@ O Brasil possui 2.664 equipes ativas de Atenção Domiciliar, organizadas em qua
 
 \begin{table}[H]
 \centering
+\caption{Distribuição nacional das equipes por tipo.}
 \begin{tabular}{|l|c|c|l|}
 \hline
 \textbf{Tipo de Equipe} & \textbf{Quantidade} & \textbf{Percentual} & \textbf{Função} \\
@@ -120,12 +111,11 @@ EMAP-R (código 77) & 182 & 6,8\% & Apoio rural/reabilitação \\
 \textbf{TOTAL} & \textbf{2.664} & \textbf{100\%} & -- \\
 \hline
 \end{tabular}
-\caption{Distribuição nacional das equipes por tipo.}
 \end{table}
 
 As EMAD (Equipes Multiprofissionais de Atenção Domiciliar, tipos I e II) são responsáveis pelo atendimento direto nas modalidades AD2 e AD3 (níveis intermediário e avançado de cuidado domiciliar), definidas pela \citelink{portaria825}{Portaria GM/MS nº 825/2016}. As EMAP (Equipes Multiprofissionais de Apoio) fornecem suporte especializado. A diferença entre os dois tipos de EMAD está nos requisitos de composição: a EMAD~I exige maior Carga Horária Semanal (CHS) de médicos e enfermeiros, sendo voltada a municípios de maior porte, enquanto a EMAD~II é uma versão mais leve, adequada a municípios menores. Da mesma forma, a EMAP-R possui requisitos reduzidos em relação à EMAP convencional, sendo destinada a municípios com menos de 20 mil habitantes.
 
-Essas 2.664 equipes estão presentes em apenas 1.218 dos 5.570 municípios brasileiros, correspondendo a uma cobertura de 21,9\%. Essa cobertura limitada tem consequência direta para o HHC-RSP: como os recursos são escassos, a otimização das rotas e agendamentos torna-se necessária para maximizar o número de pacientes atendidos com a capacidade disponível. Além disso, os quatro tipos de equipe possuem capacidades ($Q_k$) e habilidades ($S_k$) distintas, o que configura um problema de frota heterogênea.
+Essas 2.664 equipes estão presentes em apenas 1.218 dos 5.570 municípios brasileiros, correspondendo a uma cobertura municipal de 21,9\%. Essa cobertura limitada evidencia que a maioria dos municípios não conta com equipes dedicadas de atendimento domiciliar, o que representa um desafio significativo para a universalização do programa.
 
 \subsubsection{Disparidades Regionais}
 
@@ -133,6 +123,7 @@ A média nacional de 21,9\% oculta diferenças substanciais entre as regiões do
 
 \begin{table}[H]
 \centering
+\caption{Cobertura do Programa Melhor em Casa por região.}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
 \textbf{Região} & \textbf{Mun. Cobertos} & \textbf{Cobertura (\%)} & \textbf{Equipes} & \textbf{Eq./100k hab.} \\
@@ -146,15 +137,15 @@ Sul & 107 & 9,0\% & 215 & 0,72 \\
 \textbf{Brasil} & \textbf{1.218} & \textbf{21,9\%} & \textbf{2.664} & \textbf{1,31} \\
 \hline
 \end{tabular}
-\caption{Cobertura do Programa Melhor em Casa por região.}
 \end{table}
 
-A tabela revela diferenças expressivas entre regiões. O Nordeste lidera em cobertura, enquanto o Sul apresenta a menor penetração do programa. Para o HHC-RSP, essa disparidade implica que a estrutura do problema varia por localidade: regiões com poucas equipes e grande dispersão geográfica geram instâncias com deslocamentos mais longos e menor flexibilidade na alocação.
+A tabela revela diferenças expressivas entre regiões. O Nordeste lidera em cobertura municipal (31,4\%), enquanto o Sul apresenta a menor penetração do programa (9,0\%). Essa disparidade se reflete também na densidade de equipes por habitante: o Nordeste possui 2,02 equipes por 100 mil habitantes, enquanto o Sul conta com apenas 0,72. Regiões com poucas equipes e grande dispersão geográfica enfrentam deslocamentos mais longos e menor flexibilidade na organização dos atendimentos.
 
 Além da distribuição geográfica, as regiões diferem na composição das equipes implantadas.
 
 \begin{table}[H]
 \centering
+\caption{Composição percentual por tipo de equipe em cada região.}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
 \textbf{Região} & \textbf{EMAD I} & \textbf{EMAD II} & \textbf{EMAP} & \textbf{EMAP-R} \\
@@ -168,44 +159,44 @@ Sul (215 eq.) & 56,3\% & 16,7\% & 24,2\% & 2,8\% \\
 \textbf{Brasil} (2.664 eq.) & 41,0\% & 17,3\% & 34,9\% & 6,8\% \\
 \hline
 \end{tabular}
-\caption{Composição percentual por tipo de equipe em cada região.}
 \end{table}
 
 O Nordeste apresenta um perfil de composição distinto das demais regiões, com maior presença de EMAD~II e EMAP-R, tipos com requisitos menos exigentes. As EMAD~II possuem metade da carga horária médica e de enfermagem em relação às EMAD~I, enquanto as EMAP-R exigem CHS total de apenas 60 horas (contra 90 horas das EMAP convencionais). O Sudeste e o Sul, por outro lado, concentram mais da metade de suas equipes no tipo EMAD~I.
 
-Essa diferença de composição é relevante tanto para a conformidade legal, pois cada tipo de equipe possui requisitos distintos de CHS e categorias profissionais, quanto para a otimização, pois define a heterogeneidade da frota em termos de capacidade ($Q_k$) e habilidades ($S_k$).
+Essa diferença de composição tem implicações diretas para a conformidade legal, uma vez que cada tipo de equipe possui requisitos distintos de CHS e categorias profissionais.
 
 \subsubsection{Conformidade com a Portaria GM/MS nº 3.005/2024}
 
-A caracterização por tipo de equipe torna possível a verificação de conformidade com os requisitos legais de composição. A \citelink{portaria3005}{Portaria GM/MS nº 3.005/2024} estabelece requisitos mínimos para cada tipo de equipe. As EMAD~I exigem no mínimo 40h de médico, 60h de enfermeiro, 120h de técnico de enfermagem e 30h de fisioterapeuta ou assistente social. As EMAD~II possuem requisitos reduzidos pela metade para médico (20h) e enfermeiro (30h). As EMAP e EMAP-R devem ter pelo menos três categorias de nível superior, com CHS total mínima de 90h e 60h, respectivamente. No pipeline computacional desta etapa, foi aplicado um corte mínimo de 20h por profissional para todas as equipes (EMAD~I, EMAD~II, EMAP e EMAP-R), como regra de padronização analítica para o cálculo de conformidade.
+A caracterização por tipo de equipe torna possível a verificação de conformidade com os requisitos legais de composição. A \citelink{portaria3005}{Portaria GM/MS nº 3.005/2024} estabelece requisitos mínimos para cada tipo de equipe. As EMAD~I exigem no mínimo 40h de médico, 60h de enfermeiro, 120h de técnico de enfermagem e 30h de fisioterapeuta ou assistente social. As EMAD~II possuem requisitos reduzidos pela metade para médico (20h) e enfermeiro (30h). As EMAP e EMAP-R devem ter pelo menos três categorias de nível superior, com CHS total mínima de 90h e 60h, respectivamente.
 
-A verificação consistiu em agregar as CHS por categoria profissional (via prefixos CBO) para cada equipe, descartar profissionais com CHS inferior a 20h, e comparar os valores resultantes com os requisitos mínimos. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 67,61\% das equipes estão em conformidade, mas essa média esconde uma diferença importante.
+A verificação consistiu em agregar a carga horária semanal por categoria profissional para cada equipe. A identificação das categorias foi feita a partir dos primeiros dígitos do código CBO de cada profissional: por exemplo, códigos iniciados em "2231" correspondem a médicos, "2235" a enfermeiros, e assim por diante. Profissionais com carga horária inferior a 20h foram descartados conforme a legislação, e os valores resultantes foram comparados com os requisitos mínimos de cada tipo de equipe. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 76,7\% das equipes estão em conformidade. Porém, a EMAD~I, tipo mais numeroso e central para o atendimento direto, apresenta a menor taxa: apenas 64,6\%.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\textwidth]{conformidade_por_tipo.png}
 \caption{Conformidade legal por tipo de equipe (\citelink{portaria3005}{Portaria GM/MS nº 3.005/2024}).}
 \label{fig:conformidade_tipo}
+\includegraphics[width=1.00\textwidth]{conformidade_por_tipo.png}
 \end{figure}
 
-A EMAD~I, tipo mais numeroso e central para o atendimento direto, é justamente o que apresenta a menor taxa de conformidade (48,9\%). As EMAD~II e EMAP apresentam taxas mais altas (83,7\% e 81,8\%, respectivamente), enquanto a EMAP-R alcança 66,5\%.
+A EMAD~II e a EMAP, com requisitos menos exigentes, atingem taxas superiores a 86\%.
 
-No cenário atual do pipeline, 558 EMAD~I estão não conformes (51,1\% do total desse tipo), indicando que este permanece sendo o principal gargalo de adequação legal. A interpretação normativa permanece a mesma: a elevação do requisito de enfermagem para 60h pela Portaria 3.005/2024 aumenta a dificuldade de conformidade das equipes EMAD~I em comparação com o cenário regulatório anterior.
+A decomposição das 387 EMAD~I não conformes revela uma causa predominante: 298 equipes (77,0\% das não conformes) possuem carga horária de enfermeiro inferior a 60h, seguidas por déficit de técnico de enfermagem em 84 equipes (21,7\%), de fisioterapeuta ou assistente social em 33 (8,5\%) e de médico em 20 (5,2\%). A explicação é legislativa: a Portaria 3.005/2024 elevou o requisito de enfermeiro para EMAD~I de 40h (Portaria 825/2016) para 60h. Muitas equipes possuem exatamente 40h de enfermagem, configuração que era conforme pela legislação anterior. Três em cada quatro EMAD~I não conformes no país falham especificamente neste critério.
 
 A análise regional, ilustrada na Figura~\ref{fig:conformidade_regiao}, complementa e reforça o padrão identificado na composição das equipes.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\textwidth]{conformidade_por_regiao.png}
 \caption{Conformidade legal por região do Brasil.}
 \label{fig:conformidade_regiao}
+\includegraphics[width=1.00\textwidth]{conformidade_por_regiao.png}
 \end{figure}
 
 Emerge um padrão claro: as regiões com maior proporção de EMAD~I tendem a apresentar menor conformidade geral, pois a taxa de conformidade desse tipo é baixa em todas as regiões. Onde as EMAD~I representam mais da metade das equipes, puxam a média regional para baixo.
 
-Para a modelagem do HHC-RSP, tanto a composição quanto a conformidade têm implicações diretas. A composição define uma frota heterogênea na qual cada tipo de equipe possui $Q_k$ e $S_k$ distintos; como nem toda equipe pode atender qualquer paciente, a verificação de compatibilidade $R_i \subseteq S_k$ restringe as alocações possíveis, tornando o problema mais complexo do que seria com frota homogênea. A não-conformidade agrava esse cenário: os valores reais de $Q_k$ e $S_k$ de muitas equipes ficam abaixo dos requisitos legais, reduzindo ainda mais os atendimentos viáveis. Ambos reforçam a necessidade de utilizar os dados reais de cada equipe, em vez de médias agregadas, na formulação das instâncias.
+Esses resultados mostram as condições reais do atendimento domiciliar no Brasil. A composição das equipes não é uniforme: cada tipo possui uma estrutura profissional diferente e, dentro de um mesmo tipo, cada equipe individual é formada pelos profissionais efetivamente vinculados a ela. Na prática, isso significa que nem toda equipe consegue atender qualquer paciente. Uma equipe sem fisioterapeuta, por exemplo, não pode prestar assistência a um paciente que necessite de reabilitação motora. A não-conformidade agrava esse cenário: muitas equipes operam com menos profissionais do que a legislação exige, reduzindo ainda mais a variedade de atendimentos que conseguem realizar.
+Em outras palavras, o programa enfrenta não apenas escassez de equipes, mas também limitações na capacidade efetiva das equipes existentes.
 
-Em síntese, cobertura, composição e conformidade formam três dimensões inter-relacionadas. A distribuição desigual das equipes significa que o HHC-RSP assume escalas e restrições diferentes conforme a região: onde há poucas equipes para grandes áreas, a otimização de rotas tem maior impacto potencial. A predominância de tipos menos exigentes nas regiões de maior cobertura eleva as taxas de conformidade locais, mas a concentração de EMAD~I em outras regiões reduz a capacidade efetiva disponível para alocação. Essas diferenças, porém, se aprofundam na escala estadual, motivando uma análise mais granular.
+Em síntese, cobertura, composição e conformidade formam três aspectos que se influenciam mutuamente. A distribuição desigual das equipes pelo território significa que diferentes regiões enfrentam realidades operacionais muito distintas: onde há poucas equipes para grandes áreas, os deslocamentos são mais longos e a flexibilidade na alocação é menor. A predominância de tipos menos exigentes nas regiões de maior cobertura eleva as taxas de conformidade locais, mas a concentração de EMAD~I em outras regiões, justamente o tipo com menor conformidade, reduz a capacidade efetiva disponível. Essas diferenças, porém, não se distribuem uniformemente dentro de cada região, motivando uma análise na escala estadual.
 
 \subsubsection{Análise na Escala Estadual}
 
@@ -213,16 +204,18 @@ A escala estadual é, em última instância, aquela na qual o problema de roteam
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\textwidth]{mapaSP.png}
 \caption{Distribuição espacial das equipes de Atenção Domiciliar no Estado de São Paulo, gerado com Folium (Leaflet.js). Círculos numerados são agrupamentos automáticos (clusters); as cores indicam a composição do estabelecimento (Roxo: EMAD+EMAP, Azul: apenas EMAD, Verde: apenas EMAP).}
 \label{fig:mapa}
+\includegraphics[width=1.00\textwidth]{mapaSP.png}
 \end{figure}
+
+A variação entre estados vai além do que o mapa de um único estado pode revelar. A Figura~\ref{fig:cobertura} compara as quinze UFs com maior cobertura percentual do programa.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\textwidth]{top15_cobertura_percentual.png}
 \caption{Top 15 UFs por cobertura percentual do Programa Melhor em Casa.}
 \label{fig:cobertura}
+\includegraphics[width=1.00\textwidth]{top15_cobertura_percentual.png}
 \end{figure}
 
 A Figura~\ref{fig:cobertura} evidencia a amplitude da variação entre estados: entre as quinze UFs com maior cobertura, os valores vão de 16,1\% (AM) a 100\% (DF), passando por estados como Pará (49,3\%), Rio de Janeiro (47,8\%) e Ceará (44,6\%).
@@ -230,104 +223,52 @@ A Figura~\ref{fig:cobertura} evidencia a amplitude da variação entre estados: 
 \begin{table}[H]
 \centering
 \footnotesize
+\caption{Indicadores dos cinco estados com mais equipes de AD.}
 \begin{tabular}{|l|c|c|c|c|c|c|}
 \hline
 \textbf{Estado} & \textbf{Equipes} & \textbf{Eq./100k} & \textbf{Cob. (\%)} & \textbf{\% EMAD I} & \textbf{Conf. Geral} & \textbf{Conf. EMAD I} \\
 \hline
-São Paulo & 412 & 0,93 & 24,0\% & 60,9\% & 58,5\% & 41,8\% \\
-Minas Gerais & 317 & 1,54 & 18,3\% & 38,8\% & 67,5\% & 56,9\% \\
-Bahia & 282 & 1,99 & 33,8\% & 30,1\% & 73,0\% & 60,0\% \\
-Ceará & 181 & 2,06 & 44,6\% & 40,3\% & 50,3\% & 24,7\% \\
-Pará & 154 & 1,90 & 49,3\% & 37,0\% & 71,4\% & 35,1\% \\
+São Paulo & 412 & 0,93 & 24,0\% & 60,9\% & 70,9\% & 59,8\% \\
+Minas Gerais & 317 & 1,54 & 18,3\% & 38,8\% & 82,6\% & 82,9\% \\
+Bahia & 282 & 1,99 & 33,8\% & 30,1\% & 78,7\% & 70,6\% \\
+Ceará & 181 & 2,06 & 44,6\% & 40,3\% & 61,9\% & 42,5\% \\
+Pará & 154 & 1,90 & 49,3\% & 37,0\% & 77,3\% & 49,1\% \\
 \hline
-\textbf{Brasil} & \textbf{2.664} & \textbf{1,31} & \textbf{21,9\%} & \textbf{41,0\%} & \textbf{67,61\%} & \textbf{48,9\%} \\
+\textbf{Brasil} & \textbf{2.664} & \textbf{1,31} & \textbf{21,9\%} & \textbf{41,0\%} & \textbf{76,7\%} & \textbf{64,6\%} \\
 \hline
 \end{tabular}
-\caption{Indicadores dos cinco estados com mais equipes de AD.}
 \end{table}
 
-A análise estadual revela que número absoluto de equipes e cobertura relativa são indicadores dissociados: São Paulo lidera em equipes (412), mas tem a pior taxa per capita entre os cinco maiores estados, enquanto o Ceará, com menos da metade, atinge mais que o dobro por habitante. Essa dissociação se repete dentro das regiões, onde estados vizinhos como Pará e Tocantins, ou Rio de Janeiro e Espírito Santo, apresentam coberturas em extremos opostos, indicando que fatores locais como políticas de adesão e disponibilidade de profissionais são determinantes. A relação entre composição e conformidade também se mostra mais complexa na escala estadual, onde fatores locais como disponibilidade de profissionais e políticas de adesão influenciam os resultados além da composição por tipo de equipe.
+A análise estadual revela que número absoluto de equipes e cobertura relativa são indicadores dissociados: São Paulo lidera em equipes (412), mas tem a pior taxa per capita entre os cinco maiores estados, enquanto o Ceará, com menos da metade, atinge mais que o dobro por habitante. Essa dissociação também aparece entre estados listados na Figura~\ref{fig:cobertura}: Pará e Amazonas, ambos da região Norte, apresentam coberturas de 49,3\% e 16,1\%, respectivamente, confirmando que fatores locais como políticas de adesão e disponibilidade de profissionais são determinantes. Da mesma forma, composição por tipo de equipe não é o único fator que explica a conformidade: Ceará e Bahia possuem proporções de EMAD~I próximas (40,3\% e 30,1\%), mas taxas de conformidade geral muito distintas (61,9\% e 78,7\%).
 
-Essa heterogeneidade reforça a necessidade de parametrização individualizada das instâncias do HHC-RSP, utilizando os dados reais de cada localidade em vez de médias nacionais ou regionais.
+Essa heterogeneidade reforça a necessidade de utilizar os dados reais de cada estado na formulação do problema, em vez de médias nacionais ou regionais.
 
-\subsubsection{Parâmetros Extraídos para o Modelo de Otimização}
-
-A análise exploratória descrita nas seções anteriores fornece os insumos concretos para a modelagem do HHC-RSP. Foram extraídos dois parâmetros fundamentais para cada equipe: a capacidade $Q_k$ e o conjunto de habilidades $S_k$.
-
-A capacidade $Q_k$ é definida como a soma das Cargas Horárias Semanais (CHS) de todos os profissionais da equipe:
-
-\begin{equation}
-Q_k = \sum_{p \in \text{equipe}_k} \text{CHS}_p, \quad \text{onde} \quad \text{CHS}_p = \text{CH}_{\text{amb.}} + \text{CH}_{\text{hosp.}} + \text{CH}_{\text{outros}}
-\end{equation}
-
-Nesta etapa, $Q_k$ deve ser interpretado como capacidade potencial baseada em CHS SUS; essa métrica não representa, necessariamente, dedicação exclusiva dos profissionais à Atenção Domiciliar.
-
-O cálculo exigiu a integração de quatro tabelas do CNES: \texttt{tbEquipe} $\bowtie$ \texttt{rlEstabEquipeProf} $\bowtie$ \texttt{tbCargaHorariaSus} $\bowtie$ \texttt{tbEstabelecimento}. A distribuição resultante apresenta mediana de 230h/semana e média de 224,0h, com alta variabilidade (desvio padrão de 169,7h), refletindo a heterogeneidade entre os tipos de equipe. Os cinco estados com maior capacidade total são: São Paulo (100.510h), Minas Gerais (67.351h), Bahia (57.304h), Rio de Janeiro (50.951h) e Ceará (36.060h).
-
-O conjunto de habilidades $S_k$ de cada equipe foi obtido mapeando códigos CBO em categorias profissionais:
-
-\begin{equation}
-S_k = \{c \in \mathcal{C} : \exists \, p \in \text{equipe}_k \text{ tal que } \text{categoria}(p) = c\}
-\end{equation}
-
-A análise identificou 17.677 vínculos profissional--CBO nas equipes AD (isto é, pares únicos \texttt{CO\_PROFISSIONAL\_SUS} + \texttt{CO\_CBO}). O contingente é dominado por quatro categorias que juntas compõem 76,8\% do total: Técnico de Enfermagem (33,4\%), Enfermeiro (16,2\%), Fisioterapeuta (14,8\%) e Médico (12,4\%). As demais categorias presentes são Nutricionista, Assistente Social, Psicólogo, Fonoaudiólogo e Terapeuta Ocupacional.
-
-Essa heterogeneidade de composição é diretamente relevante para a otimização: equipes de tipos distintos possuem capacidades ($Q_k$) e habilidades ($S_k$) diferentes, configurando um problema de frota heterogênea no qual a alocação de pacientes depende não apenas de proximidade geográfica, mas da compatibilidade $R_i \subseteq S_k$ e da capacidade residual, justificando a parametrização individualizada das instâncias.
-
-Os parâmetros $Q_k$, $S_k$ e as coordenadas geográficas dos depots foram utilizados para gerar seis instâncias sintéticas para testes do algoritmo BRKGA, variando de 10 a 500 pacientes, com número de equipes proporcional à demanda. Como dados reais de pacientes não estão disponíveis publicamente, os pacientes foram gerados com parâmetros baseados na \citelink{portaria3005}{Portaria 3.005/2024}: modalidades AD2 (70\%) e AD3 (30\%), janelas de tempo (manhã 40\%, tarde 35\%, integral 25\%) e tempos de serviço compatíveis com a complexidade. A matriz de tempos de viagem utiliza a distância geodésica (Haversine) com velocidade média de 25~km/h.
-
-Nesta etapa, as instâncias não incluem os requisitos de habilidades dos pacientes ($R_i$). A definição formal de $R_i$ será incorporada na próxima etapa, juntamente com as restrições de compatibilidade ($R_i \subseteq S_k$) no modelo de otimização.
 
 \subsection{Produtos Desenvolvidos}
 
-Todo o código-fonte está disponível publicamente no repositório GitHub: \url{https://github.com/fersuaiden/IC}. Foram desenvolvidos 11 scripts Python organizados em 4 partes (PARTE1 a PARTE4), compondo o pipeline completo de ETL e análise de dados. Os scripts geram 3 mapas interativos em HTML (mapa de equipes em SP com MarkerCluster, heatmap da capacidade no Brasil e gráfico hierárquico de composição profissional) e 39 visualizações estáticas em PNG, incluindo gráficos de cobertura, conformidade e resumo por estado. Foram também geradas 6 instâncias sintéticas para o BRKGA em formato JSON, variando de 10 a 500 pacientes, e 7 datasets processados em CSV para análises futuras. A documentação técnica (README.md) descreve o fluxo de processamento de cada etapa.
+Todo o código-fonte está disponível publicamente no repositório GitHub: \url{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}. Foram desenvolvidos 11 scripts Python organizados em 4 partes (PARTE1 a PARTE4), compondo o pipeline completo de ETL e análise de dados. Os scripts geram 3 mapas interativos em HTML (mapa de equipes em SP com MarkerCluster, heatmap da capacidade no Brasil e gráfico hierárquico de composição profissional) e 39 visualizações estáticas em PNG, incluindo gráficos de cobertura, conformidade e resumo por estado. Foram também geradas 6 instâncias sintéticas para o BRKGA em formato JSON, variando de 10 a 500 pacientes, e 7 datasets processados em CSV para análises futuras. A documentação técnica (README.md) descreve o fluxo de processamento de cada etapa.
 
 \subsection{Principais Conclusões}
 
 A análise exploratória, ao percorrer as escalas nacional, regional e estadual, revela um cenário de cobertura insuficiente e desigual, no qual a composição das equipes e a conformidade legal variam de forma inter-relacionada. Regiões que expandiram o programa com tipos de equipe menos exigentes alcançaram maior cobertura, mas o tipo mais numeroso e operacionalmente central, a EMAD~I, apresenta baixa conformidade em todo o país, sobretudo após a elevação dos requisitos pela \citelink{portaria3005}{Portaria 3.005/2024}. Essa heterogeneidade se intensifica na escala estadual, onde estados de uma mesma região apresentam cenários operacionais muito distintos.
 
-A caracterização completa de $Q_k$ e $S_k$, combinada com o mapeamento geográfico dos depots, fornece os insumos necessários para a modelagem do HHC-RSP. O cenário de recursos escassos, desigualmente distribuídos e parcialmente não conformes torna a otimização de rotas necessária para maximizar o impacto das equipes existentes.
+A caracterização completa da capacidade e composição profissional de cada equipe, combinada com o mapeamento geográfico das bases operacionais, fornece os insumos necessários para a futura modelagem do problema de roteamento e agendamento. O cenário de recursos escassos, desigualmente distribuídos e parcialmente não conformes reforça a importância de planejar o atendimento de forma eficiente para maximizar o impacto das equipes existentes.
 
-Em diálogo com \citelink{albuquerque2025}{Albuquerque (2025)}, os resultados também sugerem que a formulação futura do problema pode se beneficiar de uma perspectiva regional: como há evidência de transbordamento espacial e de fortes assimetrias de adesão por porte municipal, decisões de alocação e roteamento que considerem fronteiras intermunicipais e heterogeneidade territorial tendem a representar melhor o contexto real de implementação do PMeC.
+Em linha com \citelink{albuquerque2025}{Albuquerque (2025)}, os resultados também sugerem que a formulação futura pode se beneficiar de uma perspectiva regional, considerando efeitos de transbordamento entre municípios e assimetrias territoriais de cobertura.
 
 \section{Estado Atual da Pesquisa}
 
-A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. A AED das bases do CNES/DATASUS, CBO e IBGE forneceu os parâmetros de capacidade ($Q_k$), habilidades ($S_k$) e localização geográfica necessários para a formulação do HHC-RSP, além de seis instâncias sintéticas para validação inicial. A próxima etapa consiste na implementação do modelo de \citelink{mankowska2014}{Mankowska et al. (2014)} no solver Gurobi, no desenvolvimento do BRKGA com as melhorias propostas, e na comparação de desempenho entre os métodos.
+A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. Neste primeiro período, a Análise Exploratória de Dados das bases públicas do CNES/DATASUS, CBO e IBGE permitiu caracterizar as equipes de Atenção Domiciliar em termos de localização geográfica, capacidade e composição profissional, além de verificar a conformidade com a legislação vigente. A próxima etapa consiste na implementação do modelo de otimização e do algoritmo de solução, seguindo a abordagem de \citelink{kummer2024}{Kummer et al. (2024)}, e na comparação de desempenho entre os métodos.
 
-\section*{Referências Bibliográficas}
+\section*{Referências}
 
-\begin{thebibliography}{99}
-
-\bibitem{ibge2022}
-IBGE -- Instituto Brasileiro de Geografia e Estatística. \textit{Censo Demográfico 2022: População por idade e sexo}. Agência IBGE Notícias, 27 out. 2023. Disponível em: \url{https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/38186-censo-2022-numero-de-pessoas-com-65-anos-ou-mais-de-idade-cresceu-57-4-em-12-anos}. Acesso em: jan. 2026.
-
-\bibitem{dantzig1959}
-DANTZIG, G.B.; RAMSER, J.H. The truck dispatching problem. \textit{Management Science}, v. 6, n. 1, p. 80-91, 1959.
-
-\bibitem{goncalves2011}
-GONÇALVES, J.F.; RESENDE, M.G.C. Biased random-key genetic algorithms for combinatorial optimization. \textit{Journal of Heuristics}, v. 17, n. 5, p. 487-525, 2011.
-
-\bibitem{mankowska2014}
-MANKOWSKA, D.S.; MEISEL, F.; BIERWIRTH, C. The home health care routing and scheduling problem with interdependent services. \textit{Health Care Management Science}, v. 17, n. 1, p. 15-30, 2014.
-
-\bibitem{fikar2017}
-FIKAR, C.; HIRSCH, P. Home health care routing and scheduling: A review. \textit{Computers \& Operations Research}, v. 77, p. 86-95, 2017.
-
-\bibitem{kummer2024}
-KUMMER, A.; SANTOS, M.O.; ARENALES, M.N. A biased random-key genetic algorithm for the home health care routing and scheduling problem. \textit{Computers \& Operations Research}, v. 162, p. 106483, 2024.
-
-\bibitem{portaria825}
-BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 825, de 25 de abril de 2016}. Redefine a Atenção Domiciliar no âmbito do Sistema Único de Saúde (SUS) e atualiza as equipes habilitadas. Brasília, 2016.
-
-\bibitem{portaria3005}
-BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 3.005/2024}. Altera requisitos de composição das equipes de Atenção Domiciliar. Brasília, 2024.
-
-\bibitem{cnes}
-BRASIL. Ministério da Saúde. \textit{CNES -- Cadastro Nacional de Estabelecimentos de Saúde}. Disponível em: https://cnes.datasus.gov.br/. Acesso em: ago. 2025.
-
-\bibitem{albuquerque2025}
-ALBUQUERQUE, W. M. \textit{Política de atenção domiciliar no Brasil: análises espacial, de cobertura, focalização e impacto do Programa Melhor em Casa}. 2025. Tese (Doutorado em Economia Rural) -- Universidade Federal do Ceará, Fortaleza, 2025.
-
-\end{thebibliography}
+\begin{enumerate}[label={[\arabic*]}]
+\item IBGE -- Instituto Brasileiro de Geografia e Estatística. \textit{Censo Demográfico 2022: População por idade e sexo}. Agência IBGE Notícias, 27 out. 2023. Disponível em: \url{https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/38186-censo-2022-numero-de-pessoas-com-65-anos-ou-mais-de-idade-cresceu-57-4-em-12-anos}. Acesso em: jan. 2026.
+\item KUMMER, A.F.; ARAÚJO, O.C.B. de; BURIOL, L.S.; RESENDE, M.G.C. \textit{A biased random-key genetic algorithm for the home health care problem}. International Transactions in Operational Research, v. 31, n. 3, p. 1859--1889, 2024. Disponível em: \url{https://doi.org/10.1111/itor.13221}.
+\item BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 825, de 25 de abril de 2016}. Redefine a Atenção Domiciliar no âmbito do Sistema Único de Saúde (SUS) e atualiza as equipes habilitadas. Brasília, 2016. Disponível em: \url{https://bvsms.saude.gov.br/bvs/saudelegis/gm/2016/prt0825_25_04_2016.html}.
+\item BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 3.005, de 2 de janeiro de 2024}. Altera as Portarias de Consolidação nºs 5 e 6, de 28 de setembro de 2017, para atualizar as regras do Serviço de Atenção Domiciliar (SAD) e do Programa Melhor em Casa (PMeC). Brasília, 2024. Disponível em: \url{https://www.gov.br/saude/pt-br/composicao/saes/melhor-em-casa/legislacao/portaria-gm-ms-no-3-005-de-2-de-janeiro-de-2024}.
+\item BRASIL. Ministério da Saúde. \textit{CNES -- Cadastro Nacional de Estabelecimentos de Saúde}. Disponível em: \url{https://cnes.datasus.gov.br/}. Acesso em: ago. 2025.
+\item ALBUQUERQUE, W. M. \textit{Política de atenção domiciliar no Brasil: análises espacial, de cobertura, focalização e impacto do Programa Melhor em Casa}. 2025. Tese (Doutorado em Economia Rural) -- Universidade Federal do Ceará, Fortaleza, 2025.
+\end{enumerate}
 
 \end{document}
