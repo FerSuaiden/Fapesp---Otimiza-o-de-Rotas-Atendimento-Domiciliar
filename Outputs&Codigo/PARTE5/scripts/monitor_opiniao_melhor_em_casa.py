@@ -45,9 +45,9 @@ RESULT_DIR = os.path.join(PARTE5_DIR, "resultados")
 SERPAPI_URL = "https://serpapi.com/search.json"
 GEMINI_URL_TEMPLATE = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
-# Chaves fornecidas pelo usuario.
-SERPAPI_API_KEY_DEFAULT = "7b794da4d63a1fe9494e4b184829714982c49105519694ab20b50a278db7814b"
-GEMINI_API_KEY_DEFAULT = "AIzaSyBI_05nLJNTZ-RQC4ZswMhlEUYWsX6lA5c"
+# Sem fallback de chave em codigo para evitar exposicao acidental.
+SERPAPI_API_KEY_DEFAULT = ""
+GEMINI_API_KEY_DEFAULT = ""
 
 # Modelos Gemini com maior chance de disponibilidade no tier gratuito.
 GEMINI_MODELOS_GRATUITOS = [

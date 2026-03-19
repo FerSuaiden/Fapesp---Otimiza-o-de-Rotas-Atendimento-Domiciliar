@@ -8,3 +8,6 @@ CBO_DATA/
 SIA_DATA/*.dbc
 SIA_DATA/*.dbf
 *.log
+.env
+.env.*
+*.env

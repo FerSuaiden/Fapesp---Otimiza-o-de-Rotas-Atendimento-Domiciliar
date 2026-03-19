@@ -37,7 +37,7 @@ VIS_DIR = os.path.join(PARTE5_DIR, "visualizacoes")
 RESULT_DIR = os.path.join(PARTE5_DIR, "resultados")
 
 GEMINI_URL_TEMPLATE = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
-GEMINI_API_KEY_DEFAULT = "AIzaSyBI_05nLJNTZ-RQC4ZswMhlEUYWsX6lA5c"
+GEMINI_API_KEY_DEFAULT = ""
 
 GEMINI_MODELOS_GRATUITOS = [
     "gemini-2.0-flash",
