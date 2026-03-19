@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-03-19T00:18:01.948581",
+  "total_mencoes": 50,
+  "fonte_coleta_principal": "serpapi",
+  "modelo_classificacao": "gemma-3-4b-it",
+  "sentimentos": {
+    "positivo": 24,
+    "neutro": 17,
+    "negativo": 7,
+    "misto": 2
+  },
+  "posicionamentos": {
+    "apoio": 23,
+    "informativo": 19,
+    "critica": 8
+  },
+  "top_temas": {
+    "saúde domiciliar": 12,
+    "saúde pública": 10,
+    "Programa Melhor em Casa": 3,
+    "atendimento em saúde": 3,
+    "saude publica": 2
+  },
+  "top_veiculos": {
+    "www.gov.br": 4,
+    "Reclame Aqui": 3,
+    "Instagram · saudeam": 2,
+    "Agência de Notícias do Acre": 2,
+    "Portal ON": 1,
+    "Associação Pró-Cura da ELA": 1,
+    "O Bom da Notícia": 1,
+    "quemconfia.com.br": 1
+  }
+}

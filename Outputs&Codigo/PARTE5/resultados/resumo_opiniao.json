@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-03-19T00:18:01.940734",
+  "total_mencoes": 75,
+  "fonte_coleta_principal": "serpapi",
+  "modelo_classificacao": "gemma-3-4b-it",
+  "sentimentos": {
+    "positivo": 44,
+    "neutro": 26,
+    "nan": 4,
+    "negativo": 1
+  },
+  "posicionamentos": {
+    "apoio": 44,
+    "informativo": 26,
+    "nan": 4,
+    "critica": 1
+  },
+  "top_temas": {
+    "saúde pública": 21,
+    "saúde domiciliar": 19,
+    "Atenção Domiciliar": 7,
+    "Programa Melhor em Casa": 5,
+    "nan": 4
+  },
+  "top_veiculos": {
+    "www.gov.br": 4,
+    "{'name': 'Prefeitura de São Paulo', 'icon': 'https://encrypted-tbn1.gstatic.com/faviconV2?url=https://prefeitura.sp.gov.br&client=NEWS_360&size=96&type=FAVICON&fallback_opts=TYPE,SIZE,URL'}": 3,
+    "Prefeitura de Fortaleza": 2,
+    "{'name': 'saude.rs.gov.br', 'icon': 'https://encrypted-tbn0.gstatic.com/faviconV2?url=https://saude.rs.gov.br&client=NEWS_360&size=96&type=FAVICON&fallback_opts=TYPE,SIZE,URL'}": 2,
+    "{'name': 'estanciavelha.rs.gov.br', 'icon': 'https://encrypted-tbn1.gstatic.com/faviconV2?url=https://estanciavelha.rs.gov.br&client=NEWS_360&size=96&type=FAVICON&fallback_opts=TYPE,SIZE,URL'}": 2,
+    "{'name': 'Prefeitura de Poços de Caldas', 'icon': 'https://encrypted-tbn1.gstatic.com/faviconV2?url=https://pocosdecaldas.mg.gov.br&client=NEWS_360&size=96&type=FAVICON&fallback_opts=TYPE,SIZE,URL'}": 2,
+    "{'name': 'Prefeitura de Fortaleza', 'icon': 'https://encrypted-tbn2.gstatic.com/faviconV2?url=https://www.fortaleza.ce.gov.br&client=NEWS_360&size=96&type=FAVICON&fallback_opts=TYPE,SIZE,URL'}": 2,
+    "{'name': 'Prefeitura de Caraguatatuba', 'icon': 'https://encrypted-tbn0.gstatic.com/faviconV2?url=https://www.caraguatatuba.sp.gov.br&client=NEWS_360&size=96&type=FAVICON&fallback_opts=TYPE,SIZE,URL'}": 2
+  }
+}

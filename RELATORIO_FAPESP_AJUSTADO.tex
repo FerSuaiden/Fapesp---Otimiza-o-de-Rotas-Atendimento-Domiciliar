@@ -58,7 +58,7 @@ Processo FAPESP: 2025/21835-0
 
 \vspace{0.5cm}
 \noindent
-\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, humanizando o atendimento e desafogando hospitais. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma Análise Exploratória de Dados (AED) utilizando bases públicas do CNES/DATASUS, CBO e IBGE. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e futura modelagem do problema.
+\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, humanizando o atendimento e desafogando hospitais. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma Análise Exploratória de Dados (AED) utilizando bases públicas do CNES/DATASUS e da CBO. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e futura modelagem do problema.
 
 \vspace{0.3cm}
 \noindent
@@ -70,23 +70,18 @@ Processo FAPESP: 2025/21835-0
 
 \subsection{Contexto e Motivação}
 
-O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge2022}{Censo 2022 do IBGE}, a população com 60 anos ou mais atingiu 32,1 milhões de pessoas (15,6\% do total), um crescimento de 56\% em relação a 2010, quando representava 10,8\%. O índice de envelhecimento saltou de 44,8 para 80,0 no período, indicando que há atualmente 80 idosos para cada 100 crianças de 0 a 14 anos. Em estados como Rio Grande do Sul e Rio de Janeiro, o número de idosos já supera o de crianças (IBGE, Censo 2022). Este fenômeno demográfico pressiona diretamente o sistema de saúde, aumentando a demanda por cuidados de longa duração e atendimento domiciliar.
+O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge2022}{Censo 2022 do IBGE}, a população com 60 anos ou mais atingiu 32,1 milhões de pessoas (15,6\% do total), um crescimento de 56\% em relação a 2010, quando representava 10,8\%. No mesmo levantamento, o índice de envelhecimento saltou de 44,8 para 80,0 no período, indicando que há atualmente 80 idosos para cada 100 crianças de 0 a 14 anos. Em estados como Rio Grande do Sul e Rio de Janeiro, o número de idosos já supera o de crianças \citelink{ibge2022}{(IBGE, Censo 2022)}. Este fenômeno demográfico pressiona diretamente o sistema de saúde, aumentando a demanda por cuidados de longa duração e atendimento domiciliar.
 
 Nesse contexto, o \citelink{portaria825}{Programa Melhor em Casa}, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais que realizam visitas regulares a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa.
 
 
 \section{Análise Exploratória de Dados}
 
-Este relatório cobre o primeiro período de desenvolvimento (outubro/2025 a março/2026), com foco na caracterização do cenário operacional da Atenção Domiciliar no contexto brasileiro.
-
-
-\subsection{Análise Exploratória de Dados -- Programa Melhor em Casa}
-
 O principal resultado deste período foi uma Análise Exploratória de Dados (AED) completa das bases públicas do governo. A análise segue um percurso do panorama nacional à escala estadual, examinando sucessivamente a distribuição geográfica, a composição por tipo de equipe e a conformidade com a legislação vigente.
 
 \subsubsection{Fontes de Dados e Metodologia}
 
-Foram utilizadas três fontes de dados públicas: o \citelink{cnes}{CNES/DATASUS} (competência 08/2025), com informações sobre estabelecimentos de saúde, equipes e profissionais; a Classificação Brasileira de Ocupações (CBO, edição 2024); e dados demográficos e geográficos do \citelink{ibge2022}{Censo 2022 do IBGE}. A partir dessas bases, as equipes de Atenção Domiciliar foram identificadas e filtradas, seus profissionais foram vinculados via tabelas relacionais, e as métricas de capacidade, composição profissional e conformidade legal foram calculadas para cada equipe. Os detalhes técnicos do processamento estão documentados no repositório do projeto.
+Foram utilizadas duas fontes de dados públicas: o \citelink{cnes}{CNES/DATASUS} (competência 08/2025), com informações sobre estabelecimentos de saúde, equipes e profissionais; e a Classificação Brasileira de Ocupações (CBO, edição 2024). A partir dessas bases, as equipes de Atenção Domiciliar foram identificadas e filtradas, seus profissionais foram vinculados via tabelas relacionais, e as métricas de capacidade, composição profissional e conformidade legal foram calculadas para cada equipe. Os detalhes técnicos do processamento estão documentados no repositório do projeto.
 
 \subsubsection{Panorama Nacional}
 
@@ -239,16 +234,30 @@ A análise estadual revela que número absoluto de equipes e cobertura relativa 
 
 Essa heterogeneidade reforça a necessidade de utilizar os dados reais de cada estado na formulação do problema, em vez de médias nacionais ou regionais.
 
-Essa leitura em escala territorial é consistente com evidências de impacto sistêmico do programa reportadas por \citelink{albuquerque2025}{Albuquerque (2025)}. Em análise nacional para 2009--2024, o autor estima redução média de 4,45\% no tempo de permanência hospitalar associada à participação no programa (isto é, um efeito médio estimado no período analisado, e não uma queda anual fixa), com efeito cumulativo que pode atingir 17,71\% após 13 anos de implementação. O estudo também identifica efeito de maturação, com ganhos estatisticamente significativos a partir de 3 a 5 anos, indicando que a efetividade depende da consolidação institucional e da integração com a rede assistencial.
+Essa leitura é consistente com evidências em escala nacional reportadas por \citelink{albuquerque2025}{Albuquerque (2025)}. Em análise para 2009--2024, o autor estima redução média de 4,45\% no tempo de permanência hospitalar associada à participação no programa (isto é, um efeito médio no período analisado, e não uma queda anual fixa). Quando se considera a acumulação da política no tempo, o efeito pode atingir 17,71\% em municípios com 13 anos de implementação dentro da janela analisada. O estudo também identifica efeito de maturação, com ganhos mais nítidos a partir de 3 a 5 anos, sugerindo que a efetividade depende da consolidação institucional e da integração com a rede assistencial.
 
-Além disso, os resultados apontam interdependência espacial relevante, com dependência espacial moderada no tempo de internação ($\rho = 0{,}265$), ou seja, o desempenho de um município tende a estar parcialmente associado ao de municípios vizinhos. Esse padrão é compatível com o efeito indireto médio estimado de aproximadamente $-0{,}23$ dia em municípios vizinhos quando há implementação local do programa. A tese também documenta forte assimetria de adesão, com 79,46\% dos grandes municípios participantes contra 4,95\% dos municípios com menos de 20 mil habitantes, além de chance de adesão 90\% maior em municípios com maior proporção de idosos e 66,5\% maior onde a ESF (Estratégia Saúde da Família) é mais consolidada. Em conjunto, esses achados conectam-se diretamente ao diagnóstico de cobertura e conformidade apresentado nesta seção e reforçam a pertinência de incorporar perspectiva regional e coordenação intermunicipal nas próximas etapas de modelagem.
+O mesmo estudo mostra ainda que a expansão do programa é desigual entre municípios e que há influência regional no desempenho local. Isso ajuda a interpretar os achados desta seção: mesmo no recorte nacional, a cobertura e a conformidade se distribuem de forma heterogênea entre estados e territórios, o que reforça a necessidade de considerar diferenças regionais nas próximas etapas de modelagem.
 
-Como aplicação prática desses resultados, propõe-se um \textbf{Indicador de Priorização Territorial (IPT)} para apoiar a próxima etapa de modelagem e planejamento operacional. Em cada território, o IPT pode combinar: (i) \textit{lacuna de cobertura} municipal, (ii) \textit{pressão regulatória} (proporção de EMAD~I não conformes), (iii) \textit{potencial de spillover} regional (vizinhança com baixa cobertura) e (iv) \textit{maturação esperada} da política. Na prática, territórios com alta lacuna de cobertura e alta não conformidade, mas com forte potencial de transbordamento, tornam-se prioritários para estratégias de alocação e coordenação intermunicipal.
+\subsubsection{Percepção Pública e Eficiência Social}
+
+Como complemento à AED estrutural (cobertura, composição e conformidade), foi conduzida uma triagem qualitativa de menções públicas ao programa em portais institucionais e notícias, via SerpAPI, com classificação automática por LLM (Gemini) em parte da amostra.
+
+Foram analisados dois recortes:
+\begin{itemize}[noitemsep]
+    \item \textbf{Amostra geral (n=75 menções):} no subconjunto efetivamente classificado pelo LLM (50/75), observou-se distribuição \textbf{60\% positiva} e \textbf{40\% neutra}, com 0\% negativa nesse subconjunto.
+    \item \textbf{Amostra focada em opinião pública (n=50 menções):} utilizando queries orientadas a percepção (ex.: \texttt{"Programa Melhor em Casa" reclamacoes}, \texttt{"..." e bom?}, \texttt{"..." depoimento paciente}), as 50 menções foram coletadas com foco temático e classificadas integralmente (\textbf{50/50}). Neste recorte, a distribuição foi \textbf{48,0\% positiva}, \textbf{34,0\% neutra}, \textbf{14,0\% negativa} e \textbf{4,0\% mista}; em posicionamento, observou-se \textbf{46,0\% apoio}, \textbf{38,0\% informativo} e \textbf{16,0\% crítica}.
+\end{itemize}
+
+Em termos interpretativos, a amostra geral captura majoritariamente comunicação institucional (expansão de cobertura, capacitações, ações de humanização), enquanto o recorte focado em opinião apresenta distribuição mais plural de sentimentos e posicionamentos. Esse contraste é útil para a formulação: a percepção pública depende não apenas da existência do serviço, mas da regularidade operacional percebida pelos usuários e cuidadores.
+
+Esse resultado dialoga com os achados de conformidade desta AED. A baixa conformidade das EMAD~I (48,95\%), justamente o tipo mais numeroso e central no atendimento direto, constitui risco para sustentação da percepção positiva no médio prazo, pois equipes incompletas tendem a reduzir escopo e previsibilidade do cuidado domiciliar.
+
+Por fim, ressalta-se que se trata de uma leitura exploratória de percepção pública (não uma pesquisa amostral primária com usuários), utilizada aqui como sinal complementar de impacto social e priorização para as próximas etapas de modelagem.
 
 
 \subsection{Produtos Desenvolvidos}
 
-Todo o código-fonte está disponível publicamente no repositório GitHub: \url{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}. Foram desenvolvidos 11 scripts Python organizados em 4 partes (PARTE1 a PARTE4), compondo o pipeline completo de ETL e análise de dados. Os scripts geram 3 mapas interativos em HTML (mapa de equipes em SP com MarkerCluster, heatmap da capacidade no Brasil e gráfico hierárquico de composição profissional) e 39 visualizações estáticas em PNG, incluindo gráficos de cobertura, conformidade e resumo por estado. Foram também geradas 6 instâncias sintéticas para o BRKGA em formato JSON, variando de 10 a 500 pacientes, e 7 datasets processados em CSV para análises futuras. A documentação técnica (README.md) descreve o fluxo de processamento de cada etapa.
+Todo o código-fonte está disponível publicamente no repositório GitHub: \url{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}. Foram desenvolvidos 11 scripts Python organizados em 4 partes (PARTE1 a PARTE4), compondo o pipeline completo de ETL e análise de dados. Os scripts geram 3 mapas interativos em HTML (mapa de equipes em SP com MarkerCluster, heatmap da capacidade no Brasil e gráfico hierárquico de composição profissional) e 39 visualizações estáticas em PNG, incluindo gráficos de cobertura, conformidade e resumo por estado. Foram também geradas 6 instâncias sintéticas para o BRKGA em formato JSON, variando de 10 a 500 pacientes, e 7 datasets processados em CSV para análises futuras. Adicionalmente, foi implementada a PARTE5 para monitoramento de percepção pública (coleta via SerpAPI, classificação via Gemini e exportação em CSV/JSON/PNG), incluindo recorte orientado a opinião pública para apoio interpretativo à AED. A documentação técnica (README.md) descreve o fluxo de processamento de cada etapa.
 
 \subsection{Principais Conclusões}
 
@@ -256,21 +265,21 @@ A análise exploratória, ao percorrer as escalas nacional, regional e estadual,
 
 A caracterização completa da capacidade e composição profissional de cada equipe, combinada com o mapeamento geográfico das bases operacionais, fornece os insumos necessários para a futura modelagem do problema de roteamento e agendamento. O cenário de recursos escassos, desigualmente distribuídos e parcialmente não conformes reforça a importância de planejar o atendimento de forma eficiente para maximizar o impacto das equipes existentes.
 
-Em linha com \citelink{albuquerque2025}{Albuquerque (2025)}, os resultados também sugerem que a formulação futura pode se beneficiar de uma perspectiva regional, considerando efeitos de transbordamento entre municípios e assimetrias territoriais de cobertura.
+Em linha com \citelink{albuquerque2025}{Albuquerque (2025)}, os resultados também sugerem que a formulação futura deve combinar a leitura nacional com recortes regionais e estaduais, de modo a capturar as assimetrias de cobertura observadas no território.
 
 \section{Estado Atual da Pesquisa}
 
-A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. Neste primeiro período, a Análise Exploratória de Dados das bases públicas do CNES/DATASUS, CBO e IBGE permitiu caracterizar as equipes de Atenção Domiciliar em termos de localização geográfica, capacidade e composição profissional, além de verificar a conformidade com a legislação vigente. A próxima etapa consiste na implementação do modelo de otimização e do algoritmo de solução, seguindo a abordagem de \citelink{kummer2024}{Kummer et al. (2024)}, e na comparação de desempenho entre os métodos.
+A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. Neste primeiro período, a Análise Exploratória de Dados das bases públicas do CNES/DATASUS e CBO permitiu caracterizar as equipes de Atenção Domiciliar em termos de localização geográfica, capacidade e composição profissional, além de verificar a conformidade com a legislação vigente. A próxima etapa consiste na implementação do modelo de otimização e do algoritmo de solução, seguindo a abordagem de \citelink{kummer2024}{Kummer et al. (2024)}, e na comparação de desempenho entre os métodos.
 
 \section*{Referências}
 
 \begin{enumerate}[label={[\arabic*]}]
-\item IBGE -- Instituto Brasileiro de Geografia e Estatística. \textit{Censo Demográfico 2022: População por idade e sexo}. Agência IBGE Notícias, 27 out. 2023. Disponível em: \url{https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/38186-censo-2022-numero-de-pessoas-com-65-anos-ou-mais-de-idade-cresceu-57-4-em-12-anos}. Acesso em: jan. 2026.
-\item KUMMER, A.F.; ARAÚJO, O.C.B. de; BURIOL, L.S.; RESENDE, M.G.C. \textit{A biased random-key genetic algorithm for the home health care problem}. International Transactions in Operational Research, v. 31, n. 3, p. 1859--1889, 2024. Disponível em: \url{https://doi.org/10.1111/itor.13221}.
-\item BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 825, de 25 de abril de 2016}. Redefine a Atenção Domiciliar no âmbito do Sistema Único de Saúde (SUS) e atualiza as equipes habilitadas. Brasília, 2016. Disponível em: \url{https://bvsms.saude.gov.br/bvs/saudelegis/gm/2016/prt0825_25_04_2016.html}.
-\item BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 3.005, de 2 de janeiro de 2024}. Altera as Portarias de Consolidação nºs 5 e 6, de 28 de setembro de 2017, para atualizar as regras do Serviço de Atenção Domiciliar (SAD) e do Programa Melhor em Casa (PMeC). Brasília, 2024. Disponível em: \url{https://www.gov.br/saude/pt-br/composicao/saes/melhor-em-casa/legislacao/portaria-gm-ms-no-3-005-de-2-de-janeiro-de-2024}.
-\item BRASIL. Ministério da Saúde. \textit{CNES -- Cadastro Nacional de Estabelecimentos de Saúde}. Disponível em: \url{https://cnes.datasus.gov.br/}. Acesso em: ago. 2025.
-\item ALBUQUERQUE, W. M. \textit{Política de atenção domiciliar no Brasil: análises espacial, de cobertura, focalização e impacto do Programa Melhor em Casa}. 2025. Tese (Doutorado em Economia Rural) -- Universidade Federal do Ceará, Fortaleza, 2025.
+\item \hypertarget{cite.ibge2022}{}IBGE -- Instituto Brasileiro de Geografia e Estatística. \textit{Censo Demográfico 2022: População por idade e sexo}. Agência IBGE Notícias, 27 out. 2023. Disponível em: \url{https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/38186-censo-2022-numero-de-pessoas-com-65-anos-ou-mais-de-idade-cresceu-57-4-em-12-anos}. Acesso em: jan. 2026.
+\item \hypertarget{cite.kummer2024}{}KUMMER, A.F.; ARAÚJO, O.C.B. de; BURIOL, L.S.; RESENDE, M.G.C. \textit{A biased random-key genetic algorithm for the home health care problem}. International Transactions in Operational Research, v. 31, n. 3, p. 1859--1889, 2024. Disponível em: \url{https://doi.org/10.1111/itor.13221}.
+\item \hypertarget{cite.portaria825}{}BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 825, de 25 de abril de 2016}. Redefine a Atenção Domiciliar no âmbito do Sistema Único de Saúde (SUS) e atualiza as equipes habilitadas. Brasília, 2016. Disponível em: \url{https://bvsms.saude.gov.br/bvs/saudelegis/gm/2016/prt0825_25_04_2016.html}.
+\item \hypertarget{cite.portaria3005}{}BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 3.005, de 2 de janeiro de 2024}. Altera as Portarias de Consolidação nºs 5 e 6, de 28 de setembro de 2017, para atualizar as regras do Serviço de Atenção Domiciliar (SAD) e do Programa Melhor em Casa (PMeC). Brasília, 2024. Disponível em: \url{https://www.gov.br/saude/pt-br/composicao/saes/melhor-em-casa/legislacao/portaria-gm-ms-no-3-005-de-2-de-janeiro-de-2024}.
+\item \hypertarget{cite.cnes}{}BRASIL. Ministério da Saúde. \textit{CNES -- Cadastro Nacional de Estabelecimentos de Saúde}. Disponível em: \url{https://cnes.datasus.gov.br/}. Acesso em: ago. 2025.
+\item \hypertarget{cite.albuquerque2025}{}ALBUQUERQUE, W. M. \textit{Política de atenção domiciliar no Brasil: análises espacial, de cobertura, focalização e impacto do Programa Melhor em Casa}. 2025. Tese (Doutorado em Economia Rural) -- Universidade Federal do Ceará, Fortaleza, 2025.
 \end{enumerate}
 
 \end{document}
