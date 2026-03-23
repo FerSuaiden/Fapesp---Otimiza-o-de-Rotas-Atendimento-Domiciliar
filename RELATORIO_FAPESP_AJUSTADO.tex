@@ -53,12 +53,12 @@
 \noindent
 Aluno: Fernando Alee Suaiden \\
 Orientadora: Maristela Oliveira dos Santos \\
-Relatório Semestral -- 2 de março de 2026 \\
+Relatório Semestral -- 19 de março de 2026 \\
 Processo FAPESP: 2025/21835-0
 
 \vspace{0.5cm}
 \noindent
-\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, humanizando o atendimento e desafogando hospitais. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma Análise Exploratória de Dados (AED) utilizando bases públicas do CNES/DATASUS e da CBO. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e futura modelagem do problema.
+\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, humanizando o atendimento e desafogando hospitais. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma análise exploratória de dados com informações públicas do CNES/DATASUS e da Classificação Brasileira de Ocupações. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e para a modelagem do problema.
 
 \vspace{0.3cm}
 \noindent
@@ -70,39 +70,29 @@ Processo FAPESP: 2025/21835-0
 
 \subsection{Contexto e Motivação}
 
-O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge2022}{Censo 2022 do IBGE}, a população com 60 anos ou mais atingiu 32,1 milhões de pessoas (15,6\% do total), um crescimento de 56\% em relação a 2010, quando representava 10,8\%. No mesmo levantamento, o índice de envelhecimento saltou de 44,8 para 80,0 no período, indicando que há atualmente 80 idosos para cada 100 crianças de 0 a 14 anos. Em estados como Rio Grande do Sul e Rio de Janeiro, o número de idosos já supera o de crianças \citelink{ibge2022}{(IBGE, Censo 2022)}. Este fenômeno demográfico pressiona diretamente o sistema de saúde, aumentando a demanda por cuidados de longa duração e atendimento domiciliar.
+O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge2022}{Censo 2022 do IBGE}, a população com 60 anos ou mais já representa 15,6\% do total nacional. No mesmo levantamento, o índice de envelhecimento chegou a 80,0, indicando 80 idosos para cada 100 crianças de 0 a 14 anos. Em estados como Rio Grande do Sul e Rio de Janeiro, o número de idosos já supera o de crianças. Este fenômeno demográfico pressiona diretamente o sistema de saúde, aumentando a demanda por cuidados de longa duração e atendimento domiciliar.
 
 Nesse contexto, o \citelink{portaria825}{Programa Melhor em Casa}, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais que realizam visitas regulares a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa.
 
 
 \section{Análise Exploratória de Dados}
 
-O principal resultado deste período foi uma Análise Exploratória de Dados (AED) completa das bases públicas do governo. A análise segue um percurso do panorama nacional à escala estadual, examinando sucessivamente a distribuição geográfica, a composição por tipo de equipe e a conformidade com a legislação vigente.
+O principal resultado deste período foi uma análise exploratória de dados completa das bases públicas do governo. A análise segue um percurso do panorama nacional à escala estadual, examinando sucessivamente a distribuição geográfica, a composição por tipo de equipe e a conformidade com a legislação vigente.
 
 \subsubsection{Fontes de Dados e Metodologia}
 
-Foram utilizadas duas fontes de dados públicas: o \citelink{cnes}{CNES/DATASUS} (competência 08/2025), com informações sobre estabelecimentos de saúde, equipes e profissionais; e a Classificação Brasileira de Ocupações (CBO, edição 2024). A partir dessas bases, as equipes de Atenção Domiciliar foram identificadas e filtradas, seus profissionais foram vinculados via tabelas relacionais, e as métricas de capacidade, composição profissional e conformidade legal foram calculadas para cada equipe. Os detalhes técnicos do processamento estão documentados no repositório do projeto.
+Foram utilizadas duas fontes públicas: os registros administrativos do \citelink{cnes}{CNES/DATASUS}, na competência 08/2025, com informações sobre estabelecimentos de saúde, equipes e profissionais, e a Classificação Brasileira de Ocupações, edição 2024, usada para padronizar e agrupar categorias profissionais. A partir desses insumos, as equipes de Atenção Domiciliar foram identificadas e filtradas, seus profissionais foram vinculados via tabelas relacionais, e as métricas de capacidade, composição profissional e conformidade legal foram calculadas para cada equipe. Os detalhes técnicos do processamento estão documentados no \href{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}{repositório do projeto}.
 
 \subsubsection{Panorama Nacional}
 
-O Brasil possui 2.664 equipes ativas de Atenção Domiciliar, organizadas em quatro tipos:
+O Brasil possui 2.664 equipes ativas de Atenção Domiciliar, organizadas em quatro tipos. A Figura~\ref{fig:composicao_nacional_tipos} apresenta a composição nacional, com percentuais e quantidades de equipes por tipo.
 
-\begin{table}[H]
+\begin{figure}[H]
 \centering
-\caption{Distribuição nacional das equipes por tipo.}
-\begin{tabular}{|l|c|c|l|}
-\hline
-\textbf{Tipo de Equipe} & \textbf{Quantidade} & \textbf{Percentual} & \textbf{Função} \\
-\hline
-EMAD I (código 22) & 1.093 & 41,0\% & Atendimento direto \\
-EMAP (código 23) & 929 & 34,9\% & Apoio especializado \\
-EMAD II (código 46) & 460 & 17,3\% & Atendimento (menor porte) \\
-EMAP-R (código 77) & 182 & 6,8\% & Apoio rural/reabilitação \\
-\hline
-\textbf{TOTAL} & \textbf{2.664} & \textbf{100\%} & -- \\
-\hline
-\end{tabular}
-\end{table}
+\caption{Composição nacional das equipes de Atenção Domiciliar por tipo, com percentuais e número de equipes.}
+\label{fig:composicao_nacional_tipos}
+\includegraphics[width=0.95\textwidth]{composicao_nacional_pizza.png}
+\end{figure}
 
 As EMAD (Equipes Multiprofissionais de Atenção Domiciliar, tipos I e II) são responsáveis pelo atendimento direto nas modalidades AD2 e AD3 (níveis intermediário e avançado de cuidado domiciliar), definidas pela \citelink{portaria825}{Portaria GM/MS nº 825/2016}. As EMAP (Equipes Multiprofissionais de Apoio) fornecem suporte especializado. A diferença entre os dois tipos de EMAD está nos requisitos de composição: a EMAD~I exige maior carga horária semanal de médicos e enfermeiros, sendo voltada a municípios de maior porte, enquanto a EMAD~II é uma versão mais leve, adequada a municípios menores. Da mesma forma, a EMAP-R possui requisitos reduzidos em relação à EMAP convencional, sendo destinada a municípios com menos de 20 mil habitantes.
 
@@ -158,9 +148,25 @@ Essa diferença de composição tem implicações diretas para a conformidade le
 
 \subsubsection{Conformidade com a Portaria GM/MS nº 3.005/2024}
 
-A caracterização por tipo de equipe torna possível a verificação de conformidade com os requisitos legais de composição. A \citelink{portaria3005}{Portaria GM/MS nº 3.005/2024} estabelece requisitos mínimos para cada tipo de equipe. As EMAD~I exigem no mínimo 40h de médico, 60h de enfermeiro, 120h de técnico de enfermagem e 30h de fisioterapeuta ou assistente social. As EMAD~II possuem requisitos reduzidos pela metade para médico (20h) e enfermeiro (30h). As EMAP e EMAP-R devem ter pelo menos três categorias de nível superior, com carga horária semanal total mínima de 90h e 60h, respectivamente.
+A caracterização por tipo de equipe torna possível avaliar a conformidade com os requisitos legais de composição definidos pela \citelink{portaria3005}{Portaria GM/MS nº 3.005/2024}. A Tabela~\ref{tab:requisitos_conformidade} sintetiza os critérios mínimos utilizados na verificação.
 
-A verificação consistiu em agregar a carga horária semanal por categoria profissional para cada equipe. A identificação das categorias foi feita a partir do código CBO de cada profissional. Profissionais com carga horária inferior a 20h foram descartados conforme a legislação, e os valores resultantes foram comparados com os requisitos mínimos de cada tipo de equipe. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 67,61\% das equipes estão em conformidade. Porém, a EMAD~I, tipo mais numeroso e central para o atendimento direto, apresenta a menor taxa: 48,95\%.
+\begin{table}[H]
+\centering
+\caption{Requisitos mínimos por tipo de equipe para verificação de conformidade.}
+\label{tab:requisitos_conformidade}
+\begin{tabular}{|l|c|c|c|c|p{5.3cm}|}
+\hline
+\textbf{Tipo} & \textbf{Médico} & \textbf{Enfermeiro} & \textbf{Téc. enf.} & \textbf{Fisio/AS} & \textbf{Critério adicional} \\
+\hline
+EMAD I & 40h & 60h & 120h & 30h & -- \\
+EMAD II & 20h & 30h & 120h & 30h & -- \\
+EMAP & -- & -- & -- & -- & Mínimo de 3 categorias de nível superior e carga horária semanal total mínima de 90h \\
+EMAP-R & -- & -- & -- & -- & Mínimo de 3 categorias de nível superior e carga horária semanal total mínima de 60h \\
+\hline
+\end{tabular}
+\end{table}
+
+Para cada equipe, foi agregada a carga horária semanal por categoria profissional e o total observado foi comparado aos mínimos exigidos para o respectivo tipo. Profissionais com carga horária inferior a 20h foram desconsiderados conforme a legislação. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 67,61\% das equipes estão em conformidade. Porém, a EMAD~I, tipo mais numeroso e central para o atendimento direto, apresenta a menor taxa, de 48,95\%.
 
 \begin{figure}[H]
 \centering
@@ -169,9 +175,7 @@ A verificação consistiu em agregar a carga horária semanal por categoria prof
 \includegraphics[width=1.00\textwidth]{conformidade_por_tipo.png}
 \end{figure}
 
-A EMAD~II e a EMAP apresentam taxas mais altas (83,7\% e 81,8\%, respectivamente), enquanto a EMAP-R atinge 66,5\%.
-
-Atualmente, 558 equipes EMAD~I estão não conformes (51,1\% do total desse tipo), confirmando esse grupo como principal gargalo regulatório no cenário nacional.
+No cenário nacional, o principal gargalo regulatório permanece nas EMAD~I, que concentram o maior número absoluto de equipes não conformes.
 
 A análise regional, ilustrada na Figura~\ref{fig:conformidade_regiao}, complementa e reforça o padrão identificado na composição das equipes.
 
@@ -182,7 +186,7 @@ A análise regional, ilustrada na Figura~\ref{fig:conformidade_regiao}, compleme
 \includegraphics[width=1.00\textwidth]{conformidade_por_regiao.png}
 \end{figure}
 
-Emerge um padrão claro: as regiões com maior proporção de EMAD~I tendem a apresentar menor conformidade geral, pois a taxa de conformidade desse tipo é baixa em todas as regiões. Onde as EMAD~I representam mais da metade das equipes, puxam a média regional para baixo.
+Observa-se um padrão consistente: as regiões com maior proporção de EMAD~I tendem a apresentar menor conformidade geral, pois a taxa de conformidade desse tipo é baixa em todas as regiões. Onde as EMAD~I representam mais da metade das equipes, a média regional é puxada para baixo.
 
 Esses resultados mostram as condições reais do atendimento domiciliar no Brasil. A composição das equipes não é uniforme: cada tipo possui uma estrutura profissional diferente e, dentro de um mesmo tipo, cada equipe individual é formada pelos profissionais efetivamente vinculados a ela. Na prática, isso significa que nem toda equipe consegue atender qualquer paciente. Uma equipe sem fisioterapeuta, por exemplo, não pode prestar assistência a um paciente que necessite de reabilitação motora. A não-conformidade agrava esse cenário: muitas equipes operam com menos profissionais do que a legislação exige, reduzindo ainda mais a variedade de atendimentos que conseguem realizar.
 Em outras palavras, o programa enfrenta não apenas escassez de equipes, mas também limitações na capacidade efetiva das equipes existentes.
@@ -191,16 +195,16 @@ Em síntese, cobertura, composição e conformidade formam três aspectos que se
 
 \subsubsection{Análise na Escala Estadual}
 
-A escala estadual é, em última instância, aquela na qual o problema de roteamento é formulado e resolvido. Ela permite identificar diferenças que a agregação regional oculta e verificar se os padrões observados se reproduzem nessa granularidade. A Figura~\ref{fig:mapa} ilustra como as equipes se distribuem espacialmente dentro de um estado, usando São Paulo como exemplo. Esse mapeamento, construído a partir das coordenadas geográficas dos estabelecimentos registradas no \citelink{cnes}{CNES}, permite identificar a localização dos depots (bases operacionais) e os recursos disponíveis para a formulação do problema de otimização em cada localidade.
+A escala estadual é, em última instância, aquela na qual o problema de roteamento é formulado e resolvido. Ela permite identificar diferenças que a agregação regional oculta e verificar se os padrões observados se reproduzem nessa granularidade. A Figura~\ref{fig:mapa} apresenta o Estado de São Paulo como exemplo da distribuição espacial das equipes e da localização das bases operacionais. O mesmo mapeamento foi produzido para todas as unidades da federação e está disponível no site interativo do projeto, no \href{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar/tree/main/site}{repositório}.
 
 \begin{figure}[H]
 \centering
-\caption{Distribuição espacial das equipes de Atenção Domiciliar no Estado de São Paulo. Círculos numerados são agrupamentos automáticos (clusters); as cores indicam a composição do estabelecimento (Roxo: EMAD+EMAP, Azul: apenas EMAD, Verde: apenas EMAP).}
+\caption{Distribuição espacial das equipes de Atenção Domiciliar no Estado de São Paulo. As cores indicam a composição do estabelecimento (Roxo: EMAD+EMAP, Azul: apenas EMAD, Verde: apenas EMAP).}
 \label{fig:mapa}
 \includegraphics[width=1.00\textwidth]{mapaSP.png}
 \end{figure}
 
-A variação entre estados vai além do que o mapa de um único estado pode revelar. A Figura~\ref{fig:cobertura} compara as quinze UFs com maior cobertura percentual do programa.
+Para complementar a leitura espacial dos mapas estaduais, a Figura~\ref{fig:cobertura} compara as quinze UFs com maior cobertura percentual do programa.
 
 \begin{figure}[H]
 \centering
@@ -209,7 +213,7 @@ A variação entre estados vai além do que o mapa de um único estado pode reve
 \includegraphics[width=1.00\textwidth]{top15_cobertura_percentual.png}
 \end{figure}
 
-A Figura~\ref{fig:cobertura} evidencia a amplitude da variação entre estados: entre as quinze UFs com maior cobertura, os valores vão de 16,1\% (AM) a 100\% (DF), passando por estados como Pará (49,3\%), Rio de Janeiro (47,8\%) e Ceará (44,6\%).
+A Figura~\ref{fig:cobertura} evidencia a amplitude da variação entre estados. Entre as quinze UFs com maior cobertura, os valores vão de 16,1\% (AM) a 100\% (DF), passando por estados como Pará (49,3\%), Rio de Janeiro (47,8\%) e Ceará (44,6\%).
 
 \begin{table}[H]
 \centering
@@ -230,34 +234,32 @@ Pará & 154 & 1,90 & 49,3\% & 37,0\% & 71,4\% & 35,1\% \\
 \end{tabular}
 \end{table}
 
-A análise estadual revela que número absoluto de equipes e cobertura relativa são indicadores dissociados: São Paulo lidera em equipes (412), mas tem a pior taxa per capita entre os cinco maiores estados, enquanto o Ceará, com menos da metade, atinge mais que o dobro por habitante. Essa dissociação também aparece entre estados listados na Figura~\ref{fig:cobertura}: Pará e Amazonas, ambos da região Norte, apresentam coberturas de 49,3\% e 16,1\%, respectivamente, confirmando que fatores locais como políticas de adesão e disponibilidade de profissionais são determinantes. Da mesma forma, composição por tipo de equipe não é o único fator que explica a conformidade: Ceará e Bahia possuem proporções de EMAD~I próximas (40,3\% e 30,1\%), mas taxas de conformidade geral distintas (50,3\% e 73,0\%).
+A análise estadual revela que número absoluto de equipes e cobertura relativa são indicadores dissociados. São Paulo lidera em equipes (412), mas tem a pior taxa per capita entre os cinco maiores estados, enquanto o Ceará, com menos da metade, atinge mais que o dobro por habitante. Essa dissociação também aparece entre estados listados na Figura~\ref{fig:cobertura}. Pará e Amazonas, ambos da região Norte, apresentam coberturas de 49,3\% e 16,1\%, respectivamente, confirmando que fatores locais como políticas de adesão e disponibilidade de profissionais são determinantes. Da mesma forma, composição por tipo de equipe não é o único fator que explica a conformidade. Ceará e Bahia possuem proporções de EMAD~I próximas (40,3\% e 30,1\%), mas taxas de conformidade geral distintas (50,3\% e 73,0\%).
 
 Essa heterogeneidade reforça a necessidade de utilizar os dados reais de cada estado na formulação do problema, em vez de médias nacionais ou regionais.
 
-Essa leitura é consistente com evidências em escala nacional reportadas por \citelink{albuquerque2025}{Albuquerque (2025)}. Em análise para 2009--2024, o autor estima redução média de 4,45\% no tempo de permanência hospitalar associada à participação no programa (isto é, um efeito médio no período analisado, e não uma queda anual fixa). Quando se considera a acumulação da política no tempo, o efeito pode atingir 17,71\% em municípios com 13 anos de implementação dentro da janela analisada. O estudo também identifica efeito de maturação, com ganhos mais nítidos a partir de 3 a 5 anos, sugerindo que a efetividade depende da consolidação institucional e da integração com a rede assistencial.
+Além do diagnóstico de heterogeneidade territorial, \citelink{albuquerque2025}{Albuquerque (2025)} mostra que o programa produz impacto assistencial relevante quando se consolida ao longo do tempo. Em análise para 2009--2024, o autor estima redução média de 4,45\% no tempo de permanência hospitalar associada à participação no programa. Quando se considera a acumulação da política no tempo, o efeito pode atingir 17,71\% em municípios com 13 anos de implementação dentro da janela analisada. O estudo também identifica efeito de maturação, com ganhos mais nítidos a partir de 3 a 5 anos, sugerindo que a efetividade depende da consolidação institucional e da integração com a rede assistencial.
 
-O mesmo estudo mostra ainda que a expansão do programa é desigual entre municípios e que há influência regional no desempenho local. Em termos espaciais, essa evidência reforça que a efetividade do programa depende da forma como ele se distribui no território e da capacidade de coordenação local da rede. Isso ajuda a interpretar os achados desta seção: mesmo no recorte nacional, cobertura e conformidade se distribuem de forma heterogênea entre estados e territórios. Assim, incorporar explicitamente essas assimetrias espaciais nas próximas etapas de modelagem não é apenas desejável, mas necessário para representar o problema de forma realista.
+O mesmo estudo mostra ainda que a expansão do programa é desigual entre municípios e que há influência regional no desempenho local. Em termos espaciais, essa evidência reforça que a efetividade do programa depende da forma como ele se distribui no território e da capacidade de coordenação local da rede. Mesmo no recorte nacional, cobertura e conformidade se distribuem de forma heterogênea entre estados e territórios. Nas próximas etapas de modelagem, essas assimetrias espaciais serão tratadas como elemento central da formulação.
 
-\subsubsection{Percepção Pública e Eficiência Social}
+\subsubsection{Integração entre Estrutura Operacional e Percepção Social}
 
-Como complemento à AED estrutural (cobertura, composição e conformidade), foi conduzida uma triagem qualitativa de menções públicas ao programa em portais institucionais e notícias, via SerpAPI, com classificação automática por LLM (Gemini) em parte da amostra.
+Como complemento à análise estrutural de cobertura, composição e conformidade, foi conduzida uma triagem qualitativa de menções públicas ao programa, com coleta via SerpAPI e classificação automática por LLM Gemini. O objetivo foi relacionar sinais de percepção social com os achados operacionais.
 
-Foram analisados dois recortes:
-\begin{itemize}[noitemsep]
-    \item \textbf{Amostra geral (n=75 menções):} no subconjunto efetivamente classificado pelo LLM (50/75), observou-se distribuição \textbf{60\% positiva} e \textbf{40\% neutra}, com 0\% negativa nesse subconjunto.
-    \item \textbf{Amostra focada em opinião pública (n=50 menções):} utilizando queries orientadas a percepção (ex.: \texttt{"Programa Melhor em Casa" reclamacoes}, \texttt{"..." e bom?}, \texttt{"..." depoimento paciente}), as 50 menções foram coletadas com foco temático e classificadas integralmente (\textbf{50/50}). Neste recorte, a distribuição foi \textbf{48,0\% positiva}, \textbf{34,0\% neutra}, \textbf{14,0\% negativa} e \textbf{4,0\% mista}; em posicionamento, observou-se \textbf{46,0\% apoio}, \textbf{38,0\% informativo} e \textbf{16,0\% crítica}.
-\end{itemize}
+Essa leitura foi organizada em dois recortes complementares. A amostra geral reúne menções amplas sobre o programa em diferentes tipos de fonte, incluindo canais institucionais, veículos jornalísticos, redes sociais e espaços de manifestação de usuários, como páginas de reclamação. Nessa visão mais ampla, prevalecem conteúdos de divulgação institucional e de serviços, com maior concentração temática em saúde pública e saúde domiciliar. Nos resultados de classificação, predominam posicionamentos de apoio e informativos, enquanto críticas aparecem de forma minoritária.
 
-Em termos interpretativos, a amostra geral captura majoritariamente comunicação institucional (expansão de cobertura, capacitações, ações de humanização), enquanto o recorte focado em opinião apresenta distribuição mais plural de sentimentos e posicionamentos. Esse contraste é útil para a formulação: a percepção pública depende não apenas da existência do serviço, mas da regularidade operacional percebida pelos usuários e cuidadores.
+Já o recorte focado em opinião pública foi montado com consultas orientadas a percepção, por exemplo termos associados a avaliação, reclamações e depoimentos. Nesse conjunto, a distribuição ficou mais plural, com 48,0\% positiva, 34,0\% neutra, 14,0\% negativa e 4,0\% mista; em posicionamento, observou-se 46,0\% apoio, 38,0\% informativo e 16,0\% crítica.
 
-Esse resultado dialoga com os achados de conformidade desta AED. A baixa conformidade das EMAD~I (48,95\%), justamente o tipo mais numeroso e central no atendimento direto, constitui risco para sustentação da percepção positiva no médio prazo, pois equipes incompletas tendem a reduzir escopo e previsibilidade do cuidado domiciliar.
+Em termos interpretativos, a amostra geral reflete principalmente comunicação institucional sobre expansão de cobertura, capacitações e ações de humanização, enquanto o recorte focado em opinião evidencia com mais nitidez queixas de regularidade, acesso e continuidade do atendimento. Esse contraste é útil para a formulação, pois a percepção pública depende não apenas da existência do serviço, mas da regularidade operacional percebida pelos usuários e cuidadores.
 
-Por fim, ressalta-se que se trata de uma leitura exploratória de percepção pública (não uma pesquisa amostral primária com usuários), utilizada aqui como sinal complementar de impacto social e priorização para as próximas etapas de modelagem.
+Esse resultado dialoga com os achados de conformidade da análise exploratória de dados. A baixa conformidade das EMAD~I, de 48,95\%, justamente o tipo mais numeroso e central no atendimento direto, constitui risco para sustentação da percepção positiva no médio prazo, pois equipes incompletas tendem a reduzir escopo e previsibilidade do cuidado domiciliar.
+
+Por fim, ressalta-se que se trata de uma leitura exploratória de percepção pública, e não de uma pesquisa amostral primária com usuários, utilizada aqui como sinal complementar de impacto social e priorização para as próximas etapas de modelagem.
 
 
 \subsection{Produtos Desenvolvidos}
 
-Todo o código-fonte está disponível publicamente no repositório GitHub: \url{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}. Foram desenvolvidos 11 scripts Python organizados em 4 partes (PARTE1 a PARTE4), compondo o pipeline completo de ETL e análise de dados. Os scripts geram 3 mapas interativos em HTML (mapa de equipes em SP com MarkerCluster, heatmap da capacidade no Brasil e gráfico hierárquico de composição profissional) e 39 visualizações estáticas em PNG, incluindo gráficos de cobertura, conformidade e resumo por estado. Foram também geradas 6 instâncias sintéticas para o BRKGA em formato JSON, variando de 10 a 500 pacientes, e 7 datasets processados em CSV para análises futuras. Adicionalmente, foi implementada a PARTE5 para monitoramento de percepção pública (coleta via SerpAPI, classificação via Gemini e exportação em CSV/JSON/PNG), incluindo recorte orientado a opinião pública para apoio interpretativo à AED. A documentação técnica (README.md) descreve o fluxo de processamento de cada etapa.
+Todo o código-fonte está disponível publicamente no \href{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}{repositório GitHub do projeto}. Foi desenvolvido um pipeline completo de ETL e análise de dados para processamento das fontes públicas, geração de mapas interativos, visualizações analíticas e bases derivadas para etapas posteriores da pesquisa. Também foram construídas instâncias sintéticas para testes de otimização e implementado um módulo específico de monitoramento de percepção pública, com coleta via SerpAPI, classificação via Gemini e exportação dos resultados em formatos tabulares e gráficos. A documentação técnica (README.md) descreve o fluxo de processamento de cada etapa.
 
 \subsection{Principais Conclusões}
 
@@ -269,7 +271,7 @@ Em linha com \citelink{albuquerque2025}{Albuquerque (2025)}, os resultados tamb�
 
 \section{Estado Atual da Pesquisa}
 
-A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. Neste primeiro período, a Análise Exploratória de Dados das bases públicas do CNES/DATASUS e CBO permitiu caracterizar as equipes de Atenção Domiciliar em termos de localização geográfica, capacidade e composição profissional, além de verificar a conformidade com a legislação vigente. A próxima etapa consiste na implementação do modelo de otimização e do algoritmo de solução, seguindo a abordagem de \citelink{kummer2024}{Kummer et al. (2024)}, e na comparação de desempenho entre os métodos.
+A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. Neste primeiro período, a Análise Exploratória de Dados dos registros públicos do CNES/DATASUS e da Classificação Brasileira de Ocupações (CBO) permitiu caracterizar as equipes de Atenção Domiciliar em termos de localização geográfica, capacidade e composição profissional, além de verificar a conformidade com a legislação vigente. A próxima etapa consiste na implementação do modelo de otimização e do algoritmo de solução, seguindo a abordagem de \citelink{kummer2024}{Kummer et al. (2024)}, e na comparação de desempenho entre os métodos.
 
 \section*{Referências}
 

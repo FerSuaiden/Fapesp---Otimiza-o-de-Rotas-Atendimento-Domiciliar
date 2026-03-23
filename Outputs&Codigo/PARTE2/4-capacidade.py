@@ -164,7 +164,7 @@ try:
     
     media_chs = Qk_valores.mean()
     ax2.axvline(media_chs, color='red', linestyle='dashed', linewidth=2)
-    ax2.text(media_chs * 1.05, ax2.get_ylim()[1] * 0.9, f'Média (inclui Qk=0): {media_chs:.1f} horas', color='red')
+    ax2.text(media_chs * 1.05, ax2.get_ylim()[1] * 0.9, f'Média: {media_chs:.1f} horas', color='red')
 
     ax2.set_title('Distribuição da Capacidade Potencial Semanal (CHS SUS) por Equipe (Qk)', fontsize=16, pad=20, weight='bold')
     ax2.set_xlabel('Capacidade Potencial (Qk) - Total de Horas Semanais CHS SUS da Equipe', fontsize=12)

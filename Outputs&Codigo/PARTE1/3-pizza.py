@@ -37,51 +37,61 @@ try:
     df_equipes_filtradas = df_equipes_ativas[df_equipes_ativas['TP_EQUIPE'].isin(CODIGOS_RELEVANTES)].copy()
     df_equipes_filtradas['Tipo_Equipe'] = df_equipes_filtradas['TP_EQUIPE'].map(MAP_EQUIPES)
 
-    # Gráfico de pizza (composição nacional)
+    # Grafico de pizza (composicao nacional) no estilo donut com percentuais fora.
     df_composicao_nacional = df_equipes_filtradas['Tipo_Equipe'].value_counts()
-    fig_pie, ax_pie = plt.subplots(figsize=(10, 8))
+    fig_pie, ax_pie = plt.subplots(figsize=(10.5, 8))
     
     # Define cores para consistência
-    cores = ['cornflowerblue', 'forestgreen', 'mediumpurple', 'lightcoral']
+    cores = ['#1f77b4', '#2ca02c', '#ff7f0e', '#9467bd']
     
     wedges, texts, autotexts = ax_pie.pie(
         df_composicao_nacional, 
         startangle=90,
         autopct=lambda p: f'{p:.1f}%',
-        colors=cores[:len(df_composicao_nacional)]
+        pctdistance=1.16,
+        colors=cores[:len(df_composicao_nacional)],
+        wedgeprops={'width': 0.45, 'edgecolor': 'white', 'linewidth': 2},
+        textprops={'fontsize': 12, 'fontweight': 'bold'}
     )
     
-    # Adiciona um "buraco" no meio para criar um gráfico de "donut"
-    centre_circle = plt.Circle((0,0),0.70,fc='white')
-    fig_pie.gca().add_artist(centre_circle)
-    
     ax_pie.axis('equal')  # Garante que a pizza seja um círculo
-    ax_pie.set_title('Composição Nacional das Equipes de Atenção Domiciliar', fontsize=16, pad=20, weight='bold')
+    ax_pie.set_title('Composicao Nacional das Equipes de Atencao Domiciliar', fontsize=17, pad=20, weight='bold')
     
-    # Adiciona legenda com descrições detalhadas
-    legend_labels_map = {
-        'EMAD I': 'EMAD I - Equipe Multiprofissional (maior porte)',
-        'EMAD II': 'EMAD II - Equipe Multiprofissional (menor porte)',
-        'EMAP': 'EMAP - Equipe Multiprofissional de Apoio',
-        'EMAP-R': 'EMAP-R - Equipe Multiprofissional de Apoio para Reabilitação'
+    # Adiciona legenda com quantidade/percentual e significado das siglas.
+    total_equipes = int(df_composicao_nacional.sum())
+    siglas_equipe = {
+        'EMAD I': 'Equipe Multiprofissional de Atencao Domiciliar - Tipo I',
+        'EMAD II': 'Equipe Multiprofissional de Atencao Domiciliar - Tipo II',
+        'EMAP': 'Equipe Multiprofissional de Apoio',
+        'EMAP-R': 'Equipe Multiprofissional de Apoio para Reabilitacao',
     }
-    detailed_labels = [legend_labels_map.get(label, label) for label in df_composicao_nacional.index]
+    detailed_labels = [
+        (
+            f"{label} ({siglas_equipe.get(label, 'Sigla nao mapeada')}): "
+            f"{valor:,} equipes ({(valor / total_equipes * 100):.1f}%)"
+        ).replace(',', '.')
+        for label, valor in df_composicao_nacional.items()
+    ]
     
     ax_pie.legend(
         wedges, 
         detailed_labels, 
         title="Tipo de Equipe (Programa Melhor em Casa)",
         loc="center left",
-        bbox_to_anchor=(0.9, 0, 0.5, 1),
-        fontsize=9
+        bbox_to_anchor=(1.01, 0.5),
+        fontsize=12,
+        title_fontsize=13,
+        frameon=False
     )
+
+    ax_pie.text(0, 0, f"Total\n{total_equipes:,}".replace(',', '.'), ha='center', va='center', fontsize=14, fontweight='bold')
     
     # Adicionar nota de fonte
-    fig_pie.text(0.5, 0.02, 'Fonte: CNES/DataSUS - Competência 2025/08 | Portaria GM/MS nº 3.005/2024', 
+    fig_pie.text(0.5, 0.02, 'Fonte: CNES/DataSUS - Competencia 2025/08 | Portaria GM/MS no 3.005/2024', 
                  ha='center', va='bottom', fontsize=9, style='italic', color='gray')
     
     plt.tight_layout()
-    nome_grafico = 'composicao_nacional_pizza.png'
+    nome_grafico = SCRIPT_DIR / 'composicao_nacional_pizza.png'
     plt.savefig(nome_grafico, bbox_inches='tight')
     print(f"Gráfico salvo: {nome_grafico}")
 
