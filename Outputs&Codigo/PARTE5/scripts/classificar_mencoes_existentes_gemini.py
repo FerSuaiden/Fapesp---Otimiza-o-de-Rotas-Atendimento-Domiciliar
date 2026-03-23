@@ -150,14 +150,14 @@ def ja_classificada_ok(m: Dict, reprocessar_indisponiveis: bool) -> bool:
     if not sentimento:
         return False
 
-    # Classificacoes com sentimento definido ja sao finais.
+    # Registros com sentimento definido sao considerados conclusivos.
     if sentimento != "nao_classificado":
         return True
 
     if reprocessar_indisponiveis:
         return False
 
-    # Quando nao vamos reprocessar, marcacoes de indisponibilidade tambem contam como finais.
+    # Sem reprocessamento, marcacoes de indisponibilidade tambem sao tratadas como finais.
     modelo = texto_ou_padrao(m.get("modelo_usado", ""), "").lower()
     return modelo in {"indisponivel", "pendente"}
 
@@ -206,7 +206,7 @@ def classificar_com_espera(
             except Exception as exc:
                 ultimo_erro = str(exc)
                 if erro_tem_cota(ultimo_erro):
-                    # Se a conta reporta limite 0, nao adianta aguardar nesta rodada.
+                    # Quando a API retorna limit: 0, a rodada atual nao tem cota utilizavel.
                     if "limit: 0" in ultimo_erro.lower():
                         return {
                             "sentimento": "nao_classificado",
@@ -242,7 +242,7 @@ def classificar_com_espera(
                     time.sleep(segundos)
                     quota_detectada = True
                     break
-                # Erro nao relacionado a cota: tenta proximo modelo.
+                # Falha fora de cota: segue para o proximo modelo da lista.
                 continue
 
         if quota_detectada:
@@ -485,8 +485,8 @@ def main() -> None:
         resultados.append(mencao_cls)
         processadas_nesta_execucao += 1
 
-        # Persistencia incremental para retomar facilmente caso interrompa,
-        # mantendo todas as linhas no arquivo mesmo durante processamento.
+        # Persistencia incremental para retomada apos interrupcao,
+        # mantendo o arquivo completo durante todo o processamento.
         restante_exec = pendentes_exec[i:]
         df_parcial = pd.DataFrame(resultados + restante_exec + pendentes_restantes)
         df_parcial.to_csv(args.classificadas_csv, sep=";", index=False, encoding="utf-8")
@@ -498,7 +498,7 @@ def main() -> None:
 
     pendentes_nao_processadas = pendentes_exec[processadas_nesta_execucao:] + pendentes_restantes
 
-    # Itens nao processados nesta rodada sao finalizados como nao_classificado.
+    # Itens fora desta rodada sao encerrados como nao_classificado.
     for rest in pendentes_nao_processadas:
         rest_out = dict(rest)
         rest_out.update(

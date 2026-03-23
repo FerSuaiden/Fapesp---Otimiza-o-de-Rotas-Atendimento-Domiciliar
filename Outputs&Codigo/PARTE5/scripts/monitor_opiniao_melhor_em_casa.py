@@ -45,11 +45,11 @@ RESULT_DIR = os.path.join(PARTE5_DIR, "resultados")
 SERPAPI_URL = "https://serpapi.com/search.json"
 GEMINI_URL_TEMPLATE = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
-# Sem fallback de chave em codigo para evitar exposicao acidental.
+# Sem fallback de chave em codigo para reduzir risco de exposicao acidental.
 SERPAPI_API_KEY_DEFAULT = ""
 GEMINI_API_KEY_DEFAULT = ""
 
-# Modelos Gemini com maior chance de disponibilidade no tier gratuito.
+# Modelos Gemini com maior probabilidade de disponibilidade no tier gratuito.
 GEMINI_MODELOS_GRATUITOS = [
     "gemini-2.0-flash",
     "gemini-2.0-flash-lite",
@@ -160,7 +160,7 @@ def coletar_serpapi(
         if len(resultados) >= max_total:
             break
 
-        # Complementa com engine de noticias para aumentar diversidade.
+        # Complementa com engine de noticias para ampliar a diversidade das fontes.
         params_news = {
             "engine": "google_news",
             "q": q,
@@ -312,7 +312,7 @@ def classificar_mencoes(mencoes: List[Dict], gemini_key: str, model: str) -> Lis
 
         if not quota_bloqueada:
             for modelo in modelos_tentativa:
-                # Retry/backoff curto para erros transientes.
+                # Retry/backoff curto para falhas transientes.
                 for tentativa in range(2):
                     try:
                         classe = classificar_gemini(mencao, gemini_key, modelo)
@@ -320,7 +320,7 @@ def classificar_mencoes(mencoes: List[Dict], gemini_key: str, model: str) -> Lis
                     except Exception as exc:
                         ultimo_erro = str(exc)
                         ultimo_erro_global = ultimo_erro
-                        # Em cota estourada, evitar espera longa e tentativas repetitivas.
+                        # Em cota esgotada, evita espera longa e repeticao de tentativas.
                         if "HTTP 429" in ultimo_erro and "Quota exceeded" in ultimo_erro:
                             quota_bloqueada = True
                             break
@@ -330,7 +330,7 @@ def classificar_mencoes(mencoes: List[Dict], gemini_key: str, model: str) -> Lis
                     break
 
         if not classe:
-            # Mantem o pipeline API-only e sinaliza os itens sem resposta do Gemini.
+            # Mantem o pipeline API-only e sinaliza itens sem resposta do Gemini.
             linha = dict(mencao)
             linha.update(
                 {
@@ -373,7 +373,7 @@ def salvar_graficos(df: pd.DataFrame) -> None:
 
     plt.style.use("ggplot")
 
-    # Grafico de sentimento
+    # Grafico de distribuicao de sentimento
     sentimentos_ordem = ["positivo", "neutro", "misto", "negativo"]
     c = Counter(df["sentimento"].fillna("neutro"))
     valores = [c.get(s, 0) for s in sentimentos_ordem]
@@ -388,7 +388,7 @@ def salvar_graficos(df: pd.DataFrame) -> None:
     fig.savefig(os.path.join(VIS_DIR, "sentimento_barras.png"), dpi=140)
     plt.close(fig)
 
-    # Grafico de temas
+    # Grafico com temas mais frequentes
     top_temas = df["tema"].fillna("percepcao geral").value_counts().head(8)
     fig, ax = plt.subplots(figsize=(10, 5))
     top_temas.sort_values().plot(kind="barh", ax=ax, color="#1f77b4")
@@ -461,12 +461,12 @@ def main() -> None:
 
     qlist = queries_padrao(args.tema)
     if args.foco_opiniao_publica:
-        # Prioriza queries de percepcao para evitar que o limite seja consumido
-        # apenas por termos institucionais mais amplos.
+        # Prioriza queries de percepcao para evitar consumo do limite
+        # apenas com termos institucionais mais amplos.
         qlist = queries_opiniao_publica(args.tema) + qlist
-        # Remove duplicatas preservando ordem.
+        # Remove duplicatas preservando a ordem original.
         qlist = list(dict.fromkeys(qlist))
-        print("Dica para sua AED: foco-opiniao-publica ativado.")
+        print("Modo foco-opiniao-publica ativado.")
         print("  Exemplos de query usadas:")
         print(f"  - \"{args.tema}\" reclamacoes")
         print(f"  - \"{args.tema}\" e bom?")
