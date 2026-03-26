@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_fe3db8b1e46b8666c56fd595abfcf66d {
+                #map_6a7ea9876254aa113feb0efb2bc98ab9 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -71,20 +71,19 @@
                 <span style="line-height: 1.7; font-size: 13px;">
                 <b>EMAD I/II:</b> Equipe Multiprofissional de Atenção Domiciliar<br>
                 <b>EMAP:</b> Equipe Multiprofissional de Apoio<br>
-                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação<br>
-                <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
+                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação
                 </span>
     </div>
     
     
-            <div class="folium-map" id="map_fe3db8b1e46b8666c56fd595abfcf66d" ></div>
+            <div class="folium-map" id="map_6a7ea9876254aa113feb0efb2bc98ab9" ></div>
         
 </body>
 <script>
     
     
-            var map_fe3db8b1e46b8666c56fd595abfcf66d = L.map(
-                "map_fe3db8b1e46b8666c56fd595abfcf66d",
+            var map_6a7ea9876254aa113feb0efb2bc98ab9 = L.map(
+                "map_6a7ea9876254aa113feb0efb2bc98ab9",
                 {
                     center: [2.83334865, -60.68860046300805],
                     crs: L.CRS.EPSG3857,
@@ -101,7 +100,7 @@
 
         
     
-            var tile_layer_bbd780a31d5b56aee8b170368f6954d2 = L.tileLayer(
+            var tile_layer_613f5a0507d2cb1e1f9c8eb4f5d7899b = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -118,10 +117,10 @@
             );
         
     
-            tile_layer_bbd780a31d5b56aee8b170368f6954d2.addTo(map_fe3db8b1e46b8666c56fd595abfcf66d);
+            tile_layer_613f5a0507d2cb1e1f9c8eb4f5d7899b.addTo(map_6a7ea9876254aa113feb0efb2bc98ab9);
         
     
-            var marker_cluster_0d366bdd63247f77cb0e47a1e41d4cd1 = L.markerClusterGroup(
+            var marker_cluster_76a604c15eab6fdfd73677ac31b02ed8 = L.markerClusterGroup(
                 {
   "disableClusteringAtZoom": 17,
   "maxClusterRadius": 40,
@@ -129,14 +128,14 @@
             );
         
     
-            var marker_036762f0015a00e60c99c31ed8d3f735 = L.marker(
+            var marker_bab10731efe94646be46cb57b7302192 = L.marker(
                 [2.83334865, -60.68860046300805],
                 {
 }
-            ).addTo(marker_cluster_0d366bdd63247f77cb0e47a1e41d4cd1);
+            ).addTo(marker_cluster_76a604c15eab6fdfd73677ac31b02ed8);
         
     
-            var icon_607637f8ed209be58001f6b29a00a712 = L.AwesomeMarkers.icon(
+            var icon_1f00ebb03837361bd60d3d246845cd41 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "blue",
   "iconColor": "white",
@@ -147,27 +146,27 @@
             );
         
     
-        var popup_89ba16985662e4c95960c1868b9688a3 = L.popup({
+        var popup_ffc77a8614b9969936281de8dcc63caa = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_d2d07f168979937210eddd495cb4b366 = $(`<div id="html_d2d07f168979937210eddd495cb4b366" style="width: 100.0%; height: 100.0%;"><b>HOSPITAL GERAL DE RORAIMA HGR</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> AV BRIGADEIRO EDUARDO GOMES, 3308<br><b>CNES:</b> 2319659</div>`)[0];
-                popup_89ba16985662e4c95960c1868b9688a3.setContent(html_d2d07f168979937210eddd495cb4b366);
+                var html_b1060f4e79f5cf539cbc2b9db020be71 = $(`<div id="html_b1060f4e79f5cf539cbc2b9db020be71" style="width: 100.0%; height: 100.0%;"><b>HOSPITAL GERAL DE RORAIMA HGR</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> AV BRIGADEIRO EDUARDO GOMES, 3308<br><b>CNES:</b> 2319659</div>`)[0];
+                popup_ffc77a8614b9969936281de8dcc63caa.setContent(html_b1060f4e79f5cf539cbc2b9db020be71);
             
         
 
-        marker_036762f0015a00e60c99c31ed8d3f735.bindPopup(popup_89ba16985662e4c95960c1868b9688a3)
+        marker_bab10731efe94646be46cb57b7302192.bindPopup(popup_ffc77a8614b9969936281de8dcc63caa)
         ;
 
         
     
     
-                marker_036762f0015a00e60c99c31ed8d3f735.setIcon(icon_607637f8ed209be58001f6b29a00a712);
+                marker_bab10731efe94646be46cb57b7302192.setIcon(icon_1f00ebb03837361bd60d3d246845cd41);
             
     
-            marker_cluster_0d366bdd63247f77cb0e47a1e41d4cd1.addTo(map_fe3db8b1e46b8666c56fd595abfcf66d);
+            marker_cluster_76a604c15eab6fdfd73677ac31b02ed8.addTo(map_6a7ea9876254aa113feb0efb2bc98ab9);
         
 </script>
 </html>

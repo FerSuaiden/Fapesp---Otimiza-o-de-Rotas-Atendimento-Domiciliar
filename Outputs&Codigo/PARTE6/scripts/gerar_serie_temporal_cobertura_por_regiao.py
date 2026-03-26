@@ -127,7 +127,7 @@ def construir_serie_mensal(df: pd.DataFrame, inicio: str, fim: str | None) -> pd
 
 def salvar_grafico_cobertura(df_serie: pd.DataFrame, caminho_saida: str) -> None:
     plt.style.use("seaborn-v0_8-whitegrid")
-    fig, ax = plt.subplots(figsize=(14, 7))
+    fig, ax = plt.subplots(figsize=(16, 9))
 
     x = pd.to_datetime(df_serie["DATA_REFERENCIA"])
     for regiao in REGIOES_ORDENADAS:
@@ -140,14 +140,9 @@ def salvar_grafico_cobertura(df_serie: pd.DataFrame, caminho_saida: str) -> None
             color=CORES_REGIAO[regiao],
         )
 
-    ax.set_title(
-        "Evolucao temporal da cobertura municipal por regiao (%)\n"
-        "Programa Melhor em Casa (CNES/DATASUS)",
-        fontsize=14,
-        pad=12,
-    )
-    ax.set_xlabel("Ano")
-    ax.set_ylabel("Cobertura regional (% dos municipios da regiao com AD)")
+    ax.set_xlabel("Ano", fontsize=24)
+    ax.set_ylabel("Cobertura regional (% dos municipios da regiao com AD)", fontsize=24)
+    ax.tick_params(axis="both", labelsize=20)
 
     # Escala dinamica: teto no multiplo de 5 imediatamente acima do maximo observado.
     cols_cob = [f"COBERTURA_PCT_{reg.upper()}" for reg in REGIOES_ORDENADAS]
@@ -155,7 +150,7 @@ def salvar_grafico_cobertura(df_serie: pd.DataFrame, caminho_saida: str) -> None
     y_max = max(5, int(math.ceil(max_cob / 5.0) * 5))
     ax.set_ylim(0, y_max)
 
-    ax.legend(title="Regiao", ncol=3)
+    ax.legend(title="Regiao", ncol=3, fontsize=18, title_fontsize=19)
     fig.autofmt_xdate()
     plt.tight_layout()
     fig.savefig(caminho_saida, dpi=220)
@@ -189,33 +184,16 @@ def main() -> None:
 
     cnes_dir = os.path.join(args.base_dir, "CNES_DATA")
     parte6_dir = os.path.join(args.base_dir, "Outputs&Codigo", "PARTE6")
-    resultados_dir = os.path.join(parte6_dir, "resultados")
-    visualizacoes_dir = os.path.join(parte6_dir, "visualizacoes")
-    os.makedirs(resultados_dir, exist_ok=True)
-    os.makedirs(visualizacoes_dir, exist_ok=True)
 
     df_equipes = carregar_equipes_ad(cnes_dir)
     df_serie = construir_serie_mensal(df_equipes, inicio=args.inicio, fim=args.fim)
 
-    csv_saida = os.path.join(resultados_dir, "evolucao_cobertura_ad_por_regiao_mensal.csv")
-    fig_cobertura_saida = os.path.join(visualizacoes_dir, "evolucao_cobertura_percentual_por_regiao.png")
+    fig_cobertura_saida = os.path.join(parte6_dir, "evolucao_cobertura_percentual_por_regiao.png")
 
-    cols_saida = [
-        "MES",
-        "DATA_REFERENCIA",
-        "COBERTURA_PCT_NORTE",
-        "COBERTURA_PCT_NORDESTE",
-        "COBERTURA_PCT_CENTRO-OESTE",
-        "COBERTURA_PCT_SUDESTE",
-        "COBERTURA_PCT_SUL",
-        "COBERTURA_PCT_BRASIL",
-    ]
-    df_serie[cols_saida].to_csv(csv_saida, sep=";", index=False)
     salvar_grafico_cobertura(df_serie, fig_cobertura_saida)
 
     print(f"Registros de equipes AD usados: {len(df_equipes):,}")
     print(f"Periodo da serie: {df_serie['MES'].iloc[0]} ate {df_serie['MES'].iloc[-1]}")
-    print(f"CSV: {csv_saida}")
     print(f"Grafico cobertura: {fig_cobertura_saida}")
 
 

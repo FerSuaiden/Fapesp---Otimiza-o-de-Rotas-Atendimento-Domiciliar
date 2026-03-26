@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_02b09345e03a41a22152f4268949670d {
+                #map_c4191fc86d986479a3e1eff43782e733 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -71,20 +71,19 @@
                 <span style="line-height: 1.7; font-size: 13px;">
                 <b>EMAD I/II:</b> Equipe Multiprofissional de Atenção Domiciliar<br>
                 <b>EMAP:</b> Equipe Multiprofissional de Apoio<br>
-                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação<br>
-                <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
+                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação
                 </span>
     </div>
     
     
-            <div class="folium-map" id="map_02b09345e03a41a22152f4268949670d" ></div>
+            <div class="folium-map" id="map_c4191fc86d986479a3e1eff43782e733" ></div>
         
 </body>
 <script>
     
     
-            var map_02b09345e03a41a22152f4268949670d = L.map(
-                "map_02b09345e03a41a22152f4268949670d",
+            var map_c4191fc86d986479a3e1eff43782e733 = L.map(
+                "map_c4191fc86d986479a3e1eff43782e733",
                 {
                     center: [0.0304871996428473, -51.09996901848272],
                     crs: L.CRS.EPSG3857,
@@ -101,7 +100,7 @@
 
         
     
-            var tile_layer_199acf84d4d5ad901a1d5a34cd8c8f0a = L.tileLayer(
+            var tile_layer_1b040e477807c7db96dbc3cc1c3b8749 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -118,10 +117,10 @@
             );
         
     
-            tile_layer_199acf84d4d5ad901a1d5a34cd8c8f0a.addTo(map_02b09345e03a41a22152f4268949670d);
+            tile_layer_1b040e477807c7db96dbc3cc1c3b8749.addTo(map_c4191fc86d986479a3e1eff43782e733);
         
     
-            var marker_cluster_d7f5a5f6d0e0236371ecc9b8bcc94274 = L.markerClusterGroup(
+            var marker_cluster_047057fb57b1137c1b29e3aa254ea116 = L.markerClusterGroup(
                 {
   "disableClusteringAtZoom": 17,
   "maxClusterRadius": 40,
@@ -129,14 +128,14 @@
             );
         
     
-            var marker_c3505a1e48ce3b1ba1f4275a660a8eb9 = L.marker(
+            var marker_27bc2e68a8011e07a7dd28e00a3a8487 = L.marker(
                 [0.031587, -51.0822442],
                 {
 }
-            ).addTo(marker_cluster_d7f5a5f6d0e0236371ecc9b8bcc94274);
+            ).addTo(marker_cluster_047057fb57b1137c1b29e3aa254ea116);
         
     
-            var icon_8f46721eafb3bcb058ba5f810563c313 = L.AwesomeMarkers.icon(
+            var icon_02588ce00a27a7fcaf39b2663df192aa = L.AwesomeMarkers.icon(
                 {
   "markerColor": "purple",
   "iconColor": "white",
@@ -147,34 +146,34 @@
             );
         
     
-        var popup_34e50535c842df6ad104f8d294304fc1 = L.popup({
+        var popup_4d15c81cf6dd833aef13bdcd0ae06c99 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_939da75a61a7224090c85e8f5431308b = $(`<div id="html_939da75a61a7224090c85e8f5431308b" style="width: 100.0%; height: 100.0%;"><b>PMM U B S CONCEICAO ROSA MOITA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA RAIMUNDO PEQUILO GOES DE ALMEIDA, 0294<br><b>CNES:</b> 2021366</div>`)[0];
-                popup_34e50535c842df6ad104f8d294304fc1.setContent(html_939da75a61a7224090c85e8f5431308b);
+                var html_f54a0f4c934e613f709f79b6acf9b44c = $(`<div id="html_f54a0f4c934e613f709f79b6acf9b44c" style="width: 100.0%; height: 100.0%;"><b>PMM U B S CONCEICAO ROSA MOITA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA RAIMUNDO PEQUILO GOES DE ALMEIDA, 0294<br><b>CNES:</b> 2021366</div>`)[0];
+                popup_4d15c81cf6dd833aef13bdcd0ae06c99.setContent(html_f54a0f4c934e613f709f79b6acf9b44c);
             
         
 
-        marker_c3505a1e48ce3b1ba1f4275a660a8eb9.bindPopup(popup_34e50535c842df6ad104f8d294304fc1)
+        marker_27bc2e68a8011e07a7dd28e00a3a8487.bindPopup(popup_4d15c81cf6dd833aef13bdcd0ae06c99)
         ;
 
         
     
     
-                marker_c3505a1e48ce3b1ba1f4275a660a8eb9.setIcon(icon_8f46721eafb3bcb058ba5f810563c313);
+                marker_27bc2e68a8011e07a7dd28e00a3a8487.setIcon(icon_02588ce00a27a7fcaf39b2663df192aa);
             
     
-            var marker_acd038361ea5ddf86a99ad03f360a4b9 = L.marker(
+            var marker_6cc11f935e64ca39b0217e8d5a108e76 = L.marker(
                 [-0.0290966021429162, -51.1765319108963],
                 {
 }
-            ).addTo(marker_cluster_d7f5a5f6d0e0236371ecc9b8bcc94274);
+            ).addTo(marker_cluster_047057fb57b1137c1b29e3aa254ea116);
         
     
-            var icon_87ef5c3f311eabbf8963d26608282677 = L.AwesomeMarkers.icon(
+            var icon_0dfe49a329dc0c7c844deea1cfb796e3 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "purple",
   "iconColor": "white",
@@ -185,34 +184,34 @@
             );
         
     
-        var popup_394e525f5fbab724ff76f785421e5987 = L.popup({
+        var popup_4ef0e30668bc5b2ff7da08fb2e11fe82 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_17b8132e3807a77961b875d0462add35 = $(`<div id="html_17b8132e3807a77961b875d0462add35" style="width: 100.0%; height: 100.0%;"><b>PM STN POLICLINICA MARIA TADEU AGUIAR</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> PRESIDENTE JUSCELINO KUBITSCHEK DE OLIVEIRA, 529<br><b>CNES:</b> 2020963</div>`)[0];
-                popup_394e525f5fbab724ff76f785421e5987.setContent(html_17b8132e3807a77961b875d0462add35);
+                var html_1dcefd1fe8f863de5b2f6d78224252a8 = $(`<div id="html_1dcefd1fe8f863de5b2f6d78224252a8" style="width: 100.0%; height: 100.0%;"><b>PM STN POLICLINICA MARIA TADEU AGUIAR</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> PRESIDENTE JUSCELINO KUBITSCHEK DE OLIVEIRA, 529<br><b>CNES:</b> 2020963</div>`)[0];
+                popup_4ef0e30668bc5b2ff7da08fb2e11fe82.setContent(html_1dcefd1fe8f863de5b2f6d78224252a8);
             
         
 
-        marker_acd038361ea5ddf86a99ad03f360a4b9.bindPopup(popup_394e525f5fbab724ff76f785421e5987)
+        marker_6cc11f935e64ca39b0217e8d5a108e76.bindPopup(popup_4ef0e30668bc5b2ff7da08fb2e11fe82)
         ;
 
         
     
     
-                marker_acd038361ea5ddf86a99ad03f360a4b9.setIcon(icon_87ef5c3f311eabbf8963d26608282677);
+                marker_6cc11f935e64ca39b0217e8d5a108e76.setIcon(icon_0dfe49a329dc0c7c844deea1cfb796e3);
             
     
-            var marker_8763f7b3cc56bd6dc6cb6b928343f222 = L.marker(
+            var marker_99b6f59339e0031a3cd66c9883e8ee44 = L.marker(
                 [0.008569, -51.0984823],
                 {
 }
-            ).addTo(marker_cluster_d7f5a5f6d0e0236371ecc9b8bcc94274);
+            ).addTo(marker_cluster_047057fb57b1137c1b29e3aa254ea116);
         
     
-            var icon_4ac4addf6a7a41a036a828c0a1f00429 = L.AwesomeMarkers.icon(
+            var icon_abef26f76431206c5bdca3a655004450 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "blue",
   "iconColor": "white",
@@ -223,34 +222,34 @@
             );
         
     
-        var popup_e3e46dea9901ef7fa1af0c821072dad6 = L.popup({
+        var popup_dac05a717a740c0810be5970f694bf7d = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_de7816e1822a6db17284790742a7212e = $(`<div id="html_de7816e1822a6db17284790742a7212e" style="width: 100.0%; height: 100.0%;"><b>PMM U B S CONGOS</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> RUA BENEDITO LINO DO CARMO, 1648<br><b>CNES:</b> 2021358</div>`)[0];
-                popup_e3e46dea9901ef7fa1af0c821072dad6.setContent(html_de7816e1822a6db17284790742a7212e);
+                var html_cd03912c0f51c1698db1b6a8caa2cb10 = $(`<div id="html_cd03912c0f51c1698db1b6a8caa2cb10" style="width: 100.0%; height: 100.0%;"><b>PMM U B S CONGOS</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> RUA BENEDITO LINO DO CARMO, 1648<br><b>CNES:</b> 2021358</div>`)[0];
+                popup_dac05a717a740c0810be5970f694bf7d.setContent(html_cd03912c0f51c1698db1b6a8caa2cb10);
             
         
 
-        marker_8763f7b3cc56bd6dc6cb6b928343f222.bindPopup(popup_e3e46dea9901ef7fa1af0c821072dad6)
+        marker_99b6f59339e0031a3cd66c9883e8ee44.bindPopup(popup_dac05a717a740c0810be5970f694bf7d)
         ;
 
         
     
     
-                marker_8763f7b3cc56bd6dc6cb6b928343f222.setIcon(icon_4ac4addf6a7a41a036a828c0a1f00429);
+                marker_99b6f59339e0031a3cd66c9883e8ee44.setIcon(icon_abef26f76431206c5bdca3a655004450);
             
     
-            var marker_fe44482b89ca5d83aff1ff62c6a9d908 = L.marker(
+            var marker_b58a946e1a30801f89dad69459ca7f4d = L.marker(
                 [0.0445527, -51.1295901],
                 {
 }
-            ).addTo(marker_cluster_d7f5a5f6d0e0236371ecc9b8bcc94274);
+            ).addTo(marker_cluster_047057fb57b1137c1b29e3aa254ea116);
         
     
-            var icon_32ee89f8a0ee5fd5f17caee94e6bb3b7 = L.AwesomeMarkers.icon(
+            var icon_fcecba52c2aa2e58f9ba57775a1b5ec9 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "blue",
   "iconColor": "white",
@@ -261,34 +260,34 @@
             );
         
     
-        var popup_c106e83d18b4da36607eafa778a27aae = L.popup({
+        var popup_c5b73330c6ee7314b8400f4321671aff = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_00b2bab85053e4c13e50f3bda1ac503f = $(`<div id="html_00b2bab85053e4c13e50f3bda1ac503f" style="width: 100.0%; height: 100.0%;"><b>PMM U B S MARABAIXO</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> RUA QUATRO, S/N<br><b>CNES:</b> 6585604</div>`)[0];
-                popup_c106e83d18b4da36607eafa778a27aae.setContent(html_00b2bab85053e4c13e50f3bda1ac503f);
+                var html_df0ad5a19f0c1cacdee76f8e02f5ef03 = $(`<div id="html_df0ad5a19f0c1cacdee76f8e02f5ef03" style="width: 100.0%; height: 100.0%;"><b>PMM U B S MARABAIXO</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> RUA QUATRO, S/N<br><b>CNES:</b> 6585604</div>`)[0];
+                popup_c5b73330c6ee7314b8400f4321671aff.setContent(html_df0ad5a19f0c1cacdee76f8e02f5ef03);
             
         
 
-        marker_fe44482b89ca5d83aff1ff62c6a9d908.bindPopup(popup_c106e83d18b4da36607eafa778a27aae)
+        marker_b58a946e1a30801f89dad69459ca7f4d.bindPopup(popup_c5b73330c6ee7314b8400f4321671aff)
         ;
 
         
     
     
-                marker_fe44482b89ca5d83aff1ff62c6a9d908.setIcon(icon_32ee89f8a0ee5fd5f17caee94e6bb3b7);
+                marker_b58a946e1a30801f89dad69459ca7f4d.setIcon(icon_fcecba52c2aa2e58f9ba57775a1b5ec9);
             
     
-            var marker_6e0980ea289eedb863bab000278c8cbd = L.marker(
+            var marker_c499817c182809db1d05fac480afeab1 = L.marker(
                 [0.0448956, -51.0487568],
                 {
 }
-            ).addTo(marker_cluster_d7f5a5f6d0e0236371ecc9b8bcc94274);
+            ).addTo(marker_cluster_047057fb57b1137c1b29e3aa254ea116);
         
     
-            var icon_54a4240af77c2d537f947938721e8195 = L.AwesomeMarkers.icon(
+            var icon_593f93e76b2318637a4ab0ae9b62e285 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "blue",
   "iconColor": "white",
@@ -299,34 +298,34 @@
             );
         
     
-        var popup_dee34d397ad7a56ad1895c1575648e46 = L.popup({
+        var popup_cfd8b4fb13b8ed8748b1f7f750532cff = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_461beced6c33f106dd58b9cd99e06ab6 = $(`<div id="html_461beced6c33f106dd58b9cd99e06ab6" style="width: 100.0%; height: 100.0%;"><b>PMM U B S PERPETUO SOCORRO</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> RUA RIO XINGU, 01<br><b>CNES:</b> 9421955</div>`)[0];
-                popup_dee34d397ad7a56ad1895c1575648e46.setContent(html_461beced6c33f106dd58b9cd99e06ab6);
+                var html_305035b9af876704c66c2df5324f3c89 = $(`<div id="html_305035b9af876704c66c2df5324f3c89" style="width: 100.0%; height: 100.0%;"><b>PMM U B S PERPETUO SOCORRO</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> RUA RIO XINGU, 01<br><b>CNES:</b> 9421955</div>`)[0];
+                popup_cfd8b4fb13b8ed8748b1f7f750532cff.setContent(html_305035b9af876704c66c2df5324f3c89);
             
         
 
-        marker_6e0980ea289eedb863bab000278c8cbd.bindPopup(popup_dee34d397ad7a56ad1895c1575648e46)
+        marker_c499817c182809db1d05fac480afeab1.bindPopup(popup_cfd8b4fb13b8ed8748b1f7f750532cff)
         ;
 
         
     
     
-                marker_6e0980ea289eedb863bab000278c8cbd.setIcon(icon_54a4240af77c2d537f947938721e8195);
+                marker_c499817c182809db1d05fac480afeab1.setIcon(icon_593f93e76b2318637a4ab0ae9b62e285);
             
     
-            var marker_59e83ded81e54fe83c89926955b5b271 = L.marker(
+            var marker_bef3cebce2ec36f3ebb6a9092fd1f600 = L.marker(
                 [0.0824155, -51.0642088],
                 {
 }
-            ).addTo(marker_cluster_d7f5a5f6d0e0236371ecc9b8bcc94274);
+            ).addTo(marker_cluster_047057fb57b1137c1b29e3aa254ea116);
         
     
-            var icon_7fc01153bf8244ba5a91a159445f39e0 = L.AwesomeMarkers.icon(
+            var icon_005c19147074721b7467df9ad0697b9f = L.AwesomeMarkers.icon(
                 {
   "markerColor": "purple",
   "iconColor": "white",
@@ -337,27 +336,27 @@
             );
         
     
-        var popup_2d486ff3501b20afc4079ce64fc1881a = L.popup({
+        var popup_6e4cae934a48df0017a528ba74083a90 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_c9409ca1f7906582f8521d5e9e73777e = $(`<div id="html_c9409ca1f7906582f8521d5e9e73777e" style="width: 100.0%; height: 100.0%;"><b>PMM U B S DR MARCELO CANDIA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> VEREADOR JULIO MARIA PINTO PEREIRA, 1329<br><b>CNES:</b> 2020599</div>`)[0];
-                popup_2d486ff3501b20afc4079ce64fc1881a.setContent(html_c9409ca1f7906582f8521d5e9e73777e);
+                var html_dd2fcd53957af13afb8e2da2d1fc88fa = $(`<div id="html_dd2fcd53957af13afb8e2da2d1fc88fa" style="width: 100.0%; height: 100.0%;"><b>PMM U B S DR MARCELO CANDIA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> VEREADOR JULIO MARIA PINTO PEREIRA, 1329<br><b>CNES:</b> 2020599</div>`)[0];
+                popup_6e4cae934a48df0017a528ba74083a90.setContent(html_dd2fcd53957af13afb8e2da2d1fc88fa);
             
         
 
-        marker_59e83ded81e54fe83c89926955b5b271.bindPopup(popup_2d486ff3501b20afc4079ce64fc1881a)
+        marker_bef3cebce2ec36f3ebb6a9092fd1f600.bindPopup(popup_6e4cae934a48df0017a528ba74083a90)
         ;
 
         
     
     
-                marker_59e83ded81e54fe83c89926955b5b271.setIcon(icon_7fc01153bf8244ba5a91a159445f39e0);
+                marker_bef3cebce2ec36f3ebb6a9092fd1f600.setIcon(icon_005c19147074721b7467df9ad0697b9f);
             
     
-            marker_cluster_d7f5a5f6d0e0236371ecc9b8bcc94274.addTo(map_02b09345e03a41a22152f4268949670d);
+            marker_cluster_047057fb57b1137c1b29e3aa254ea116.addTo(map_c4191fc86d986479a3e1eff43782e733);
         
 </script>
 </html>

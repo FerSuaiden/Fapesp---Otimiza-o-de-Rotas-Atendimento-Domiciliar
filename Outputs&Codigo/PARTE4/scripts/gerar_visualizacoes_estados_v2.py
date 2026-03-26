@@ -204,9 +204,6 @@ def main():
     # ----- GRÁFICO 1: % Equipes Conformes -----
     if total_equipes > 0:
         fig1, ax1 = plt.subplots(figsize=(8, 7))
-        fig1.suptitle('Programa Melhor em Casa - Indicadores Nacionais\n'
-                     f'Brasil - {total_equipes:,} equipes AD em {municipios_com_ad:,} municípios',
-                     fontsize=14, fontweight='bold', y=1.02)
         
         sizes1 = [equipes_conformes, equipes_nao_conformes]
         labels1 = ['Conformes', 'Não Conformes']
@@ -223,16 +220,10 @@ def main():
         ax1.text(0, 0, f'{taxa_conformidade_equipes:.2f}%\nConformes', 
                  ha='center', va='center', fontsize=14, fontweight='bold')
         
-        ax1.set_title(f'Conformidade das Equipes AD\n({equipes_conformes:,} de {total_equipes:,} equipes)',
-                      fontsize=12, fontweight='bold', pad=15)
-        
         ax1.legend([f'Conformes: {equipes_conformes:,}', f'Não Conformes: {equipes_nao_conformes:,}'],
                    loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=10)
         
-        plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-        fig1.text(0.5, 0.01, 
-                 f'Fonte: CNES/DATASUS (Agosto 2025) | Portaria GM/MS nº 3.005/2024',
-                 ha='center', fontsize=9, style='italic', color='gray')
+        plt.tight_layout()
         
         output_conformidade = os.path.join(resumo_dir, 'conformidade_nacional_donut.png')
         plt.savefig(output_conformidade, dpi=150, bbox_inches='tight', facecolor='white')
@@ -243,9 +234,6 @@ def main():
     
     # ----- GRÁFICO 2: % Municípios com Cobertura -----
     fig2, ax2 = plt.subplots(figsize=(8, 7))
-    fig2.suptitle('Programa Melhor em Casa - Indicadores Nacionais\n'
-                 f'Brasil - {total_equipes:,} equipes AD em {municipios_com_ad:,} municípios',
-                 fontsize=14, fontweight='bold', y=1.02)
     
     municipios_sem_ad = total_municipios_brasil - municipios_com_ad
     sizes2 = [municipios_com_ad, municipios_sem_ad]
@@ -263,16 +251,10 @@ def main():
     ax2.text(0, 0, f'{taxa_cobertura_municipal:.2f}%\nCobertos', 
              ha='center', va='center', fontsize=14, fontweight='bold')
     
-    ax2.set_title(f'Cobertura Municipal do Programa\n({municipios_com_ad:,} de {total_municipios_brasil:,} municípios)',
-                  fontsize=12, fontweight='bold', pad=15)
-    
     ax2.legend([f'Com AD: {municipios_com_ad:,}', f'Sem AD: {municipios_sem_ad:,}'],
                loc='upper center', bbox_to_anchor=(0.5, -0.05), fontsize=10)
     
-    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    fig2.text(0.5, 0.01, 
-             f'Fonte: CNES/DATASUS (Agosto 2025) | IBGE 2022',
-             ha='center', fontsize=9, style='italic', color='gray')
+    plt.tight_layout()
     
     output_cobertura = os.path.join(resumo_dir, 'cobertura_nacional_donut.png')
     plt.savefig(output_cobertura, dpi=150, bbox_inches='tight', facecolor='white')
@@ -314,10 +296,6 @@ def main():
         
         # Criar figura com 2 subplots lado a lado
         fig, axes = plt.subplots(1, 2, figsize=(16, 8))
-        fig.suptitle(f'{nome_estado} ({uf}) - Equipes de Atenção Domiciliar\n'
-                     f'{total_equipes_uf} equipes em {total_municipios_uf} municípios | Região {regiao} | '
-                     f'Taxa de Conformidade: {taxa_conf_uf:.2f}%',
-                     fontsize=13, fontweight='bold', y=1.02)
         
         # ----- GRÁFICO 1: Top 15 municípios por número de equipes (HORIZONTAL) -----
         ax1 = axes[0]
@@ -336,7 +314,6 @@ def main():
             ax1.set_yticklabels(labels, fontsize=9)
             ax1.invert_yaxis()
             ax1.set_xlabel('Número de Equipes AD')
-            ax1.set_title(f'Top Municípios por Número de Equipes', fontsize=11, fontweight='bold')
             
             # Anotações
             for i, (_, row) in enumerate(top_bruto.iterrows()):
@@ -390,8 +367,6 @@ def main():
             ax2.set_yticklabels(labels_mun, fontsize=9)
             ax2.invert_yaxis()
             ax2.set_xlabel('Número de Equipes')
-            ax2.set_title(f'Conformidade por Município\n(Top Municípios - Portaria 3.005/2024)', 
-                         fontsize=11, fontweight='bold')
             ax2.legend(loc='lower right', fontsize=9)
             
             # Anotações
@@ -405,10 +380,7 @@ def main():
         else:
             ax2.text(0.5, 0.5, 'Sem dados de conformidade', ha='center', va='center', fontsize=14)
         
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-        fig.text(0.5, 0.01, 
-                f'Fonte: CNES/DATASUS (Agosto 2025) | Portaria GM/MS nº 3.005/2024',
-                ha='center', fontsize=9, style='italic', color='gray')
+        plt.tight_layout()
         
         # Salvar
         output_file = os.path.join(pasta_uf, f'{uf}_equipes_conformidade.png')

@@ -347,9 +347,6 @@ def main():
     # =========================================================================
     
     fig1a, ax1 = plt.subplots(figsize=(10, 9))
-    fig1a.suptitle('Programa Melhor em Casa - Cobertura Municipal no Brasil\n'
-                  f'{total_mun_ad:,} municípios com equipes AD ({cobertura_nacional:.2f}% do Brasil)',
-                  fontsize=14, fontweight='bold', y=1.02)
     
     # Ordenar por PORCENTAGEM de cobertura (não por números brutos)
     top_ufs_pct = municipios_ad.nlargest(15, 'COBERTURA_%').copy()
@@ -374,8 +371,6 @@ def main():
     ax1.set_yticklabels(top_ufs_pct['UF'], fontsize=10)
     ax1.invert_yaxis()
     ax1.set_xlabel('Cobertura Municipal (%)')
-    ax1.set_title('Top 15 UFs por Cobertura Percentual\n(% de municípios com equipes de Atenção Domiciliar)', 
-                  fontsize=11, fontweight='bold', pad=10)
     
     # Legenda de regiões
     handles_cob = [mpatches.Patch(color=cores_regiao[r], label=r) for r in cores_regiao]
@@ -384,10 +379,7 @@ def main():
     ax1.grid(True, alpha=0.3, axis='x')
     ax1.set_xlim(0, top_ufs_pct['COBERTURA_%'].max() * 1.25)
     
-    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    fig1a.text(0.5, 0.01, 
-             f'Fonte: CNES/DATASUS (Agosto 2025) | Total Brasil: {TOTAL_MUNICIPIOS_BRASIL:,} municípios',
-             ha='center', fontsize=9, style='italic', color='gray')
+    plt.tight_layout()
     
     output_fig1a = os.path.join(VIS_COBERTURA_DIR, 'top15_cobertura_percentual.png')
     plt.savefig(output_fig1a, dpi=150, bbox_inches='tight', facecolor='white')
@@ -401,9 +393,6 @@ def main():
     media_nacional = total_equipes / TOTAL_POPULACAO_BRASIL * 100
     
     fig2a, ax3 = plt.subplots(figsize=(10, 7))
-    fig2a.suptitle('Programa Melhor em Casa - Taxa por 100 mil Habitantes\n'
-                  f'Equipes de Atenção Domiciliar - Brasil ({total_equipes:,} equipes)',
-                  fontsize=14, fontweight='bold', y=1.02)
     
     ordem_regioes = cobertura_regiao.sort_values('EQUIPES_POR_100K', ascending=True)
     
@@ -412,8 +401,6 @@ def main():
                     color=cores_barras, alpha=0.85)
     
     ax3.set_xlabel('Equipes por 100 mil habitantes')
-    ax3.set_title('Taxa de Equipes AD por Região\n(equipes por 100 mil habitantes)', 
-                  fontsize=11, fontweight='bold', pad=10)
     
     # Linha de média nacional
     ax3.axvline(media_nacional, color='red', linestyle='--', linewidth=2, alpha=0.7)
@@ -428,10 +415,7 @@ def main():
     ax3.grid(True, alpha=0.3, axis='x')
     ax3.set_xlim(0, ordem_regioes['EQUIPES_POR_100K'].max() * 1.25)
     
-    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    fig2a.text(0.5, 0.01, 
-             f'Fonte: CNES/DATASUS (Agosto 2025) + IBGE Censo 2022 | População Brasil: {TOTAL_POPULACAO_BRASIL:,} mil',
-             ha='center', fontsize=9, style='italic', color='gray')
+    plt.tight_layout()
     
     output_fig2a = os.path.join(VIS_TAXA100K_DIR, 'densidade_por_regiao.png')
     plt.savefig(output_fig2a, dpi=150, bbox_inches='tight', facecolor='white')
@@ -443,9 +427,6 @@ def main():
     # =========================================================================
     
     fig2b, ax4 = plt.subplots(figsize=(10, 8))
-    fig2b.suptitle('Programa Melhor em Casa - Taxa por 100 mil Habitantes\n'
-                  f'Equipes de Atenção Domiciliar - Brasil ({total_equipes:,} equipes)',
-                  fontsize=14, fontweight='bold', y=1.02)
     
     top_ufs_percapita = municipios_ad.nlargest(15, 'EQUIPES_POR_100K').copy()
     
@@ -458,8 +439,6 @@ def main():
     ax4.set_yticklabels(top_ufs_percapita['UF'])
     ax4.invert_yaxis()
     ax4.set_xlabel('Equipes por 100 mil habitantes')
-    ax4.set_title('Top 15 UFs por Taxa de Equipes\n(equipes por 100 mil habitantes)', 
-                  fontsize=11, fontweight='bold', pad=10)
     
     # Linha de média
     ax4.axvline(media_nacional, color='red', linestyle='--', linewidth=2, alpha=0.7)
@@ -476,10 +455,7 @@ def main():
     handles = [mpatches.Patch(color=cores_regiao[r], label=r) for r in cores_regiao]
     ax4.legend(handles=handles, title='Região', loc='lower right', fontsize=8)
     
-    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    fig2b.text(0.5, 0.01, 
-             f'Fonte: CNES/DATASUS (Agosto 2025) + IBGE Censo 2022 | População Brasil: {TOTAL_POPULACAO_BRASIL:,} mil',
-             ha='center', fontsize=9, style='italic', color='gray')
+    plt.tight_layout()
     
     output_fig2b = os.path.join(VIS_TAXA100K_DIR, 'top15_taxa_100k_ufs.png')
     plt.savefig(output_fig2b, dpi=150, bbox_inches='tight', facecolor='white')
@@ -491,9 +467,6 @@ def main():
     # =========================================================================
     
     fig3a, ax5 = plt.subplots(figsize=(9, 7))
-    fig3a.suptitle('Programa Melhor em Casa - Conformidade Legal (Portaria 3.005/2024)\n'
-                  f'{total_conformes:,} de {total_equipes:,} equipes em conformidade ({taxa_nacional:.2f}%)',
-                  fontsize=14, fontweight='bold', y=1.02)
     
     # Por tipo
     stats_tipo = df_resultados.groupby('TIPO').agg({
@@ -519,7 +492,6 @@ def main():
     ax5.set_xticks(x_pos)
     ax5.set_xticklabels(stats_tipo['TIPO'])
     ax5.set_ylabel('Número de Equipes')
-    ax5.set_title('Conformidade por Tipo de Equipe', fontsize=11, fontweight='bold')
     ax5.legend(loc='upper right')
     
     for i, row in stats_tipo.iterrows():
@@ -528,10 +500,7 @@ def main():
     
     ax5.grid(True, alpha=0.3, axis='y')
     
-    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    fig3a.text(0.5, 0.01, 
-             f'Fonte: CNES/DATASUS (Agosto 2025) | Portaria GM/MS nº 3.005/2024',
-             ha='center', fontsize=9, style='italic', color='gray')
+    plt.tight_layout()
     
     output_fig3a = os.path.join(VIS_CONFORMIDADE_DIR, 'conformidade_por_tipo.png')
     plt.savefig(output_fig3a, dpi=150, bbox_inches='tight', facecolor='white')
@@ -543,9 +512,6 @@ def main():
     # =========================================================================
     
     fig3b, ax6 = plt.subplots(figsize=(9, 7))
-    fig3b.suptitle('Programa Melhor em Casa - Conformidade Legal (Portaria 3.005/2024)\n'
-                  f'{total_conformes:,} de {total_equipes:,} equipes em conformidade ({taxa_nacional:.2f}%)',
-                  fontsize=14, fontweight='bold', y=1.02)
     
     # Por região
     stats_regiao = df_resultados.groupby('REGIAO').agg({
@@ -562,7 +528,6 @@ def main():
     ax6.set_xticks(x_pos)
     ax6.set_xticklabels(stats_regiao['REGIAO'])
     ax6.set_ylabel('Número de Equipes')
-    ax6.set_title('Conformidade por Região', fontsize=11, fontweight='bold')
     ax6.legend(loc='upper right')
     
     # CORRIGIDO: usar enumerate para posição correta
@@ -572,10 +537,7 @@ def main():
     
     ax6.grid(True, alpha=0.3, axis='y')
     
-    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
-    fig3b.text(0.5, 0.01, 
-             f'Fonte: CNES/DATASUS (Agosto 2025) | Portaria GM/MS nº 3.005/2024',
-             ha='center', fontsize=9, style='italic', color='gray')
+    plt.tight_layout()
     
     output_fig3b = os.path.join(VIS_CONFORMIDADE_DIR, 'conformidade_por_regiao.png')
     plt.savefig(output_fig3b, dpi=150, bbox_inches='tight', facecolor='white')

@@ -87,7 +87,6 @@ try:
         width=0.8
     )
     
-    ax_bar.set_title('Top 15 Estados por Nº de Equipes de Atenção Domiciliar (Melhor em Casa)', fontsize=18, pad=20, weight='bold')
     ax_bar.set_xlabel('Estado (UF)', fontsize=14, labelpad=10)
     ax_bar.set_ylabel('Número Total de Equipes', fontsize=14, labelpad=10)
     plt.xticks(rotation=45, ha='right', fontsize=12)
@@ -108,10 +107,6 @@ try:
     ax_bar.yaxis.grid(color='gray', linestyle='dashed', alpha=0.5)
     ax_bar.set_axisbelow(True)
     
-    # Adicionar nota de fonte
-    fig.text(0.99, 0.01, 'Fonte: CNES/DataSUS - Competência 2025/08 | Programa Melhor em Casa', 
-             ha='right', va='bottom', fontsize=9, style='italic', color='gray')
-
     plt.tight_layout()
     nome_grafico = 'distribuicao_equipes_por_estado_empilhado.png'
     plt.savefig(nome_grafico, bbox_inches='tight')

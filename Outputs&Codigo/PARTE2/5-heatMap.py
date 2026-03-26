@@ -152,7 +152,6 @@ try:
                 a cada estabelecimento de saúde (EMAD + EMAP).<br>
                 <b>Azul:</b> Baixa capacidade &nbsp;|&nbsp; <b>Vermelho:</b> Alta capacidade<br>
                 <hr style="margin: 8px 0;">
-                <i>Fonte: CNES/DataSUS - Competência 2025/08</i><br>
                 <i>Nota: CHS SUS não implica dedicação exclusiva à AD.</i>
                 </span>
     </div>

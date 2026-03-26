@@ -39,26 +39,33 @@ try:
 
     # Grafico de pizza (composicao nacional) no estilo donut com percentuais fora.
     df_composicao_nacional = df_equipes_filtradas['Tipo_Equipe'].value_counts()
-    fig_pie, ax_pie = plt.subplots(figsize=(10.5, 8))
+    fig_pie, ax_pie = plt.subplots(figsize=(12.8, 8.8))
     
     # Define cores para consistência
     cores = ['#1f77b4', '#2ca02c', '#ff7f0e', '#9467bd']
     
+    total_equipes = int(df_composicao_nacional.sum())
+
+    # Mostra percentual e quantidade diretamente no grafico para aliviar a legenda.
+    def pct_e_qtd(pct):
+        qtd = int(round(pct * total_equipes / 100.0))
+        return f"{pct:.1f}%\n({qtd:,})".replace(',', '.')
+
     wedges, texts, autotexts = ax_pie.pie(
         df_composicao_nacional, 
         startangle=90,
-        autopct=lambda p: f'{p:.1f}%',
+        autopct=pct_e_qtd,
+        radius=1.08,
         pctdistance=1.16,
         colors=cores[:len(df_composicao_nacional)],
         wedgeprops={'width': 0.45, 'edgecolor': 'white', 'linewidth': 2},
-        textprops={'fontsize': 12, 'fontweight': 'bold'}
+        textprops={'fontsize': 11, 'fontweight': 'bold'}
     )
     
     ax_pie.axis('equal')  # Garante que a pizza seja um círculo
-    ax_pie.set_title('Composicao Nacional das Equipes de Atencao Domiciliar', fontsize=17, pad=20, weight='bold')
+    # Sem titulo superior para priorizar area util do grafico.
     
-    # Adiciona legenda com quantidade/percentual e significado das siglas.
-    total_equipes = int(df_composicao_nacional.sum())
+    # Legenda enxuta: apenas sigla e significado.
     siglas_equipe = {
         'EMAD I': 'Equipe Multiprofissional de Atencao Domiciliar - Tipo I',
         'EMAD II': 'Equipe Multiprofissional de Atencao Domiciliar - Tipo II',
@@ -66,11 +73,8 @@ try:
         'EMAP-R': 'Equipe Multiprofissional de Apoio para Reabilitacao',
     }
     detailed_labels = [
-        (
-            f"{label} ({siglas_equipe.get(label, 'Sigla nao mapeada')}): "
-            f"{valor:,} equipes ({(valor / total_equipes * 100):.1f}%)"
-        ).replace(',', '.')
-        for label, valor in df_composicao_nacional.items()
+        f"{label}: {siglas_equipe.get(label, 'Sigla nao mapeada')}"
+        for label in df_composicao_nacional.index
     ]
     
     ax_pie.legend(
@@ -78,17 +82,13 @@ try:
         detailed_labels, 
         title="Tipo de Equipe (Programa Melhor em Casa)",
         loc="center left",
-        bbox_to_anchor=(1.01, 0.5),
+        bbox_to_anchor=(1.02, 0.5),
         fontsize=12,
-        title_fontsize=13,
+        title_fontsize=14,
         frameon=False
     )
 
     ax_pie.text(0, 0, f"Total\n{total_equipes:,}".replace(',', '.'), ha='center', va='center', fontsize=14, fontweight='bold')
-    
-    # Adicionar nota de fonte
-    fig_pie.text(0.5, 0.02, 'Fonte: CNES/DataSUS - Competencia 2025/08 | Portaria GM/MS no 3.005/2024', 
-                 ha='center', va='bottom', fontsize=9, style='italic', color='gray')
     
     plt.tight_layout()
     nome_grafico = SCRIPT_DIR / 'composicao_nacional_pizza.png'

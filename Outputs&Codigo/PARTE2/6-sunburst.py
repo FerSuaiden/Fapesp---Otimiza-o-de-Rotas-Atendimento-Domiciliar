@@ -160,8 +160,7 @@ try:
     
     # Melhora a legibilidade
     fig.update_layout(
-        title='Composição da Capacidade Potencial (CHS SUS) por Habilidades na Atenção Domiciliar - Brasil',
-        margin=dict(t=80, l=25, r=25, b=140),
+        margin=dict(t=25, l=25, r=25, b=120),
         font_size=12,
         # Adiciona anotações como legenda
         annotations=[
@@ -171,7 +170,6 @@ try:
                      "<span style='color:#5EBCD1'>●</span> EMAD II - Equipe Multiprofissional (menor porte)<br>" +
                      "<span style='color:#E5323B'>●</span> EMAP - Equipe Multiprofissional de Apoio<br>" +
                      "<span style='color:#F29C38'>●</span> EMAP-R - Equipe Multiprofissional de Apoio para Reabilitação<br><br>" +
-                     "<i>Fonte: CNES/DataSUS - Competência 2025/08 | Programa Melhor em Casa</i><br>" +
                      "<i>Nota: CHS SUS não implica dedicação exclusiva à AD.</i>",
                 align='left',
                 showarrow=False,

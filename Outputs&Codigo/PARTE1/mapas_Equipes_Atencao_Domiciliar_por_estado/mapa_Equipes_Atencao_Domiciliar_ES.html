@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_767db485578aaea34ca27454b7cac5d6 {
+                #map_b6dfe10e0bd47415daca9ce0759da37e {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -71,20 +71,19 @@
                 <span style="line-height: 1.7; font-size: 13px;">
                 <b>EMAD I/II:</b> Equipe Multiprofissional de Atenção Domiciliar<br>
                 <b>EMAP:</b> Equipe Multiprofissional de Apoio<br>
-                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação<br>
-                <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
+                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação
                 </span>
     </div>
     
     
-            <div class="folium-map" id="map_767db485578aaea34ca27454b7cac5d6" ></div>
+            <div class="folium-map" id="map_b6dfe10e0bd47415daca9ce0759da37e" ></div>
         
 </body>
 <script>
     
     
-            var map_767db485578aaea34ca27454b7cac5d6 = L.map(
-                "map_767db485578aaea34ca27454b7cac5d6",
+            var map_b6dfe10e0bd47415daca9ce0759da37e = L.map(
+                "map_b6dfe10e0bd47415daca9ce0759da37e",
                 {
                     center: [-19.312426520590886, -40.167332655759274],
                     crs: L.CRS.EPSG3857,
@@ -101,7 +100,7 @@
 
         
     
-            var tile_layer_e0225ac7859ae5d1400dee9221572a9e = L.tileLayer(
+            var tile_layer_be8ee88713e23548196c48c8e32385ec = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -118,10 +117,10 @@
             );
         
     
-            tile_layer_e0225ac7859ae5d1400dee9221572a9e.addTo(map_767db485578aaea34ca27454b7cac5d6);
+            tile_layer_be8ee88713e23548196c48c8e32385ec.addTo(map_b6dfe10e0bd47415daca9ce0759da37e);
         
     
-            var marker_cluster_e599ff1051a8105f51d65348ecf80f37 = L.markerClusterGroup(
+            var marker_cluster_3cea569090b80c286a8af3986a6207cd = L.markerClusterGroup(
                 {
   "disableClusteringAtZoom": 17,
   "maxClusterRadius": 40,
@@ -129,14 +128,14 @@
             );
         
     
-            var marker_9dd98e96b1c7d8f0a74d39297e65aeee = L.marker(
+            var marker_fda56f1d0000002ff258657d222e23fd = L.marker(
                 [-18.567366, -39.752335],
                 {
 }
-            ).addTo(marker_cluster_e599ff1051a8105f51d65348ecf80f37);
+            ).addTo(marker_cluster_3cea569090b80c286a8af3986a6207cd);
         
     
-            var icon_8377005964f99e947acea96e2327f76f = L.AwesomeMarkers.icon(
+            var icon_ca52e3f7c34e6c32cc81682e64cb7580 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "green",
   "iconColor": "white",
@@ -147,34 +146,34 @@
             );
         
     
-        var popup_bd8cc3e22ef7cce03800047354f8ede8 = L.popup({
+        var popup_c8350714ebd81caac7ed4cd6f82bc5b5 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_6bc1ca27613f01f63790d986874ab196 = $(`<div id="html_6bc1ca27613f01f63790d986874ab196" style="width: 100.0%; height: 100.0%;"><b>POLICLINICA NOSSA SENHORA DA CONCEICAO</b><br><b>Equipes:</b> Apenas Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> RUA ITAUNAS, S/N<br><b>CNES:</b> 2483920</div>`)[0];
-                popup_bd8cc3e22ef7cce03800047354f8ede8.setContent(html_6bc1ca27613f01f63790d986874ab196);
+                var html_437e3f310a42237265cb3f7591134a38 = $(`<div id="html_437e3f310a42237265cb3f7591134a38" style="width: 100.0%; height: 100.0%;"><b>POLICLINICA NOSSA SENHORA DA CONCEICAO</b><br><b>Equipes:</b> Apenas Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> RUA ITAUNAS, S/N<br><b>CNES:</b> 2483920</div>`)[0];
+                popup_c8350714ebd81caac7ed4cd6f82bc5b5.setContent(html_437e3f310a42237265cb3f7591134a38);
             
         
 
-        marker_9dd98e96b1c7d8f0a74d39297e65aeee.bindPopup(popup_bd8cc3e22ef7cce03800047354f8ede8)
+        marker_fda56f1d0000002ff258657d222e23fd.bindPopup(popup_c8350714ebd81caac7ed4cd6f82bc5b5)
         ;
 
         
     
     
-                marker_9dd98e96b1c7d8f0a74d39297e65aeee.setIcon(icon_8377005964f99e947acea96e2327f76f);
+                marker_fda56f1d0000002ff258657d222e23fd.setIcon(icon_ca52e3f7c34e6c32cc81682e64cb7580);
             
     
-            var marker_e248179fadf0814bef43cb9e0ca39682 = L.marker(
+            var marker_085fb15f5fd2a5262def8ac369e4b681 = L.marker(
                 [-20.353821102954427, -40.35411357879639],
                 {
 }
-            ).addTo(marker_cluster_e599ff1051a8105f51d65348ecf80f37);
+            ).addTo(marker_cluster_3cea569090b80c286a8af3986a6207cd);
         
     
-            var icon_599459bf62b6f9e42008119085b78676 = L.AwesomeMarkers.icon(
+            var icon_4d7e6092ad485e015a8bbe6441e8534d = L.AwesomeMarkers.icon(
                 {
   "markerColor": "purple",
   "iconColor": "white",
@@ -185,34 +184,34 @@
             );
         
     
-        var popup_94934c8258708b41c6db516e0a45169f = L.popup({
+        var popup_8d0b41e33d5c2a90b6f9130876c1c9c6 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_89b57f9b92a7db2015fda469e458fcdc = $(`<div id="html_89b57f9b92a7db2015fda469e458fcdc" style="width: 100.0%; height: 100.0%;"><b>MELHOR EM CASA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA JOAO FRANCISCO GONCALVES, 733<br><b>CNES:</b> 3408159</div>`)[0];
-                popup_94934c8258708b41c6db516e0a45169f.setContent(html_89b57f9b92a7db2015fda469e458fcdc);
+                var html_56e74259bca75b1e3638c8741d87e27b = $(`<div id="html_56e74259bca75b1e3638c8741d87e27b" style="width: 100.0%; height: 100.0%;"><b>MELHOR EM CASA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA JOAO FRANCISCO GONCALVES, 733<br><b>CNES:</b> 3408159</div>`)[0];
+                popup_8d0b41e33d5c2a90b6f9130876c1c9c6.setContent(html_56e74259bca75b1e3638c8741d87e27b);
             
         
 
-        marker_e248179fadf0814bef43cb9e0ca39682.bindPopup(popup_94934c8258708b41c6db516e0a45169f)
+        marker_085fb15f5fd2a5262def8ac369e4b681.bindPopup(popup_8d0b41e33d5c2a90b6f9130876c1c9c6)
         ;
 
         
     
     
-                marker_e248179fadf0814bef43cb9e0ca39682.setIcon(icon_599459bf62b6f9e42008119085b78676);
+                marker_085fb15f5fd2a5262def8ac369e4b681.setIcon(icon_4d7e6092ad485e015a8bbe6441e8534d);
             
     
-            var marker_fc884b3f3239aa18fdef17e971ba6ead = L.marker(
+            var marker_289a14daf45de3c581779d011d655024 = L.marker(
                 [-18.715212, -39.860879],
                 {
 }
-            ).addTo(marker_cluster_e599ff1051a8105f51d65348ecf80f37);
+            ).addTo(marker_cluster_3cea569090b80c286a8af3986a6207cd);
         
     
-            var icon_c527041ee143d014596a60f4567e9daf = L.AwesomeMarkers.icon(
+            var icon_ba59c82d7d24f627d89cd375a1fd0864 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "purple",
   "iconColor": "white",
@@ -223,34 +222,34 @@
             );
         
     
-        var popup_fa134b1ef04b149301f1d8a714310f86 = L.popup({
+        var popup_d3101c799d65476ba6518f70de37d6ca = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_70d5a2bcb4751917b51d1309cbcff9d3 = $(`<div id="html_70d5a2bcb4751917b51d1309cbcff9d3" style="width: 100.0%; height: 100.0%;"><b>PROGRAMA MELHOR EM CASA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA JOSE TOZZI, 2220<br><b>CNES:</b> 9946586</div>`)[0];
-                popup_fa134b1ef04b149301f1d8a714310f86.setContent(html_70d5a2bcb4751917b51d1309cbcff9d3);
+                var html_09d279c12fa5c80a4bed257839c54883 = $(`<div id="html_09d279c12fa5c80a4bed257839c54883" style="width: 100.0%; height: 100.0%;"><b>PROGRAMA MELHOR EM CASA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA JOSE TOZZI, 2220<br><b>CNES:</b> 9946586</div>`)[0];
+                popup_d3101c799d65476ba6518f70de37d6ca.setContent(html_09d279c12fa5c80a4bed257839c54883);
             
         
 
-        marker_fc884b3f3239aa18fdef17e971ba6ead.bindPopup(popup_fa134b1ef04b149301f1d8a714310f86)
+        marker_289a14daf45de3c581779d011d655024.bindPopup(popup_d3101c799d65476ba6518f70de37d6ca)
         ;
 
         
     
     
-                marker_fc884b3f3239aa18fdef17e971ba6ead.setIcon(icon_c527041ee143d014596a60f4567e9daf);
+                marker_289a14daf45de3c581779d011d655024.setIcon(icon_ba59c82d7d24f627d89cd375a1fd0864);
             
     
-            var marker_311e0afed625383bde6dae8622c07203 = L.marker(
+            var marker_a214b6296c0f89e4f6d4ba7e582ae078 = L.marker(
                 [-18.5857335, -39.7343357],
                 {
 }
-            ).addTo(marker_cluster_e599ff1051a8105f51d65348ecf80f37);
+            ).addTo(marker_cluster_3cea569090b80c286a8af3986a6207cd);
         
     
-            var icon_8f246029e03be186e504fba08f7f11c1 = L.AwesomeMarkers.icon(
+            var icon_e0bdca8729ab15da0ee77e11b434fd15 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "blue",
   "iconColor": "white",
@@ -261,34 +260,34 @@
             );
         
     
-        var popup_bf7f75e3e7c5af461886cb4482e14f28 = L.popup({
+        var popup_d3a16f94a432a3861aeee7a8ce0958ef = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_67c768b335c1280c113f78bd74cab357 = $(`<div id="html_67c768b335c1280c113f78bd74cab357" style="width: 100.0%; height: 100.0%;"><b>PRONTO SOCORRO DE CONCEICAO DA BARRA</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> RUA PREF ITALO BENSO, 735<br><b>CNES:</b> 2483858</div>`)[0];
-                popup_bf7f75e3e7c5af461886cb4482e14f28.setContent(html_67c768b335c1280c113f78bd74cab357);
+                var html_0182ee2afcea298c4c44fb2d4cdbb810 = $(`<div id="html_0182ee2afcea298c4c44fb2d4cdbb810" style="width: 100.0%; height: 100.0%;"><b>PRONTO SOCORRO DE CONCEICAO DA BARRA</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> RUA PREF ITALO BENSO, 735<br><b>CNES:</b> 2483858</div>`)[0];
+                popup_d3a16f94a432a3861aeee7a8ce0958ef.setContent(html_0182ee2afcea298c4c44fb2d4cdbb810);
             
         
 
-        marker_311e0afed625383bde6dae8622c07203.bindPopup(popup_bf7f75e3e7c5af461886cb4482e14f28)
+        marker_a214b6296c0f89e4f6d4ba7e582ae078.bindPopup(popup_d3a16f94a432a3861aeee7a8ce0958ef)
         ;
 
         
     
     
-                marker_311e0afed625383bde6dae8622c07203.setIcon(icon_8f246029e03be186e504fba08f7f11c1);
+                marker_a214b6296c0f89e4f6d4ba7e582ae078.setIcon(icon_e0bdca8729ab15da0ee77e11b434fd15);
             
     
-            var marker_61e489577be66e02b595799ccbd0a69d = L.marker(
+            var marker_bc9eec8e8712e0597f3421bb16e4eda7 = L.marker(
                 [-20.34, -41.135],
                 {
 }
-            ).addTo(marker_cluster_e599ff1051a8105f51d65348ecf80f37);
+            ).addTo(marker_cluster_3cea569090b80c286a8af3986a6207cd);
         
     
-            var icon_9787f678736fa9aa0688fd79b093f30a = L.AwesomeMarkers.icon(
+            var icon_8b4060d12bc959e71e62a8effc674ed2 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "purple",
   "iconColor": "white",
@@ -299,27 +298,27 @@
             );
         
     
-        var popup_c1028777c02bf2cd68337817de352151 = L.popup({
+        var popup_7b7ed26fdf729b6a735290ee9b5380a7 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_10e4c567dcfd7991681201d70597df98 = $(`<div id="html_10e4c567dcfd7991681201d70597df98" style="width: 100.0%; height: 100.0%;"><b>POLICLINICA DE VENDA NOVA DO IMIGRANTE</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA LORENZO ZANDONADE, 840<br><b>CNES:</b> 2403358</div>`)[0];
-                popup_c1028777c02bf2cd68337817de352151.setContent(html_10e4c567dcfd7991681201d70597df98);
+                var html_4e06eb7c6cc087a628b388de22f06acc = $(`<div id="html_4e06eb7c6cc087a628b388de22f06acc" style="width: 100.0%; height: 100.0%;"><b>POLICLINICA DE VENDA NOVA DO IMIGRANTE</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA LORENZO ZANDONADE, 840<br><b>CNES:</b> 2403358</div>`)[0];
+                popup_7b7ed26fdf729b6a735290ee9b5380a7.setContent(html_4e06eb7c6cc087a628b388de22f06acc);
             
         
 
-        marker_61e489577be66e02b595799ccbd0a69d.bindPopup(popup_c1028777c02bf2cd68337817de352151)
+        marker_bc9eec8e8712e0597f3421bb16e4eda7.bindPopup(popup_7b7ed26fdf729b6a735290ee9b5380a7)
         ;
 
         
     
     
-                marker_61e489577be66e02b595799ccbd0a69d.setIcon(icon_9787f678736fa9aa0688fd79b093f30a);
+                marker_bc9eec8e8712e0597f3421bb16e4eda7.setIcon(icon_8b4060d12bc959e71e62a8effc674ed2);
             
     
-            marker_cluster_e599ff1051a8105f51d65348ecf80f37.addTo(map_767db485578aaea34ca27454b7cac5d6);
+            marker_cluster_3cea569090b80c286a8af3986a6207cd.addTo(map_b6dfe10e0bd47415daca9ce0759da37e);
         
 </script>
 </html>

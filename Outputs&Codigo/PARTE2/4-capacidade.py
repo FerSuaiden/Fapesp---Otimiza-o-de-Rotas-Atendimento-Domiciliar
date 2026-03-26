@@ -140,7 +140,6 @@ try:
         color='darkgreen'
     )
     
-    ax1.set_title('Top 15 Estados por Capacidade Potencial de AD (Soma de CHS SUS das Equipes)', fontsize=18, pad=20, weight='bold')
     ax1.set_xlabel('Capacidade Potencial (Horas Semanais CHS SUS)', fontsize=14)
     ax1.set_ylabel('Estado (UF)', fontsize=14)
     
@@ -166,7 +165,6 @@ try:
     ax2.axvline(media_chs, color='red', linestyle='dashed', linewidth=2)
     ax2.text(media_chs * 1.05, ax2.get_ylim()[1] * 0.9, f'Média: {media_chs:.1f} horas', color='red')
 
-    ax2.set_title('Distribuição da Capacidade Potencial Semanal (CHS SUS) por Equipe (Qk)', fontsize=16, pad=20, weight='bold')
     ax2.set_xlabel('Capacidade Potencial (Qk) - Total de Horas Semanais CHS SUS da Equipe', fontsize=12)
     ax2.set_ylabel('Número de Equipes', fontsize=12)
     ax2.spines['top'].set_visible(False)
