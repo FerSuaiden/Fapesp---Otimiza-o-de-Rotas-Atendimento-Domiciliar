@@ -2,6 +2,7 @@
 """
 Etapa 2: Classifica menções com Gemini (Foco Logístico), 
 limpa dados (sem truncar) e gera rede semântica profissional.
+COM CHECKPOINT, SALVAMENTO EM TEMPO REAL E PROTEÇÃO DE COTA DIÁRIA.
 """
 
 from __future__ import annotations
@@ -23,7 +24,7 @@ import requests
 
 # Configurações de API
 GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
-MODELOS_PREFERIDOS = ["gemini-2.0-flash", "gemini-1.5-flash"]
+MODELOS_PREFERIDOS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
 
 # Configurações de Validação
 SENTIMENTOS_VALIDOS = {"positivo", "negativo", "neutro", "misto"}
@@ -45,8 +46,15 @@ UF_LISTA = [
 
 PROJETO_ROOT = Path(__file__).resolve().parents[3]
 
+
+class GeminiQuotaExauridaError(RuntimeError):
+    """Erro para cota indisponivel (limite diário ou total)."""
+
+class GeminiBadRequestError(RuntimeError):
+    """Erro para requests invalidas (HTTP 400)."""
+
+
 def carregar_env_arquivo() -> None:
-    """Carrega chaves do .env sem dependências externas."""
     for caminho in [Path.cwd() / ".env", PROJETO_ROOT / ".env"]:
         if caminho.exists():
             with caminho.open("r", encoding="utf-8") as f:
@@ -60,20 +68,53 @@ def resolver_caminho(caminho: Path) -> Path:
     if caminho.is_absolute(): return caminho
     return (PROJETO_ROOT / caminho).resolve()
 
+def listar_modelos_generate_content(chave: str) -> List[str]:
+    resp = requests.get(f"{GEMINI_API_BASE}?key={chave}", timeout=30)
+    if resp.status_code >= 400:
+        raise RuntimeError(f"Falha ao listar modelos Gemini (HTTP {resp.status_code}): {resp.text[:260]}")
+
+    modelos = []
+    for item in resp.json().get("models", []):
+        metodos = item.get("supportedGenerationMethods", [])
+        if "generateContent" not in metodos:
+            continue
+        nome = str(item.get("name", ""))
+        if nome.startswith("models/"):
+            nome = nome.split("/", 1)[1]
+        if nome:
+            modelos.append(nome)
+    return modelos
+
+def escolher_modelo(chave: str, modelo_env: str) -> str:
+    modelos = listar_modelos_generate_content(chave)
+    if not modelos:
+        raise RuntimeError("Nenhum modelo com generateContent disponivel para a chave atual.")
+
+    if modelo_env and modelo_env in modelos:
+        return modelo_env
+
+    for m in MODELOS_PREFERIDOS:
+        if m in modelos:
+            return m
+    return modelos[0]
+
+def extrair_retry_seconds(texto_erro: str, padrao: int = 60) -> int:
+    match = re.search(r"retry in\s+([0-9]+(?:\.[0-9]+)?)s", texto_erro, re.IGNORECASE)
+    if match:
+        return max(1, int(float(match.group(1))) + 1)
+    return padrao
+
 def limpar_texto_profissional(texto: str) -> str:
-    """Remove acentos sem cortar palavras e limpa ruído."""
     if not texto or pd.isna(texto): return ""
-    # 1. Remover URLs
     texto = re.sub(r"https?://\S+|www\.\S+", " ", texto)
-    # 2. Normalizar Unicode (Transforma 'á' em 'a' em vez de apagar)
     texto = unicodedata.normalize('NFKD', texto).encode('ascii', 'ignore').decode('utf-8')
-    # 3. Limpeza de caracteres não alfabéticos
     texto = re.sub(r"[^a-zA-Z\s]", " ", texto).lower()
-    # 4. Tokenização e remoção de ruído
     tokens = [t for t in texto.split() if t not in TERMOS_BANIDOS_GRAFO and len(t) > 2]
     return " ".join(tokens)
 
 def construir_prompt_logistico(titulo: str, resumo: str) -> str:
+    titulo = str(titulo)[:280]
+    resumo = str(resumo)[:700]
     return f"""
 Analise como especialista em logística de saúde:
 Título: {titulo}
@@ -95,55 +136,115 @@ Regras Estritas:
 
 def chamar_gemini_com_retry(chave: str, modelo: str, prompt: str) -> Dict:
     url = f"{GEMINI_API_BASE}/{modelo}:generateContent?key={chave}"
-    payload = {"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"temperature": 0.1}}
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.0, "response_mime_type": "application/json"}, # Ajustado para 0.0 para maior precisão de JSON
+    }
     
     max_tentativas = 3
+    ultimo_erro = ""
     for i in range(max_tentativas):
         try:
             resp = requests.post(url, json=payload, timeout=30)
+            
+            # Checagem de Rate Limit (429)
             if resp.status_code == 429:
-                # Se for erro de cota, espera 60s (tempo para o tier gratuito resetar)
-                print(f"  [!] Cota atingida. Pausando 60s para resetar limite...")
-                time.sleep(60)
+                texto_erro = resp.text or ""
+                
+                # NOVO: Detecta se a cota DIÁRIA acabou, não apenas o limite por minuto
+                if "limit: 0" in texto_erro.lower() or "exceeded your current quota" in texto_erro.lower() or "billing" in texto_erro.lower():
+                    raise GeminiQuotaExauridaError("Quota diária esgotada. Retorne amanhã ou verifique o faturamento da conta.")
+                
+                ultimo_erro = f"HTTP 429: {texto_erro[:260]}"
+                espera = extrair_retry_seconds(texto_erro, padrao=60)
+                print(f"  [!] Cota por minuto atingida. Pausando {espera}s para tentar novamente... (Tentativa {i+1}/{max_tentativas})")
+                time.sleep(espera)
                 continue
+
+            if resp.status_code == 400:
+                raise GeminiBadRequestError(f"HTTP 400 BadRequest: {resp.text[:400]}")
+
+            if resp.status_code == 403:
+                raise RuntimeError(f"HTTP 403 Gemini: {resp.text[:400]}")
+
+            if resp.status_code == 404:
+                raise RuntimeError(f"HTTP 404 Modelo nao encontrado ({modelo}): {resp.text[:240]}")
             
             resp.raise_for_status()
             res_json = resp.json()
             texto_saida = res_json['candidates'][0]['content']['parts'][0]['text']
-            # Extrair JSON do texto (proteção contra Markdown)
+            
             match = re.search(r"\{.*\}", texto_saida, re.DOTALL)
+            if not match:
+                raise ValueError(f"Gemini retornou resposta sem JSON parseavel: {texto_saida[:220]}")
             return json.loads(match.group(0))
+            
+        except (GeminiQuotaExauridaError, GeminiBadRequestError):
+            raise
         except Exception as e:
+            ultimo_erro = str(e)
+            print(f"  [!] Falha na tentativa {i+1}/{max_tentativas}: {ultimo_erro[:100]}")
             if i == max_tentativas - 1: raise e
             time.sleep(5)
-    return {}
+            
+    raise RuntimeError(f"Falha apos {max_tentativas} tentativas: {ultimo_erro}")
 
-def processar_df(df: pd.DataFrame, sleep_padrao: float) -> pd.DataFrame:
+def processar_df(df_bruto: pd.DataFrame, caminho_saida: Path, sleep_padrao: float) -> pd.DataFrame:
     carregar_env_arquivo()
     chave = os.getenv("GEMINI_API_KEY")
-    modelo = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+    if not chave:
+        raise RuntimeError("GEMINI_API_KEY nao encontrada no ambiente/.env")
+
+    modelo = escolher_modelo(chave, os.getenv("GEMINI_MODEL", "").strip())
+    print(f"Modelo Gemini em uso: {modelo}")
     
-    resultados = []
-    total = len(df)
+    resultados_em_memoria = []
+    titulos_processados = set()
     
-    print(f"Iniciando classificação de {total} registros...")
+    # ---------------------------------------------------------
+    # SISTEMA DE CHECKPOINT
+    # ---------------------------------------------------------
+    if caminho_saida.exists():
+        try:
+            df_existente = pd.read_csv(caminho_saida)
+            # Filtra linhas válidas
+            df_sucesso = df_existente[
+                df_existente["sentimento"].notna() & 
+                (df_existente["sentimento"] != "nao_classificado")
+            ]
+            titulos_processados = set(df_sucesso["titulo"].tolist())
+            resultados_em_memoria = df_sucesso.to_dict('records')
+            print(f"✅ Checkpoint: {len(titulos_processados)} registros já classificados carregados com sucesso.")
+        except Exception as e:
+            print(f"⚠️ Erro ao ler checkpoint ({e}). Processando do zero.")
     
-    for i, row in enumerate(df.itertuples(), 1):
-        print(f"[{i}/{total}] Processando: {row.titulo[:40]}...")
-        
+    # Filtra o que falta
+    df_pendente = df_bruto[~df_bruto["titulo"].isin(titulos_processados)]
+    total_pendente = len(df_pendente)
+    
+    if total_pendente == 0:
+        print("🎉 Todos os registros já foram processados! Nenhum consumo extra de cota necessário.")
+        return pd.DataFrame(resultados_em_memoria)
+
+    print(f"🚀 Iniciando classificação de {total_pendente} registros pendentes...\n")
+    
+    # ---------------------------------------------------------
+    # LOOP DE PROCESSAMENTO COM SALVAMENTO EM TEMPO REAL
+    # ---------------------------------------------------------
+    for i, row in enumerate(df_pendente.itertuples(), 1):
+        print(f"[{i}/{total_pendente}] Processando: {row.titulo[:50]}...")
         texto_limpo = limpar_texto_profissional(f"{row.titulo} {row.resumo}")
-        
+
         try:
             classif = chamar_gemini_com_retry(chave, modelo, construir_prompt_logistico(row.titulo, row.resumo))
             
-            # Normalização de Saída
             estado = str(classif.get("estado", "NA")).upper()
             if estado not in UF_LISTA: estado = "NA"
             
             termos = [limpar_texto_profissional(t) for t in classif.get("termos_chave", [])]
             termos = [t for t in termos if t and t not in TERMOS_BANIDOS_GRAFO]
 
-            resultados.append({
+            novo_registro = {
                 **row._asdict(),
                 "sentimento": classif.get("sentimento", "neutro"),
                 "estado": estado,
@@ -151,19 +252,51 @@ def processar_df(df: pd.DataFrame, sleep_padrao: float) -> pd.DataFrame:
                 "texto_limpo": texto_limpo,
                 "termos_relevantes": ", ".join(termos),
                 "erro_classificacao": ""
-            })
+            }
+            
+            # Adiciona na memória para o grafo final
+            resultados_em_memoria.append(novo_registro)
+            
+            # Salva instantaneamente no CSV
+            precisa_cabecalho = not caminho_saida.exists()
+            pd.DataFrame([novo_registro]).to_csv(
+                caminho_saida, mode='a', header=precisa_cabecalho, index=False, encoding="utf-8"
+            )
+            
+        except GeminiQuotaExauridaError as e:
+            print(f"\n🛑 [CRÍTICO] A cota do seu projeto esgotou: {e}")
+            print("🛑 Interrompendo a execução de forma segura. O progresso até aqui já está salvo no CSV.")
+            break # Interrompe o loop
+            
         except Exception as e:
-            print(f"  [Erro] Falha ao processar linha {i}: {e}")
-            resultados.append({**row._asdict(), "sentimento": "nao_classificado", "erro_classificacao": str(e)})
+            print(f"  [Erro Definitivo] Pulo do registro. Falha: {str(e)[:150]}")
+            
+            registro_erro = {
+                **row._asdict(),
+                "sentimento": "nao_classificado",
+                "estado": "NA",
+                "gargalo": "nenhum",
+                "texto_limpo": texto_limpo,
+                "termos_relevantes": "",
+                "erro_classificacao": str(e)
+            }
+            resultados_em_memoria.append(registro_erro)
+            
+            # Salva o erro também em tempo real
+            precisa_cabecalho = not caminho_saida.exists()
+            pd.DataFrame([registro_erro]).to_csv(
+                caminho_saida, mode='a', header=precisa_cabecalho, index=False, encoding="utf-8"
+            )
 
-        # Intervalo de segurança para não estourar 15 RPM (4s é seguro)
         time.sleep(sleep_padrao)
         
-    return pd.DataFrame(resultados)
+    return pd.DataFrame(resultados_em_memoria)
 
 def plotar_grafo_profissional(df: pd.DataFrame, caminho: Path):
     df_validos = df[df["sentimento"] != "nao_classificado"].copy()
-    if df_validos.empty: return
+    if df_validos.empty: 
+        print("⚠️ Sem dados válidos para plotar o grafo.")
+        return
 
     G = nx.Graph()
     for _, row in df_validos.iterrows():
@@ -180,11 +313,12 @@ def plotar_grafo_profissional(df: pd.DataFrame, caminho: Path):
             else:
                 G.add_edge(gargalo, t, weight=1)
 
-    # PODA: Remove nós isolados ou com pouca relevância (Grau < 2)
     remover = [n for n, d in G.degree() if d < 2]
     G.remove_nodes_from(remover)
 
-    if G.number_of_nodes() == 0: return
+    if G.number_of_nodes() == 0: 
+        print("⚠️ Grafo vazio após poda de termos isolados.")
+        return
 
     plt.figure(figsize=(12, 8))
     pos = nx.spring_layout(G, k=1.5, seed=42)
@@ -205,7 +339,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--entrada", type=Path, default=Path("Outputs&Codigo/PARTE5/resultados/mencoes_serpapi_brutas.csv"))
     parser.add_argument("--saida", type=Path, default=Path("Outputs&Codigo/PARTE5/percepcao_operacional.csv"))
-    parser.add_argument("--pacing", type=float, default=4.0) # 4 segundos entre chamadas
+    parser.add_argument("--pacing", type=float, default=6.0) 
     args = parser.parse_args()
 
     args.entrada = resolver_caminho(args.entrada)
@@ -216,13 +350,15 @@ def main():
         return
 
     df_bruto = pd.read_csv(args.entrada)
-    df_final = processar_df(df_bruto, args.pacing)
     
-    df_final.to_csv(args.saida, index=False, encoding="utf-8")
+    # Processa (ou continua o processamento) salvando dinamicamente
+    df_final = processar_df(df_bruto, args.saida, args.pacing)
     
+    # Gera o Grafo com os dados consolidados da memória
     caminho_grafo = resolver_caminho(Path("Outputs&Codigo/PARTE5/visualizacoes/rede_gargalos.png"))
     plotar_grafo_profissional(df_final, caminho_grafo)
-    print(f"Sucesso! CSV salvo em {args.saida} e Grafo em {caminho_grafo}")
+    
+    print(f"\n✅ Concluído! Dados consolidados em: {args.saida}")
 
 if __name__ == "__main__":
     main()

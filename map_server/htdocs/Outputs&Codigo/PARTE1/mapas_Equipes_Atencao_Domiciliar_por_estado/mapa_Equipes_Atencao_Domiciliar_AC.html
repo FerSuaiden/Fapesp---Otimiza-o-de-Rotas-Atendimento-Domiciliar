@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_b4318cb122a31ddecd36864c511722da {
+                #map_3ffa8421cd80706b9e3f5bfc4335a6a7 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -71,20 +71,19 @@
                 <span style="line-height: 1.7; font-size: 13px;">
                 <b>EMAD I/II:</b> Equipe Multiprofissional de Atenção Domiciliar<br>
                 <b>EMAP:</b> Equipe Multiprofissional de Apoio<br>
-                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação<br>
-                <i>Fonte: CNES/DataSUS - Competência 2025/08</i>
+                <b>EMAP-R:</b> Equipe Multiprofissional de Apoio para Reabilitação
                 </span>
     </div>
     
     
-            <div class="folium-map" id="map_b4318cb122a31ddecd36864c511722da" ></div>
+            <div class="folium-map" id="map_3ffa8421cd80706b9e3f5bfc4335a6a7" ></div>
         
 </body>
 <script>
     
     
-            var map_b4318cb122a31ddecd36864c511722da = L.map(
-                "map_b4318cb122a31ddecd36864c511722da",
+            var map_3ffa8421cd80706b9e3f5bfc4335a6a7 = L.map(
+                "map_3ffa8421cd80706b9e3f5bfc4335a6a7",
                 {
                     center: [-9.1847255, -69.4296048],
                     crs: L.CRS.EPSG3857,
@@ -101,7 +100,7 @@
 
         
     
-            var tile_layer_4084d006bdb622886195bfc170566a33 = L.tileLayer(
+            var tile_layer_2b48515c90e8c03a6e9fd807a5b3af53 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -118,10 +117,10 @@
             );
         
     
-            tile_layer_4084d006bdb622886195bfc170566a33.addTo(map_b4318cb122a31ddecd36864c511722da);
+            tile_layer_2b48515c90e8c03a6e9fd807a5b3af53.addTo(map_3ffa8421cd80706b9e3f5bfc4335a6a7);
         
     
-            var marker_cluster_f4d580a320997cc2dae9493b561fd99e = L.markerClusterGroup(
+            var marker_cluster_b37920327c4536d8831c21c541816e72 = L.markerClusterGroup(
                 {
   "disableClusteringAtZoom": 17,
   "maxClusterRadius": 40,
@@ -129,14 +128,14 @@
             );
         
     
-            var marker_eb17db59484acffdeea1c9327ad12720 = L.marker(
+            var marker_bf2e55eb7a5e742bd6a4975f524204c2 = L.marker(
                 [-9.9649435, -67.8152152],
                 {
 }
-            ).addTo(marker_cluster_f4d580a320997cc2dae9493b561fd99e);
+            ).addTo(marker_cluster_b37920327c4536d8831c21c541816e72);
         
     
-            var icon_fcbdf110b286c40d4b93ea80855ad133 = L.AwesomeMarkers.icon(
+            var icon_bc235d2a15a04ad31dd4b50eedceeaf4 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "blue",
   "iconColor": "white",
@@ -147,34 +146,34 @@
             );
         
     
-        var popup_c5f11ac4d9fa28f6c45554e91070cb11 = L.popup({
+        var popup_71447498771953e60e0a6b9520161271 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_0a5fcb9e7c7520a796f645b93d6e97d9 = $(`<div id="html_0a5fcb9e7c7520a796f645b93d6e97d9" style="width: 100.0%; height: 100.0%;"><b>HOSPITAL GERAL DE CLINICAS DE RIO BRANCO</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> AV NACOES UNIDAS, 700<br><b>CNES:</b> 2001578</div>`)[0];
-                popup_c5f11ac4d9fa28f6c45554e91070cb11.setContent(html_0a5fcb9e7c7520a796f645b93d6e97d9);
+                var html_65e8e518529ebd5fa41ed1b4901cadcf = $(`<div id="html_65e8e518529ebd5fa41ed1b4901cadcf" style="width: 100.0%; height: 100.0%;"><b>HOSPITAL GERAL DE CLINICAS DE RIO BRANCO</b><br><b>Equipes:</b> Apenas Atendimento (EMAD I/II)<br><b>Endereço:</b> AV NACOES UNIDAS, 700<br><b>CNES:</b> 2001578</div>`)[0];
+                popup_71447498771953e60e0a6b9520161271.setContent(html_65e8e518529ebd5fa41ed1b4901cadcf);
             
         
 
-        marker_eb17db59484acffdeea1c9327ad12720.bindPopup(popup_c5f11ac4d9fa28f6c45554e91070cb11)
+        marker_bf2e55eb7a5e742bd6a4975f524204c2.bindPopup(popup_71447498771953e60e0a6b9520161271)
         ;
 
         
     
     
-                marker_eb17db59484acffdeea1c9327ad12720.setIcon(icon_fcbdf110b286c40d4b93ea80855ad133);
+                marker_bf2e55eb7a5e742bd6a4975f524204c2.setIcon(icon_bc235d2a15a04ad31dd4b50eedceeaf4);
             
     
-            var marker_41e51e8193f5fe9e5af6e92dbca56ff2 = L.marker(
+            var marker_105f63fb662f553d6ceb3dcfe73c18e4 = L.marker(
                 [-7.623183, -72.6713792],
                 {
 }
-            ).addTo(marker_cluster_f4d580a320997cc2dae9493b561fd99e);
+            ).addTo(marker_cluster_b37920327c4536d8831c21c541816e72);
         
     
-            var icon_64af697609c5d1fc80e3c56518f8b6e8 = L.AwesomeMarkers.icon(
+            var icon_6c3c2f0952b48366b297fede5302896f = L.AwesomeMarkers.icon(
                 {
   "markerColor": "purple",
   "iconColor": "white",
@@ -185,34 +184,34 @@
             );
         
     
-        var popup_1635509d884313395b0c3b545a67b35c = L.popup({
+        var popup_94c0aa17b848cb263295cd4529994e78 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_9e8283d7d1ac783a613b7969850ecfb7 = $(`<div id="html_9e8283d7d1ac783a613b7969850ecfb7" style="width: 100.0%; height: 100.0%;"><b>CENTRO MULTIDICIPLINAR DE ATENCAO DOMICILIAR</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA 25 DE AGOSTO, S/N<br><b>CNES:</b> 0930245</div>`)[0];
-                popup_1635509d884313395b0c3b545a67b35c.setContent(html_9e8283d7d1ac783a613b7969850ecfb7);
+                var html_8a98c08aecc478f5837fd294f18ce1d5 = $(`<div id="html_8a98c08aecc478f5837fd294f18ce1d5" style="width: 100.0%; height: 100.0%;"><b>CENTRO MULTIDICIPLINAR DE ATENCAO DOMICILIAR</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> AVENIDA 25 DE AGOSTO, S/N<br><b>CNES:</b> 0930245</div>`)[0];
+                popup_94c0aa17b848cb263295cd4529994e78.setContent(html_8a98c08aecc478f5837fd294f18ce1d5);
             
         
 
-        marker_41e51e8193f5fe9e5af6e92dbca56ff2.bindPopup(popup_1635509d884313395b0c3b545a67b35c)
+        marker_105f63fb662f553d6ceb3dcfe73c18e4.bindPopup(popup_94c0aa17b848cb263295cd4529994e78)
         ;
 
         
     
     
-                marker_41e51e8193f5fe9e5af6e92dbca56ff2.setIcon(icon_64af697609c5d1fc80e3c56518f8b6e8);
+                marker_105f63fb662f553d6ceb3dcfe73c18e4.setIcon(icon_6c3c2f0952b48366b297fede5302896f);
             
     
-            var marker_85093c7b71a048abeb42131670f39063 = L.marker(
+            var marker_95288021233501d424e24b90b8e6dd0c = L.marker(
                 [-9.96605, -67.80222],
                 {
 }
-            ).addTo(marker_cluster_f4d580a320997cc2dae9493b561fd99e);
+            ).addTo(marker_cluster_b37920327c4536d8831c21c541816e72);
         
     
-            var icon_f2758057e378bdc869eed545ee3bfd07 = L.AwesomeMarkers.icon(
+            var icon_b855d8a1cf8e62a3d102b0f4a1e06235 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "purple",
   "iconColor": "white",
@@ -223,27 +222,27 @@
             );
         
     
-        var popup_974b894aa31d2886c45df19908c2c11b = L.popup({
+        var popup_9bfce58d04cc3418fd2b494ddc03c2a9 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_321c7a055ed855ccab8610ff3005e71d = $(`<div id="html_321c7a055ed855ccab8610ff3005e71d" style="width: 100.0%; height: 100.0%;"><b>SERVICO DE ATENCAO DOMICILIAR SAD PROGRAMA MELHOR EM CASA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> RUA SANTA INES, 140<br><b>CNES:</b> 0145645</div>`)[0];
-                popup_974b894aa31d2886c45df19908c2c11b.setContent(html_321c7a055ed855ccab8610ff3005e71d);
+                var html_6022ad2d7139d04bb327aa2ba08fbd9d = $(`<div id="html_6022ad2d7139d04bb327aa2ba08fbd9d" style="width: 100.0%; height: 100.0%;"><b>SERVICO DE ATENCAO DOMICILIAR SAD PROGRAMA MELHOR EM CASA</b><br><b>Equipes:</b> Atendimento (EMAD) e Apoio (EMAP/EMAP-R)<br><b>Endereço:</b> RUA SANTA INES, 140<br><b>CNES:</b> 0145645</div>`)[0];
+                popup_9bfce58d04cc3418fd2b494ddc03c2a9.setContent(html_6022ad2d7139d04bb327aa2ba08fbd9d);
             
         
 
-        marker_85093c7b71a048abeb42131670f39063.bindPopup(popup_974b894aa31d2886c45df19908c2c11b)
+        marker_95288021233501d424e24b90b8e6dd0c.bindPopup(popup_9bfce58d04cc3418fd2b494ddc03c2a9)
         ;
 
         
     
     
-                marker_85093c7b71a048abeb42131670f39063.setIcon(icon_f2758057e378bdc869eed545ee3bfd07);
+                marker_95288021233501d424e24b90b8e6dd0c.setIcon(icon_b855d8a1cf8e62a3d102b0f4a1e06235);
             
     
-            marker_cluster_f4d580a320997cc2dae9493b561fd99e.addTo(map_b4318cb122a31ddecd36864c511722da);
+            marker_cluster_b37920327c4536d8831c21c541816e72.addTo(map_3ffa8421cd80706b9e3f5bfc4335a6a7);
         
 </script>
 </html>

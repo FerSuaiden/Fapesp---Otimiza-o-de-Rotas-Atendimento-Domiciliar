@@ -26,7 +26,6 @@
 \usepackage{multirow}
 \usepackage{float}
 \usepackage{enumitem}
-\usepackage{xcolor}
 \usepackage{titlesec}
 
 % Apenas números de página no rodapé
@@ -58,30 +57,77 @@ Processo FAPESP: 2025/21835-0
 
 \vspace{0.5cm}
 \noindent
-\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, humanizando o atendimento e desafogando hospitais. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma análise exploratória de dados com informações públicas do CNES/DATASUS e da Classificação Brasileira de Ocupações. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e para a modelagem do problema. Os resultados e visualizações interativas também foram disponibilizados no site do projeto (\href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}), ampliando a transparência e o acesso público aos achados.
+\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, humanizando o atendimento e desafogando hospitais. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma análise exploratória de dados com informações públicas do CNES/DATASUS e da Classificação Brasileira de Ocupações. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e para a modelagem do problema. Os resultados e visualizações interativas também foram disponibilizados no site do projeto (\href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}), ampliando a transparência e permitindo o acesso contínuo e público dos resultados.
 
 \vspace{0.3cm}
 \noindent
-\textbf{Palavras-chave:} Atenção Domiciliar; Programa Melhor em Casa; Análise Exploratória de Dados; CNES/DATASUS; Conformidade Legal; SUS.
+\textbf{Palavras-chave:} Ciência de dados; Atenção Domiciliar; Programa Melhor em Casa; Análise Exploratória de Dados; CNES/DATASUS; Conformidade Legal; SUS.
 
 \newpage
-
 \section{Introdução}
 
 \subsection{Contexto e Motivação}
 
 O Brasil vive uma acelerada transição demográfica. Segundo o \citelink{ibge2022}{Censo 2022 do IBGE}, a população com 60 anos ou mais já representa 15,6\% do total nacional. No mesmo levantamento, o índice de envelhecimento chegou a 80,0, indicando 80 idosos para cada 100 crianças de 0 a 14 anos. Em estados como Rio Grande do Sul e Rio de Janeiro, o número de idosos já supera o de crianças. Este fenômeno demográfico pressiona diretamente o sistema de saúde, aumentando a demanda por cuidados de longa duração e atendimento domiciliar.
 
-Nesse contexto, o \citelink{portaria825}{Programa Melhor em Casa}, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais que realizam visitas regulares a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa.
+Nesse contexto, o \citelink{portaria825}{Programa Melhor em Casa}, instituído pelo Ministério da Saúde em 2011, organiza o cuidado domiciliar no SUS para pessoas que precisam de acompanhamento frequente, mas não necessariamente de internação contínua. Embora o envelhecimento populacional seja um fator importante para essa demanda, o programa não se restringe a idosos: ele também atende pacientes com condições clínicas diversas que exigem cuidado contínuo no domicílio. Na prática, busca-se manter o tratamento em casa com equipes de diferentes áreas da saúde, reduzindo deslocamentos desnecessários para famílias, favorecendo a continuidade do cuidado e contribuindo para aliviar a pressão sobre leitos hospitalares.
 
+Para entender como essa política se distribui no território nacional, este relatório reúne e organiza informações oficiais em indicadores comparáveis. O objetivo é transformar registros dispersos em uma leitura clara da cobertura e das condições operacionais do programa.
 
-\section{Análise Exploratória de Dados}
+Os dados do programa estão públicos, mas sua utilização analítica exige extração em múltiplas tabelas do CNES/DATASUS e tratamento posterior para integração consistente. Nos scripts do projeto, esse trabalho aparece em filtros de atividade e em cruzamentos entre equipes, profissionais e cargas horárias, com apoio da Classificação Brasileira de Ocupações (CBO) para padronizar as categorias profissionais. Essas etapas tornam a leitura direta das planilhas menos imediata para quem não acompanha o processamento.
 
-O principal resultado deste período foi uma análise exploratória de dados completa das bases públicas do governo. A análise segue um percurso do panorama nacional à escala estadual, examinando sucessivamente a distribuição geográfica, a composição por tipo de equipe e a conformidade com a legislação vigente.
+Ao disponibilizar esse diagnóstico em tabelas, mapas e gráficos, o trabalho amplia a transparência sobre o Programa Melhor em Casa e oferece base prática para análises e decisões de planejamento.
 
-\subsubsection{Fontes de Dados e Metodologia}
+\iffalse
+Fernando: vou resumir aqui minhas sugestões (tente acatar o que é possível ok - se tiver dúvida me chame para discutirmos)\\
+O trabalho pode ser dividido assim:\\
+1) Introdução:\\
+Precisa ampliar um pouco mais a introdução:\\
+Descreva em linhas gerais o programa melhor em casa;\\
+Descreva que as informações são publicas, mas precisam ser recuperadas manualmente e tratadas;\\
+Descreva as dificuldades de tratar esses dados;\\
+Depois finalize com os benefícios de ter essa informação fácil de visualizar.\\
+2) Revisão teórica:\\
+Estado da arte (ou Revisão teórica)\\
+Inclua aqui um ou dois paragráfos de trabalhos similares, tipo a tese que você descreve no texto.\\
+Você pode colocar basicamente o resumo (tem que escrever com suas palavras) e alguns dos principais resultados que você entendeu.\\
+Pode colocar também aquele trecho de conformidades ou normativas que estabelecem o programa.\\
+Por fim, faça um paragráfo final dizendo o que pretende atender no seu trabalho que as revisões não fizeram (essa é uma sugestão ok, depois vejo se encaixa)\\
+3) Metodologia:\\
+A metodologia é uma receita de bolo, não precisa explicar em detalhes o que fez, mas sim qual processo usou.\\
+- Descreva o que fez primeiro, que dados coletou, qual local acessou, como processou os dados, onde armazenou etc. é de 1 ou duas pg. no máximo.\\
+Sugestão: Use essa parte do texto:\\
+- Fontes de Dados e Metodologia\\
+- Precisa incluir aqui: Ferramentas utilizadas, links de códigos e sites, etc\\
+- Coloque também a "ordem de grandeza espacial da análise", exemplo:\\
+Explique que iniciou com analises em âmbito nacional, para entender isso e aquilo e depois fez uma análise detalhada em regiôes (ou estado).\\
+4) Resultados\\
+Os resultados, penso que estão com bastante material. Do seu texto, são partes dos resultados os seguintes títulos:\\
+- Panorama Nacional\\
+- Disparidades Regionais\\
+- Análise na Escala Estadual\\
+Depois que reorganizar (sugestão ok) - Podemos fazer a discussão e resumo.
+\fi
 
-Foram utilizadas duas fontes públicas: os registros administrativos do \citelink{cnes}{CNES/DATASUS}, na competência 08/2025, com informações sobre estabelecimentos de saúde, equipes e profissionais, e a Classificação Brasileira de Ocupações, edição 2024, usada para padronizar e agrupar categorias profissionais. A partir desses insumos, as equipes de Atenção Domiciliar foram identificadas e filtradas, seus profissionais foram vinculados via tabelas relacionais, e as métricas de capacidade, composição profissional e conformidade legal foram calculadas para cada equipe. As visualizações e resultados do projeto estão publicados no site \href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}; o código-fonte e os scripts de processamento permanecem disponíveis no \href{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}{repositório GitHub}.
+\section{Revisão Teórica}
+
+Estudos recentes sobre Atenção Domiciliar no Brasil indicam diferenças relevantes na expansão do Programa Melhor em Casa entre municípios e regiões, além da dependência de capacidade institucional local. Em \citelink{albuquerque2025}{Albuquerque (2025)}, a autora analisa cobertura, focalização e impacto da política no período de 2009 a 2024, indicando que a participação no programa está associada à redução do tempo médio de permanência hospitalar e que os efeitos se intensificam com a maturação da implementação municipal. Em escala local, \citelink{castellani2022}{Castellani e Magni (2022)} analisam o perfil de usuários do programa em município do centro-oeste do Paraná e reforçam a importância de diagnósticos territoriais para orientar planejamento e organização do cuidado domiciliar. Em síntese, os resultados sugerem que continuidade administrativa e integração com a rede assistencial são condições importantes para capturar ganhos assistenciais mais robustos.
+
+Do ponto de vista normativo, a organização das equipes e os critérios de elegibilidade são definidos principalmente pela \citelink{portaria825}{Portaria GM/MS nº 825/2016}, com atualizações pela \citelink{portaria3005}{Portaria GM/MS nº 3.005/2024}. Essas normas estabelecem tipos de equipe, composição mínima por categoria profissional e parâmetros de carga horária, elementos que condicionam a capacidade real de atendimento no território. Assim, a análise de conformidade legal não é apenas um requisito regulatório, mas um componente substantivo para interpretar a oferta efetiva do serviço.
+
+Com base nessa revisão, este trabalho busca avançar em um ponto ainda pouco explorado de forma integrada: a conexão entre distribuição espacial das equipes, composição profissional observada e conformidade normativa, em múltiplas escalas (nacional, regional e estadual), com produtos visuais e reprodutíveis para apoiar etapas posteriores de modelagem e otimização.
+
+\section{Metodologia}
+
+A metodologia foi conduzida em etapas. Primeiro, foram coletados os dados públicos do \href{https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp}{CNES/DATASUS} e da \href{http://www.mtecbo.gov.br/cbosite/pages/downloads.jsf}{Classificação Brasileira de Ocupações (CBO)}. Em seguida, os dados passaram por organização e tratamento: filtragem de registros ativos, padronização de campos e datas, cruzamento entre tabelas e consolidação das variáveis necessárias para análise.
+
+Na etapa seguinte, foram calculados os indicadores de cobertura, densidade de equipes, composição por tipo e conformidade legal. As análises e produtos foram implementados com scripts em Python, organizados em repositório versionado no \href{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}{GitHub}. Por fim, os resultados foram armazenados em saídas tabulares e visuais (CSV, gráficos e mapas) e publicados no site \href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}. Esse arranjo permite atualização contínua e rastreabilidade das etapas de processamento.
+
+A análise espacial foi conduzida em três níveis para facilitar a leitura dos resultados. No nível nacional, buscou-se identificar o quadro geral de cobertura e composição das equipes. No nível regional, foram comparadas diferenças estruturais entre macrorregiões. No nível estadual, o diagnóstico foi detalhado para evidenciar heterogeneidades locais que ficam ocultas em agregações mais amplas e que são diretamente relevantes para a formulação posterior do problema de roteamento e agendamento.
+
+\section{Resultados}
+
+O principal resultado deste período foi uma análise exploratória de dados completa das bases públicas do governo. A análise segue um percurso do panorama nacional à escala estadual, examinando sucessivamente a distribuição geográfica, a composição por tipo de equipe e a conformidade com a legislação vigente. Os produtos analíticos e visualizações interativas estão disponíveis em \url{https://otimhomecare.icmc.usp.br/}, e o código-fonte com os scripts de processamento permanece público no \href{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}{repositório GitHub do projeto}.
 
 \subsubsection{Panorama Nacional}
 
@@ -122,13 +168,13 @@ Sul & 107 & 9,0\% & 215 & 0,72 \\
 
 A tabela revela diferenças expressivas entre regiões. O Nordeste lidera em cobertura municipal (31,4\%), enquanto o Sul apresenta a menor penetração do programa (9,0\%). Essa disparidade se reflete também na densidade de equipes por habitante: o Nordeste possui 2,02 equipes por 100 mil habitantes, enquanto o Sul conta com apenas 0,72. Regiões com poucas equipes e grande dispersão geográfica enfrentam deslocamentos mais longos e menor flexibilidade na organização dos atendimentos.
 
-Para complementar a fotografia da Tabela 1 com uma leitura dinâmica da expansão territorial, a Figura~\ref{fig:cobertura_regional_temporal} apresenta a evolução mensal da cobertura municipal por região. A visualização reforça que as diferenças regionais não são pontuais: elas se mantêm ao longo do período analisado, com trajetórias de crescimento em ritmos distintos entre as macrorregiões.
+Para complementar os dados da Tabela 1, a Figura~\ref{fig:cobertura_regional_temporal} apresenta a evolução mensal da cobertura municipal por região. A visualização reforça que as diferenças regionais não são pontuais: elas se mantêm ao longo do período analisado, com trajetórias de crescimento em ritmos distintos entre as macrorregiões.
 
 \begin{figure}[H]
 \centering
 \caption{Evolução temporal da cobertura municipal por região do Brasil.}
 \label{fig:cobertura_regional_temporal}
-\includegraphics[width=1.00\textwidth]{Outputs\&Codigo/PARTE6/evolucao_cobertura_percentual_por_regiao.png}
+\includegraphics[width=1.00\textwidth]{evolucao_cobertura_percentual_por_regiao.png}
 \end{figure}
 
 Além da distribuição geográfica, as regiões diferem na composição das equipes implantadas.
@@ -175,7 +221,7 @@ EMAP-R & -- & -- & -- & -- & Mínimo de 3 categorias de nível superior e carga 
 \end{tabular}
 \end{table}
 
-Para a EMAP-R, os profissionais de nível superior permitidos (Art. 548-A) são: fisioterapeuta, fonoaudiólogo, nutricionista, terapeuta ocupacional, psicólogo e enfermeiro. Já para a EMAP (Art. 548), exige-se no mínimo três categorias de nível superior e carga horária total mínima de 90h.
+Para EMAP e EMAP-R, a verificação considerou equipe multiprofissional de nível superior e carga horária semanal total mínima de 90h (EMAP) e 60h (EMAP-R). A Portaria explicita, para EMAP-R, as ocupações fisioterapeuta, fonoaudiólogo, nutricionista, terapeuta ocupacional, psicólogo e enfermeiro.
 
 Para cada equipe, foi agregada a carga horária semanal por categoria profissional e o total observado foi comparado aos mínimos exigidos para o respectivo tipo. Profissionais com carga horária inferior a 20h foram desconsiderados conforme a legislação. Os resultados, ilustrados na Figura~\ref{fig:conformidade_tipo}, revelam que 67,61\% das equipes estão em conformidade. Porém, a EMAD~I, tipo mais numeroso e central para o atendimento direto, apresenta a menor taxa, de 48,95\%.
 
@@ -253,6 +299,7 @@ Além do diagnóstico de heterogeneidade territorial, \citelink{albuquerque2025}
 
 O mesmo estudo mostra ainda que a expansão do programa é desigual entre municípios e que há influência regional no desempenho local. Em termos espaciais, essa evidência converge com os resultados deste relatório: mesmo no recorte nacional, cobertura e conformidade se distribuem de forma heterogênea entre estados e territórios. Nas próximas etapas de modelagem, essas assimetrias espaciais serão tratadas como elemento central da formulação.
 
+\iffalse
 \subsubsection{Integração entre Estrutura Operacional e Percepção Social}
 
 Até aqui, a análise mostrou onde as equipes estão, como se distribuem e onde a conformidade é mais frágil. Para completar esse diagnóstico com a dimensão de uso do serviço, foi feita uma leitura qualitativa de menções públicas ao programa (coleta via SerpAPI e classificação automática via LLM Gemini).
@@ -266,11 +313,8 @@ Entre as menções críticas, os temas mais recorrentes foram falhas de atendime
 Essa leitura é coerente com os resultados de conformidade: a EMAD~I, tipo mais numeroso e central no atendimento direto, apresentou 48,95\% de conformidade. Equipes incompletas tendem a reduzir escopo e regularidade, o que ajuda a explicar por que a percepção crítica se concentra em acesso e continuidade.
 
 Como se trata de uma leitura exploratória, com fontes heterogêneas e classificação automática, esses resultados devem ser entendidos como um retrato indicativo do que apareceu nas fontes consultadas no período, complementando o diagnóstico desta seção.
+\fi
 
-
-\subsection{Produtos Desenvolvidos}
-
-Os produtos analíticos e visualizações interativas estão disponíveis em \url{https://otimhomecare.icmc.usp.br/}. O código-fonte e os scripts de processamento permanecem públicos no \href{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}{repositório GitHub do projeto}. Foi desenvolvido um pipeline completo de ETL e análise de dados para processamento das fontes públicas, geração de mapas interativos, visualizações analíticas e bases derivadas para etapas posteriores da pesquisa. Também foram construídas instâncias sintéticas para testes de otimização e implementado um módulo específico de monitoramento de percepção pública, com coleta via SerpAPI, classificação via Gemini e exportação dos resultados em formatos tabulares e gráficos. A documentação técnica (README.md) descreve o fluxo de processamento de cada etapa.
 
 \subsection{Principais Conclusões}
 
@@ -280,9 +324,11 @@ A caracterização completa da capacidade e composição profissional de cada eq
 
 Em linha com \citelink{albuquerque2025}{Albuquerque (2025)}, os resultados também sugerem que a formulação futura deve combinar a leitura nacional com recortes regionais e estaduais, de modo a capturar as assimetrias de cobertura observadas no território.
 
+\iffalse
 \section{Estado Atual da Pesquisa}
 
-A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. Neste primeiro período, a Análise Exploratória de Dados dos registros públicos do CNES/DATASUS e da Classificação Brasileira de Ocupações (CBO) permitiu caracterizar as equipes de Atenção Domiciliar em termos de localização geográfica, capacidade e composição profissional, além de verificar a conformidade com a legislação vigente. A próxima etapa consiste na implementação do modelo de otimização e do algoritmo de solução, seguindo a abordagem de \citelink{kummer2024}{Kummer et al. (2024)}, e na comparação de desempenho entre os métodos.
+A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. Neste primeiro período, a Análise Exploratória de Dados dos registros públicos do CNES/DATASUS e da Classificação Brasileira de Ocupações (CBO) permitiu caracterizar as equipes de Atenção Domiciliar em termos de localização geográfica, capacidade e composição profissional, além de verificar a conformidade com a legislação vigente. Os resultados desta etapa, incluindo visualizações e bases processadas, já estão organizados no site do projeto e no repositório GitHub. A próxima etapa consiste na implementação do modelo de otimização e do algoritmo de solução, seguindo a abordagem de \citelink{kummer2024}{Kummer et al. (2024)}, e na comparação de desempenho entre os métodos.
+\fi
 
 \section*{Referências}
 
@@ -293,6 +339,7 @@ A pesquisa encontra-se na transição entre a fase de análise de dados e a fase
 \item \hypertarget{cite.portaria3005}{}BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 3.005, de 2 de janeiro de 2024}. Altera as Portarias de Consolidação nºs 5 e 6, de 28 de setembro de 2017, para atualizar as regras do Serviço de Atenção Domiciliar (SAD) e do Programa Melhor em Casa (PMeC). Brasília, 2024. Disponível em: \url{https://www.gov.br/saude/pt-br/composicao/saes/melhor-em-casa/legislacao/portaria-gm-ms-no-3-005-de-2-de-janeiro-de-2024}.
 \item \hypertarget{cite.cnes}{}BRASIL. Ministério da Saúde. \textit{CNES -- Cadastro Nacional de Estabelecimentos de Saúde}. Disponível em: \url{https://cnes.datasus.gov.br/}. Acesso em: ago. 2025.
 \item \hypertarget{cite.albuquerque2025}{}ALBUQUERQUE, W. M. \textit{Política de atenção domiciliar no Brasil: análises espacial, de cobertura, focalização e impacto do Programa Melhor em Casa}. 2025. Tese (Doutorado em Economia Rural) -- Universidade Federal do Ceará, Fortaleza, 2025. Disponível em: \url{https://repositorio.ufc.br/bitstream/riufc/83280/3/2025_tese_wmalbuquerque.pdf}.
+\item \hypertarget{cite.castellani2022}{}CASTELLANI, L. J.; MAGNI, C. \textit{Perfil dos usuários do Programa Melhor em Casa em um município do centro-oeste do Paraná}. Multitemas, v. 26, n. 64, p. 161--176, 2022. Disponível em: \url{https://doi.org/10.20435/multi.v26i64.3223}.
 \end{enumerate}
 
 \end{document}

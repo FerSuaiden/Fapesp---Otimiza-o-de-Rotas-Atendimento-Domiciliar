@@ -183,12 +183,12 @@ def main() -> None:
     args = parse_args()
 
     cnes_dir = os.path.join(args.base_dir, "CNES_DATA")
-    parte6_dir = os.path.join(args.base_dir, "Outputs&Codigo", "PARTE6")
+    serie_dir = os.path.join(args.base_dir, "Outputs&Codigo", "PARTE1", "serie_temporal_cobertura")
 
     df_equipes = carregar_equipes_ad(cnes_dir)
     df_serie = construir_serie_mensal(df_equipes, inicio=args.inicio, fim=args.fim)
 
-    fig_cobertura_saida = os.path.join(parte6_dir, "evolucao_cobertura_percentual_por_regiao.png")
+    fig_cobertura_saida = os.path.join(serie_dir, "evolucao_cobertura_percentual_por_regiao.png")
 
     salvar_grafico_cobertura(df_serie, fig_cobertura_saida)
 
