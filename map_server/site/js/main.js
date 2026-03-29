@@ -509,8 +509,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mapPath = `Outputs%26Codigo/PARTE1/mapas_Equipes_Atencao_Domiciliar_por_estado/mapa_Equipes_Atencao_Domiciliar_${uf}.html`;
 
     ofertaMapDisplay.innerHTML = `
-      <div class="card card-full">
-        <div class="iframe-wrapper" style="padding-bottom:65%;">
+      <div class="card card-full oferta-map-card">
+        <div class="iframe-wrapper oferta-map-frame">
           <iframe src="${mapPath}" title="Mapa de Equipes AD em ${uf}" loading="lazy"></iframe>
           <button class="iframe-expand" title="Expandir">⛶</button>
         </div>

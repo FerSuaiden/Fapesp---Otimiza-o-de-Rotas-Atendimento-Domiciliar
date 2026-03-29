@@ -1,64 +1,76 @@
-# Otimização de Rotas de Atenção Domiciliar (HHC-RSP)
+# Analise de Atencao Domiciliar (Melhor em Casa)
 
-Repositório da IC/FAPESP para análise de dados do programa **Melhor em Casa** e geração de insumos para modelagem de roteamento e agendamento em atenção domiciliar.
+Repositorio de Iniciacao Cientifica (IC/FAPESP) para analise de dados do programa Melhor em Casa, com foco em oferta de equipes, capacidade potencial, cobertura municipal e conformidade normativa.
 
-## Escopo
+## Objetivo cientifico
 
-- Identificar equipes EMAD/EMAP no CNES.
-- Estimar capacidade das equipes ($Q_k$) pela CHS SUS.
-- Caracterizar composição profissional/habilidades ($S_k$).
-- Preparar dados para geração de instâncias de otimização.
-- Analisar cobertura municipal e conformidade legal (Portaria GM/MS nº 3.005/2024).
-- Monitorar mencoes e percepcao publica sobre o programa (PARTE5).
+- Medir a distribuicao espacial e estadual das equipes AD.
+- Estimar capacidade potencial de atendimento com base em CHS SUS.
+- Avaliar composicao profissional das equipes.
+- Quantificar cobertura municipal e densidade por populacao.
+- Verificar conformidade com a Portaria GM/MS no 3.005/2024.
 
-## Estrutura do projeto
+## Estrutura principal
 
 ```text
-IC/
-├── CNES_DATA/                      # Bases CNES/DATASUS (não versionadas)
-├── CBO_DATA/                       # Dicionários CBO (não versionados)
-├── IBGE_DATA/                      # Bases IBGE/Censo (não versionadas)
-├── Outputs&Codigo/
-│   ├── PARTE1/                     # Mapeamento e distribuição de equipes
-│   ├── PARTE2/                     # Capacidade e habilidades
-│   ├── PARTE3/                     # Geração de instâncias
-│   ├── PARTE4/                     # Cobertura e conformidade legal
-│   └── PARTE5/                     # Monitor de percepção (coleta + classificação)
-├── map_server/
-└── README.md                       # ÚNICO README do repositório
+CNES_DATA/                         # Bases CNES (competencia 2025-08)
+CBO_DATA/                          # Dicionarios CBO
+IBGE_DATA/                         # Bases de municipios e populacao
+Outputs&Codigo/
+	PARTE1/                          # Oferta, mapas, distribuicoes e serie temporal
+	PARTE2/                          # Capacidade potencial e composicao profissional
+	PARTE3/                          # Geracao de instancias para modelagem
+	PARTE4/                          # Cobertura e conformidade legal
+	PARTE5/                          # Coleta e classificacao de percepcao publica
+map_server/                        # Site estatico e publicacao via Docker
+README.md
+requirements.txt
 ```
 
-## Pré-requisitos
+Nota: o conteudo da antiga PARTE6 foi incorporado em `Outputs&Codigo/PARTE1/serie_temporal_cobertura/`.
+
+## Requisitos
 
 - Python 3.10+
-- Ambiente virtual ativo
-- Bibliotecas: `pandas`, `numpy`, `matplotlib`, `folium`, `plotly`, `requests`
+- Ambiente virtual (`venv`)
+- Dependencias em `requirements.txt`
 
-Exemplo:
-
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install pandas numpy matplotlib folium plotly requests
-```
-
-## Execução rápida
-
-Na raiz do projeto:
+Instalacao recomendada:
 
 ```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## Como executar os scripts
+
+Sempre a partir da raiz do repositorio:
+
+```bash
 source venv/bin/activate
 ```
 
-### PARTE 1
+### PARTE1 - oferta e visualizacao espacial
+
+- `1-visuazacaoMapa.py`: gera mapas interativos por UF.
+- `2-equipes_por_estado.py`: gera distribuicao de equipes por estado/tipo.
+- `3-pizza.py`: gera composicao nacional por tipo.
+- `serie_temporal_cobertura/scripts/gerar_serie_temporal_cobertura_por_regiao.py`: gera serie temporal da cobertura regional.
 
 ```bash
 python "Outputs&Codigo/PARTE1/1-visuazacaoMapa.py"
 python "Outputs&Codigo/PARTE1/2-equipes_por_estado.py"
 python "Outputs&Codigo/PARTE1/3-pizza.py"
+python "Outputs&Codigo/PARTE1/serie_temporal_cobertura/scripts/gerar_serie_temporal_cobertura_por_regiao.py"
 ```
 
-### PARTE 2
+### PARTE2 - capacidade potencial e habilidades
+
+- `4-capacidade.py`: estatisticas de capacidade potencial por equipe/UF.
+- `5-heatMap.py`: mapa de calor nacional da capacidade potencial.
+- `6-sunburst.py`: visualizacao de composicao profissional por tipo de equipe.
 
 ```bash
 python "Outputs&Codigo/PARTE2/4-capacidade.py"
@@ -66,74 +78,55 @@ python "Outputs&Codigo/PARTE2/5-heatMap.py"
 python "Outputs&Codigo/PARTE2/6-sunburst.py"
 ```
 
-### PARTE 3
+### PARTE3 - instancias de modelagem
+
+- `15-gerador_instancias.py`: prepara instancias para otimizacao/roteamento.
 
 ```bash
 python "Outputs&Codigo/PARTE3/15-gerador_instancias.py"
 ```
 
-### PARTE 4 (v2)
+### PARTE4 - cobertura e conformidade legal
+
+- `analise_nacional_brasil_v2.py`: gera indicadores nacionais e visualizacoes.
+- `gerar_visualizacoes_estados_v2.py`: gera graficos por estado e arquivos auxiliares.
 
 ```bash
 python "Outputs&Codigo/PARTE4/scripts/analise_nacional_brasil_v2.py"
 python "Outputs&Codigo/PARTE4/scripts/gerar_visualizacoes_estados_v2.py"
 ```
 
-### PARTE 5 (monitor de percepção)
+### PARTE5 - percepcao publica
 
-Fluxo recomendado em duas etapas (API-only):
+- `coleta_serpapi_opiniao.py`: coleta resultados da web.
+- `classificar_gemini_percepcao.py`: classifica temas/sentimento e gera visualizacoes.
 
-1) Coletar mencoes com SerpAPI + classificar via Gemini no mesmo pipeline:
-
-```bash
-export SERPAPI_API_KEY="SUA_CHAVE_SERPAPI"
-export GEMINI_API_KEY="SUA_CHAVE_GEMINI"
-export GEMINI_MODEL="gemini-2.0-flash"
-python "Outputs&Codigo/PARTE5/scripts/monitor_opiniao_melhor_em_casa.py" --tema "Programa Melhor em Casa" --max-itens 80 --gemini-model "gemini-2.0-flash"
-```
-
-2) Classificar novamente apenas o que ja foi coletado (sem consumir SerpAPI):
+Exemplo:
 
 ```bash
-export GEMINI_API_KEY="SUA_CHAVE_GEMINI"
-python "Outputs&Codigo/PARTE5/scripts/classificar_mencoes_existentes_gemini.py" --coletadas-csv "Outputs&Codigo/PARTE5/dados_csv/mencoes_coletadas.csv" --classificadas-csv "Outputs&Codigo/PARTE5/dados_csv/mencoes_classificadas.csv" --gemini-model "gemini-2.0-flash"
+export SERPAPI_API_KEY="SUA_CHAVE"
+export GEMINI_API_KEY="SUA_CHAVE"
+python "Outputs&Codigo/PARTE5/scripts/coleta_serpapi_opiniao.py"
+python "Outputs&Codigo/PARTE5/scripts/classificar_gemini_percepcao.py"
 ```
 
-Observacao: o classificador separado espera automaticamente quando o Gemini retorna HTTP 429 e retoma a classificacao depois do tempo de retry. Para evitar execucao indefinida, use limites por item e limite global de duracao:
+## Publicacao local do site
 
 ```bash
-python "Outputs&Codigo/PARTE5/scripts/classificar_mencoes_existentes_gemini.py" --max-esperas-429-por-item 3 --max-segundos-espera-por-item 240 --max-minutos-execucao 30
+cd map_server
+docker compose up -d --build --force-recreate
 ```
 
-Se quiser concluir a rodada sem nenhuma chamada ao Gemini (sem risco de bloqueio por cota), use:
+Site em: `http://localhost:8080`
 
-```bash
-python "Outputs&Codigo/PARTE5/scripts/classificar_mencoes_existentes_gemini.py" --sem-tentativa-gemini
-```
+## Saidas esperadas
 
-Dica para a analise de opiniao publica no relatorio: rode a coleta com foco em percepcao usando queries de reclamacoes e depoimentos, por exemplo:
-- `"Melhor em Casa" reclamacoes`
-- `"Melhor em Casa" e bom?`
-- `"Melhor em Casa" depoimento paciente`
+- PNG/HTML em `Outputs&Codigo/PARTE1`, `Outputs&Codigo/PARTE2` e `Outputs&Codigo/PARTE4/visualizacoes`.
+- CSV em `Outputs&Codigo/PARTE4/dados_csv`.
+- Artefatos de percepcao em `Outputs&Codigo/PARTE5`.
 
-```bash
-python "Outputs&Codigo/PARTE5/scripts/monitor_opiniao_melhor_em_casa.py" --max-itens 80 --foco-opiniao-publica
-```
+## Fontes de dados
 
-## Dados e filtros principais
-
-- Tipos de equipe AD usados: **22 (EMAD I), 46 (EMAD II), 23 (EMAP), 77 (EMAP-R)**.
-- Competência CNES utilizada: **08/2025**.
-- Fontes: CNES/DATASUS, CBO, IBGE.
-
-## Saídas esperadas (resumo)
-
-- Visualizações em PNG/HTML nas partes 1, 2 e 4.
-- CSVs analíticos em `Outputs&Codigo/PARTE4/dados_csv`.
-- Artefatos por estado em `Outputs&Codigo/PARTE4/visualizacoes/estados`.
-- CSV/JSON/PNG de percepção em `Outputs&Codigo/PARTE5/`.
-
-## Observações
-
-- Este repositório mantém **apenas este README na raiz**.
-- Pastas de dados brutos podem estar fora do versionamento por tamanho.
+- CNES/DATASUS (competencia 2025-08)
+- CBO 2002
+- IBGE (municipios e populacao)

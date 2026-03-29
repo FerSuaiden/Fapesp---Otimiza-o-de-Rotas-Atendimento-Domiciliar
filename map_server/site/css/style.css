@@ -281,6 +281,14 @@ a:hover { opacity: .8; }
   margin-top: 2rem;
 }
 
+.oferta-map-card .iframe-wrapper {
+  margin-bottom: 0;
+}
+
+.iframe-wrapper.oferta-map-frame {
+  padding-bottom: 52%;
+}
+
 
 /* ---------- Tables ---------- */
 .table-wrapper {
@@ -733,6 +741,10 @@ main strong {
   .kpi-row {
     grid-template-columns: repeat(2, 1fr);
     margin-top: -1.5rem;
+  }
+
+  .iframe-wrapper.oferta-map-frame {
+    padding-bottom: 68%;
   }
 }
 
