@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showOfertaState(uf) {
     if (!ofertaMapDisplay) return;
-    const mapPath = `Outputs%26Codigo/PARTE1/mapas_Equipes_Atencao_Domiciliar_por_estado/mapa_Equipes_Atencao_Domiciliar_${uf}.html`;
+    const mapPath = `Outputs%26Codigo/OFERTA/mapas_Equipes_Atencao_Domiciliar_por_estado/mapa_Equipes_Atencao_Domiciliar_${uf}.html`;
 
     ofertaMapDisplay.innerHTML = `
       <div class="card card-full oferta-map-card">
@@ -541,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showState(uf) {
     if (!stateDisplay) return;
-    const imgPath = `Outputs%26Codigo/PARTE4/visualizacoes/estados/${uf}/${uf}_equipes_conformidade.png`;
+    const imgPath = `Outputs%26Codigo/CONFORMIDADE/visualizacoes/estados/${uf}/${uf}_equipes_conformidade.png`;
 
     stateDisplay.innerHTML = `
       <div class="card card-full">

@@ -57,7 +57,7 @@ Este pacote ja inclui:
 
 - Paginas principais: `index.html`, `oferta.html`, `composicao.html`, `conformidade.html`
 - Assets locais: `css/` e `js/`
-- Visualizacoes referenciadas nas paginas em `Outputs&Codigo/PARTE1`, `Outputs&Codigo/PARTE2` e `Outputs&Codigo/PARTE4/visualizacoes`
+- Visualizacoes referenciadas nas paginas em `Outputs&Codigo/OFERTA`, `Outputs&Codigo/COMPOSICAO` e `Outputs&Codigo/CONFORMIDADE/visualizacoes`
 
 ## Entrega para o professor
 
