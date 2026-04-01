@@ -2,6 +2,13 @@
 
 Repositorio de Iniciacao Cientifica (IC/FAPESP) para analise de dados do programa Melhor em Casa, com foco em oferta de equipes, capacidade potencial, cobertura municipal e conformidade normativa.
 
+## Projeto FAPESP
+
+- Processo: 2025/21835-0
+- Bolsa/projeto: https://bv.fapesp.br/pt/bolsas/232802/metodos-de-solucao-para-o-agendamento-e-roteamento-de-equipes-para-a-assistencia-domiciliar/
+- Aluno: Fernando Alee Suaiden
+- Orientadora: Maristela Oliveira dos Santos
+
 ## Objetivo cientifico
 
 - Medir a distribuicao espacial e estadual das equipes AD.
@@ -15,12 +22,10 @@ Repositorio de Iniciacao Cientifica (IC/FAPESP) para analise de dados do program
 ```text
 CNES_DATA/                         # Bases CNES (competencia 2025-08)
 CBO_DATA/                          # Dicionarios CBO
-IBGE_DATA/                         # Bases de municipios e populacao
 Outputs&Codigo/
 	OFERTA/                          # Oferta, mapas, distribuicoes e serie temporal
 	COMPOSICAO/                      # Capacidade potencial e composicao profissional
 	CONFORMIDADE/                    # Cobertura e conformidade legal
-BACKUP_PARTES_3_E_5/              # Backup da antiga PARTE3 e PARTE5
 map_server/                        # Site estatico e publicacao via Docker
 README.md
 requirements.txt
@@ -87,11 +92,6 @@ python "Outputs&Codigo/CONFORMIDADE/scripts/analise_nacional_brasil_v2.py"
 python "Outputs&Codigo/CONFORMIDADE/scripts/gerar_visualizacoes_estados_v2.py"
 ```
 
-### Partes arquivadas
-
-- A antiga `PARTE3` (instancias de modelagem) foi movida para `BACKUP_PARTES_3_E_5/Outputs&Codigo/PARTE3`.
-- A antiga `PARTE5` (percepcao publica) foi movida para `BACKUP_PARTES_3_E_5/Outputs&Codigo/PARTE5`.
-
 ## Publicacao local do site
 
 ```bash
@@ -105,10 +105,4 @@ Site em: `http://localhost:8080`
 
 - PNG/HTML em `Outputs&Codigo/OFERTA`, `Outputs&Codigo/COMPOSICAO` e `Outputs&Codigo/CONFORMIDADE/visualizacoes`.
 - CSV em `Outputs&Codigo/CONFORMIDADE/dados_csv`.
-- Artefatos das partes arquivadas em `BACKUP_PARTES_3_E_5/`.
-
-## Fontes de dados
-
-- CNES/DATASUS (competencia 2025-08)
-- CBO 2002
-- IBGE (municipios e populacao)
+- Bases atualmente utilizadas: CNES/DATASUS (competencia 2025-08) e CBO.

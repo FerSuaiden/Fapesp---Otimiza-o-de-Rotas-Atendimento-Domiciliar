@@ -170,7 +170,7 @@ try:
                      "<span style='color:#5EBCD1'>●</span> EMAD II - Equipe Multiprofissional (menor porte)<br>" +
                      "<span style='color:#E5323B'>●</span> EMAP - Equipe Multiprofissional de Apoio<br>" +
                      "<span style='color:#F29C38'>●</span> EMAP-R - Equipe Multiprofissional de Apoio para Reabilitação<br><br>" +
-                     "<i>Nota: CHS SUS não implica dedicação exclusiva à AD.</i>",
+                     "<i>Nota: CHS SUS representa potencial de disponibilidade para atendimento domiciliar no SUS e não dedicação exclusiva à modalidade.</i>",
                 align='left',
                 showarrow=False,
                 xref='paper', yref='paper',

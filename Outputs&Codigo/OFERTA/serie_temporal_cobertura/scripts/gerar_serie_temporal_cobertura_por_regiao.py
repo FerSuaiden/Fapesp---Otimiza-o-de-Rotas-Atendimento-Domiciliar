@@ -141,7 +141,7 @@ def salvar_grafico_cobertura(df_serie: pd.DataFrame, caminho_saida: str) -> None
         )
 
     ax.set_xlabel("Ano", fontsize=24)
-    ax.set_ylabel("Cobertura regional (% dos municipios da regiao com AD)", fontsize=24)
+    ax.set_ylabel("% dos municípios da região com AD", fontsize=24)
     ax.tick_params(axis="both", labelsize=20)
 
     # Escala dinamica: teto no multiplo de 5 imediatamente acima do maximo observado.
