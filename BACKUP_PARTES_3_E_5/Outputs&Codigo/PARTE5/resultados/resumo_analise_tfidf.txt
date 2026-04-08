@@ -1,0 +1,43 @@
+RESUMO - PARTE 5 (ANALISE LEXICAL SEM LLM)
+Total de mencoes analisadas: 60
+Mencoes de consultas com foco em queixa: 40 (66.7%)
+
+Distribuicao de sentimento (heuristica):
+- negativo: 33 (55.0%)
+- positivo: 13 (21.7%)
+- neutro: 9 (15.0%)
+- misto: 5 (8.3%)
+
+Distribuicao de gargalo inferido:
+- nenhum: 21 (35.0%)
+- escala: 18 (30.0%)
+- pessoal: 14 (23.3%)
+- frota: 7 (11.7%)
+
+Top 12 termos por TF-IDF medio:
+- sad: 0.0603
+- equipe: 0.0468
+- leva: 0.0425
+- nao: 0.0404
+- oferece: 0.0360
+- equipes: 0.0349
+- sobre: 0.0338
+- promover: 0.0311
+- conheca: 0.0297
+- protocolo: 0.0291
+- alta: 0.0290
+- home: 0.0289
+
+Top 12 termos frequentes nas consultas de queixa:
+- sad: 9
+- reclamacoes: 6
+- nao: 6
+- leva: 6
+- denuncia: 5
+- wilker: 4
+- barreto: 4
+- atraso: 4
+- sobre: 4
+- esta: 4
+- cuidado: 4
+- conheca: 4

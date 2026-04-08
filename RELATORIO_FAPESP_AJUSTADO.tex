@@ -302,17 +302,13 @@ O mesmo estudo mostra ainda que a expansão do programa é desigual entre munic�
 \iffalse
 \subsubsection{Integração entre Estrutura Operacional e Percepção Social}
 
-Até aqui, a análise mostrou onde as equipes estão, como se distribuem e onde a conformidade é mais frágil. Para completar esse diagnóstico com a dimensão de uso do serviço, foi feita uma leitura qualitativa de menções públicas ao programa (coleta via SerpAPI e classificação automática via LLM Gemini).
+Até aqui, a análise mostrou onde as equipes estão, como se distribuem e onde a conformidade é mais frágil. Para complementar esse diagnóstico com a dimensão de uso do serviço, foi realizada uma leitura textual de menções públicas ao programa com pipeline determinístico: coleta via SerpAPI, limpeza lexical, extração de termos por TF-IDF e inferência heurística de sentimento e gargalo.
 
-Foram analisadas duas amostras. A primeira é geral, reunindo menções em canais institucionais, imprensa, redes sociais e manifestações de usuários. A segunda é uma amostra com foco em opinião pública, construída com consultas voltadas a avaliação, reclamações e depoimentos.
+No recorte atual, foram processadas 60 menções e 40 delas (66,7\%) vieram de consultas com foco explícito em queixa (reclamação, atraso, falha, demora, desassistência e termos correlatos). A classificação heurística indicou 55,0\% de menções negativas, 21,7\% positivas, 15,0\% neutras e 8,3\% mistas. Somando negativo e misto, o tom crítico chega a 63,3\%.
 
-Na amostra focada em opinião (50 menções), a crítica aparece em 16,0\% dos posicionamentos, o que corresponde a 8 menções críticas, e o tom crítico (negativo+misto) chega a 18,0\%. Os 84,0\% restantes se distribuem entre conteúdos de apoio/informativos e sentimentos majoritariamente neutros ou positivos, sugerindo percepção geral favorável, mas com espaço para melhoria.
+Na tipificação de gargalos logísticos, 30,0\% das menções foram associadas a problemas de escala/continuidade, 23,3\% a pessoal e 11,7\% a frota/insumos; em 35,0\% não houve sinal lexical suficiente para inferir gargalo específico. Entre os termos recorrentes no subconjunto de queixas, destacaram-se reclamações, atraso e denúncia, reforçando que a principal fricção percebida está na previsibilidade do atendimento.
 
-Entre as menções críticas, os temas mais recorrentes foram falhas de atendimento, regularidade do cuidado, suspensão de serviços, atrasos, espera por consultas/falta de médicos e ausência de resposta em situações de urgência. Em conjunto, esses relatos sugerem que o principal foco de insatisfação não é a existência formal do programa, mas a continuidade e a previsibilidade da entrega.
-
-Essa leitura é coerente com os resultados de conformidade: a EMAD~I, tipo mais numeroso e central no atendimento direto, apresentou 48,95\% de conformidade. Equipes incompletas tendem a reduzir escopo e regularidade, o que ajuda a explicar por que a percepção crítica se concentra em acesso e continuidade.
-
-Como se trata de uma leitura exploratória, com fontes heterogêneas e classificação automática, esses resultados devem ser entendidos como um retrato indicativo do que apareceu nas fontes consultadas no período, complementando o diagnóstico desta seção.
+Essa leitura permanece alinhada ao diagnóstico estrutural: fragilidades de conformidade e composição de equipe tendem a aparecer socialmente como descontinuidade do cuidado e percepção de demora. Como se trata de análise exploratória com fontes heterogêneas, os resultados devem ser interpretados como sinal de priorização para as próximas etapas de modelagem.
 \fi
 
 

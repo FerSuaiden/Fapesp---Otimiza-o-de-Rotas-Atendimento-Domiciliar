@@ -5,3 +5,5 @@ folium>=0.15
 plotly>=5.18
 requests>=2.31
 networkx>=3.2
+scikit-learn>=1.4
+wordcloud>=1.9
