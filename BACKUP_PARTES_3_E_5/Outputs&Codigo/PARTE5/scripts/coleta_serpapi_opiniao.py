@@ -91,21 +91,42 @@ def obter_chave_serpapi() -> str:
     return chave
 
 
-def construir_consultas() -> List[str]:
-    termos_foco = [
-        "reclamacao",
-        "depoimento",
-        "atraso",
-        "falha",
-        "avaliacao",
-        "demora",
-        "falta de equipe",
-        "falta de ambulancia",
-        "cancelamento",
-        "nao atendido",
-        "desassistencia",
-        "ouvidoria",
-    ]
+def construir_consultas(perfil: str) -> List[str]:
+    termos_por_perfil = {
+        "problem-oriented": [
+            "reclamacao",
+            "depoimento",
+            "atraso",
+            "falha",
+            "avaliacao",
+            "demora",
+            "falta de equipe",
+            "falta de ambulancia",
+            "cancelamento",
+            "nao atendido",
+            "desassistencia",
+            "ouvidoria",
+        ],
+        "balanced": [
+            "informacoes",
+            "como funciona",
+            "criterios de acesso",
+            "cobertura",
+            "resultados",
+            "avaliacao",
+            "depoimento",
+            "satisfacao",
+            "elogio",
+            "reclamacao",
+            "problema",
+            "qualidade",
+        ],
+    }
+
+    if perfil not in termos_por_perfil:
+        raise ValueError(f"Perfil de consulta invalido: {perfil}")
+
+    termos_foco = termos_por_perfil[perfil]
     base = '"Melhor em Casa" OR "atencao domiciliar"'
     return [f"{base} {termo}" for termo in termos_foco]
 
@@ -255,6 +276,13 @@ def parse_args() -> argparse.Namespace:
         description="Coleta mencoes do Melhor em Casa via SerpAPI para etapa de classificacao."
     )
     parser.add_argument(
+        "--perfil",
+        type=str,
+        default="problem-oriented",
+        choices=["problem-oriented", "balanced"],
+        help="Perfil de consultas para coleta via SerpAPI.",
+    )
+    parser.add_argument(
         "--max-resultados-por-consulta",
         type=int,
         default=20,
@@ -275,8 +303,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--saida",
         type=Path,
-        default=Path("Outputs&Codigo/PARTE5/resultados/mencoes_serpapi_brutas.csv"),
-        help="CSV de saida da coleta.",
+        default=None,
+        help=(
+            "CSV de saida da coleta. Se omitido, usa "
+            "Outputs&Codigo/PARTE5/<perfil>/resultados/mencoes_serpapi_brutas.csv"
+        ),
     )
     return parser.parse_args()
 
@@ -285,7 +316,13 @@ def main() -> None:
     carregar_env_arquivo()
     args = parse_args()
     chave = obter_chave_serpapi()
-    consultas = construir_consultas()
+    consultas = construir_consultas(args.perfil)
+
+    saida = args.saida
+    if saida is None:
+        saida = Path(
+            f"Outputs&Codigo/PARTE5/{args.perfil}/resultados/mencoes_serpapi_brutas.csv"
+        )
 
     mencoes = coletar_mencoes(
         chave=chave,
@@ -294,11 +331,12 @@ def main() -> None:
         sleep_segundos=args.sleep_segundos,
         max_paginas_por_consulta=args.max_paginas_por_consulta,
     )
-    salvar_csv(mencoes, args.saida)
+    salvar_csv(mencoes, saida)
 
+    print(f"Perfil de coleta: {args.perfil}")
     print(f"Consultas executadas: {len(consultas)}")
     print(f"Mencoes salvas: {len(mencoes)}")
-    print(f"Arquivo: {args.saida}")
+    print(f"Arquivo: {saida}")
 
 
 if __name__ == "__main__":

@@ -25,37 +25,45 @@ export SERPAPI_API_KEY="SUA_CHAVE_SERPAPI"
 
 ```bash
 python "Outputs&Codigo/PARTE5/scripts/coleta_serpapi_opiniao.py" \
+  --perfil balanced \
   --max-resultados-por-consulta 20 \
   --sleep-segundos 1.5
 ```
 
 Saida:
-- Outputs&Codigo/PARTE5/resultados/mencoes_serpapi_brutas.csv
+- Outputs&Codigo/PARTE5/<perfil>/resultados/mencoes_serpapi_brutas.csv
+
+Perfis disponiveis:
+- problem-oriented
+- balanced
 
 ## Etapa 2 - Analise lexical (estilo notebook)
 
 ```bash
-python "Outputs&Codigo/PARTE5/scripts/classificar_gemini_percepcao.py"
+python "Outputs&Codigo/PARTE5/scripts/classificar_gemini_percepcao.py" \
+  --perfil balanced
 ```
 
 Saidas:
-- Outputs&Codigo/PARTE5/percepcao_operacional.csv
-- Outputs&Codigo/PARTE5/resultados/resumo_analise_tfidf.txt
-- Outputs&Codigo/PARTE5/visualizacoes/top_termos_tfidf.png
-- Outputs&Codigo/PARTE5/visualizacoes/nuvem_palavras_tfidf.png
-- Outputs&Codigo/PARTE5/visualizacoes/rede_gargalos.png
+- Outputs&Codigo/PARTE5/<perfil>/percepcao_operacional.csv
+- Outputs&Codigo/PARTE5/<perfil>/resultados/resumo_analise_tfidf.txt
+- Outputs&Codigo/PARTE5/<perfil>/visualizacoes/top_termos_tfidf.png
+- Outputs&Codigo/PARTE5/<perfil>/visualizacoes/nuvem_palavras_tfidf.png
+- Outputs&Codigo/PARTE5/<perfil>/visualizacoes/rede_gargalos.png
 
 ## Metodo (passo a passo)
 
 1. Limpa e normaliza titulo + resumo de cada mencao.
-2. Calcula TF-IDF global (unigramas e bigramas).
-3. Extrai termos mais relevantes por mencao.
-4. Infere sentimento (positivo, negativo, neutro, misto) por regras lexicais.
-5. Infere gargalo logistico (pessoal, frota, escala, tempo de deslocamento, nenhum).
-6. Gera resumo textual e visualizacoes para leitura rapida.
+2. Aplica stopwords manuais (pronomes, siglas administrativas e termos de baixo valor semantico).
+3. Calcula TF-IDF global (unigramas e bigramas).
+4. Filtra termos pouco informativos antes de montar ranking, rede e nuvem.
+5. Infere sentimento (positivo, negativo, neutro, misto) por regras lexicais.
+6. Infere gargalo logistico (pessoal, frota, escala, tempo de deslocamento, nenhum) usando o texto da mencao.
+7. Gera resumo textual e visualizacoes para leitura rapida.
 
 ## Observacoes
 
 - Esta etapa nao usa LLM externa.
 - O campo erro_classificacao e mantido no CSV para compatibilidade, mas fica vazio no fluxo atual.
 - Como a inferencia e heuristica, os resultados devem ser lidos como sinal exploratorio.
+- A regra de sentimento foi ajustada para nao penalizar apenas a ocorrencia isolada de "nao".

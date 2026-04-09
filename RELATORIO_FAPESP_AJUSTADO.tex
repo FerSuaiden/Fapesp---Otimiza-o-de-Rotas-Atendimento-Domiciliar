@@ -57,7 +57,7 @@ Processo FAPESP: 2025/21835-0
 
 \vspace{0.5cm}
 \noindent
-\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, humanizando o atendimento e desafogando hospitais. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma análise exploratória de dados com informações públicas do CNES/DATASUS e da Classificação Brasileira de Ocupações. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e para a modelagem do problema. Os resultados e visualizações interativas também foram disponibilizados no site do projeto (\href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}), ampliando a transparência e permitindo o acesso contínuo e público dos resultados.
+\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, priorizando a humanização do atendimento e a desospitalização. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma análise de dados com informações públicas do CNES/DATASUS e da Classificação Brasileira de Ocupações. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e para a modelagem do problema. Os resultados e visualizações interativas também foram disponibilizados no site do projeto (\href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}), ampliando a transparência e permitindo o acesso contínuo e público dos resultados.
 
 \vspace{0.3cm}
 \noindent
@@ -150,7 +150,7 @@ A média nacional de 21,9\% oculta diferenças substanciais entre as regiões do
 
 \begin{table}[H]
 \centering
-\caption{Cobertura do Programa Melhor em Casa por região.}
+\caption{Cobertura do Programa Melhor em Casa por região.}\label{tabelaa}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
 \textbf{Região} & \textbf{Mun. Cobertos} & \textbf{Cobertura (\%)} & \textbf{Equipes} & \textbf{Eq./100k hab.} \\
@@ -166,7 +166,7 @@ Sul & 107 & 9,0\% & 215 & 0,72 \\
 \end{tabular}
 \end{table}
 
-A tabela revela diferenças expressivas entre regiões. O Nordeste lidera em cobertura municipal (31,4\%), enquanto o Sul apresenta a menor penetração do programa (9,0\%). Essa disparidade se reflete também na densidade de equipes por habitante: o Nordeste possui 2,02 equipes por 100 mil habitantes, enquanto o Sul conta com apenas 0,72. Regiões com poucas equipes e grande dispersão geográfica enfrentam deslocamentos mais longos e menor flexibilidade na organização dos atendimentos.
+A Tabela \ref{tabelaa} revela diferenças expressivas entre regiões. O Nordeste lidera em cobertura municipal (31,4\%), enquanto o Sul apresenta a menor penetração do programa (9,0\%). Essa disparidade se reflete também na densidade de equipes por habitante: o Nordeste possui 2,02 equipes por 100 mil habitantes, enquanto o Sul conta com apenas 0,72. Regiões com poucas equipes e grande dispersão geográfica enfrentam deslocamentos mais longos e menor flexibilidade na organização dos atendimentos.
 
 Para complementar os dados da Tabela 1, a Figura~\ref{fig:cobertura_regional_temporal} apresenta a evolução mensal da cobertura municipal por região. A visualização reforça que as diferenças regionais não são pontuais: elas se mantêm ao longo do período analisado, com trajetórias de crescimento em ritmos distintos entre as macrorregiões.
 
@@ -302,14 +302,47 @@ O mesmo estudo mostra ainda que a expansão do programa é desigual entre munic�
 \iffalse
 \subsubsection{Integração entre Estrutura Operacional e Percepção Social}
 
-Até aqui, a análise mostrou onde as equipes estão, como se distribuem e onde a conformidade é mais frágil. Para complementar esse diagnóstico com a dimensão de uso do serviço, foi realizada uma leitura textual de menções públicas ao programa com pipeline determinístico: coleta via SerpAPI, limpeza lexical, extração de termos por TF-IDF e inferência heurística de sentimento e gargalo.
+Até aqui, a análise mostrou onde as equipes estão, como se distribuem e onde a conformidade é mais frágil. Para completar esse diagnóstico com a dimensão de uso do serviço, foi feita uma leitura qualitativa de menções públicas ao programa (coleta via SerpAPI e classificação automática via LLM Gemini).
 
-No recorte atual, foram processadas 60 menções e 40 delas (66,7\%) vieram de consultas com foco explícito em queixa (reclamação, atraso, falha, demora, desassistência e termos correlatos). A classificação heurística indicou 55,0\% de menções negativas, 21,7\% positivas, 15,0\% neutras e 8,3\% mistas. Somando negativo e misto, o tom crítico chega a 63,3\%.
+Foram analisadas duas amostras. A primeira é geral, reunindo menções em canais institucionais, imprensa, redes sociais e manifestações de usuários. A segunda é uma amostra com foco em opinião pública, construída com consultas voltadas a avaliação, reclamações e depoimentos.
 
-Na tipificação de gargalos logísticos, 30,0\% das menções foram associadas a problemas de escala/continuidade, 23,3\% a pessoal e 11,7\% a frota/insumos; em 35,0\% não houve sinal lexical suficiente para inferir gargalo específico. Entre os termos recorrentes no subconjunto de queixas, destacaram-se reclamações, atraso e denúncia, reforçando que a principal fricção percebida está na previsibilidade do atendimento.
+Na amostra focada em opinião (50 menções), a crítica aparece em 16,0\% dos posicionamentos, o que corresponde a 8 menções críticas, e o tom crítico (negativo+misto) chega a 18,0\%. Os 84,0\% restantes se distribuem entre conteúdos de apoio/informativos e sentimentos majoritariamente neutros ou positivos, sugerindo percepção geral favorável, mas com espaço para melhoria.
 
-Essa leitura permanece alinhada ao diagnóstico estrutural: fragilidades de conformidade e composição de equipe tendem a aparecer socialmente como descontinuidade do cuidado e percepção de demora. Como se trata de análise exploratória com fontes heterogêneas, os resultados devem ser interpretados como sinal de priorização para as próximas etapas de modelagem.
+Entre as menções críticas, os temas mais recorrentes foram falhas de atendimento, regularidade do cuidado, suspensão de serviços, atrasos, espera por consultas/falta de médicos e ausência de resposta em situações de urgência. Em conjunto, esses relatos sugerem que o principal foco de insatisfação não é a existência formal do programa, mas a continuidade e a previsibilidade da entrega.
+
+Essa leitura é coerente com os resultados de conformidade: a EMAD~I, tipo mais numeroso e central no atendimento direto, apresentou 48,95\% de conformidade. Equipes incompletas tendem a reduzir escopo e regularidade, o que ajuda a explicar por que a percepção crítica se concentra em acesso e continuidade.
+
+Como se trata de uma leitura exploratória, com fontes heterogêneas e classificação automática, esses resultados devem ser entendidos como um retrato indicativo do que apareceu nas fontes consultadas no período, complementando o diagnóstico desta seção.
 \fi
+
+\subsubsection{Parte 5 -- Percepção Social Exploratória (SerpAPI + TF-IDF)}
+
+Para complementar o diagnóstico estrutural com sinais de percepção pública, foi executada uma etapa exploratória de análise textual com coleta via SerpAPI e processamento lexical determinístico (sem LLM), combinando limpeza de texto, TF-IDF, regras heurísticas de sentimento e inferência de gargalos operacionais.
+
+Foram avaliados dois perfis de coleta: \textit{balanced} (consultas informativas e de avaliação geral) e \textit{problem-oriented} (consultas orientadas a reclamações e falhas). A Tabela~\ref{tab:parte5_percepcao} resume os principais indicadores.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Resumo comparativo da Parte 5 (percepção social exploratória).}
+\label{tab:parte5_percepcao}
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Perfil} & \textbf{Menções} & \textbf{Foco em queixa} & \textbf{Neutro} & \textbf{Negativo} & \textbf{Positivo} & \textbf{Gargalo pessoal} \\
+\hline
+Balanced & 230 & 8,7\% (20) & 66,1\% (152) & 8,7\% (20) & 22,6\% (52) & 28,3\% (65) \\
+Problem-oriented & 60 & 66,7\% (40) & 21,7\% (13) & 51,7\% (31) & 21,7\% (13) & 23,3\% (14) \\
+\hline
+\end{tabular}
+\end{table}
+
+No perfil \textit{balanced}, a leitura lexical indica debate público majoritariamente informativo/descritivo, com baixa proporção de queixa explícita (8,7\%). Já no perfil \textit{problem-oriented}, o tom negativo passa a predominar (51,7\%), como esperado para um conjunto de consultas orientado a falhas. Essa diferença é metodologicamente relevante: ela mostra que a percepção capturada é sensível ao desenho da coleta, reduzindo risco de conclusão enviesada por um único tipo de consulta.
+
+Em termos de conteúdo, os termos de maior peso no perfil \textit{balanced} (por TF-IDF) concentram-se em \textit{equipe}, \textit{cuidado}, \textit{assistência} e \textit{qualidade}, sugerindo que a discussão pública está mais associada à organização da assistência e à experiência de cuidado do que a episódios críticos isolados.
+
+Na inferência de gargalos, \textit{pessoal} é o sinal recorrente em ambos os perfis. No \textit{balanced}, 65 das 230 menções (28,3\%) foram classificadas em \textit{pessoal}; entre as menções com algum gargalo detectado (84), essa categoria representa 77,4\%. No \textit{problem-oriented}, \textit{pessoal} aparece em 14 de 60 menções (23,3\%), equivalendo a 58,3\% entre as menções com gargalo detectado (24). Esse padrão converge com o diagnóstico estrutural anterior de baixa conformidade das EMAD~I (48,95\%), reforçando que disponibilidade e composição de força de trabalho são pontos centrais para continuidade e regularidade do atendimento.
+
+Assim, a utilidade da Parte 5 para a pesquisa não está em "provar" avaliação positiva ou negativa, mas em identificar sinais operacionais acionáveis para a modelagem: priorização de cenários com restrição de equipe, análise de robustez sob variação de demanda/percepção e foco em métricas de continuidade do cuidado.
 
 
 \subsection{Principais Conclusões}
