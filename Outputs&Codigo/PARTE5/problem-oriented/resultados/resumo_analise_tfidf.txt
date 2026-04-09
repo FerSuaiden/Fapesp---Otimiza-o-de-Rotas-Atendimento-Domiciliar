@@ -1,0 +1,49 @@
+RESUMO - PARTE 5 (ANALISE LEXICAL SEM LLM)
+Total de mencoes analisadas: 60
+Mencoes de consultas com foco em queixa: 40 (66.7%)
+
+Distribuicao de sentimento (heuristica):
+- negativo: 31 (51.7%)
+- neutro: 13 (21.7%)
+- positivo: 13 (21.7%)
+- misto: 3 (5.0%)
+
+Distribuicao de gargalo inferido:
+- nenhum: 36 (60.0%)
+- pessoal: 14 (23.3%)
+- escala: 5 (8.3%)
+- frota: 5 (8.3%)
+
+Top 12 termos por TF-IDF medio:
+- equipe: 0.0807
+- cuidado: 0.0391
+- denuncia: 0.0345
+- reclamacoes: 0.0333
+- organiza: 0.0333
+- atraso: 0.0329
+- promover: 0.0328
+- alta: 0.0320
+- pmec: 0.0318
+- cuidadores: 0.0316
+- atendimentos: 0.0298
+- protocolo: 0.0293
+
+Leitura analitica da nuvem/TF-IDF:
+- A nuvem concentra o discurso em: equipe, cuidado, denuncia, reclamacoes, organiza.
+- O corpus esta orientado por queixas, entao a nuvem tende a enfatizar termos de critica e falha operacional.
+- Sentimento dominante: negativo (51.7%), sugerindo predominio de percepcao critica sobre a operacao.
+- Entre os gargalos inferidos, o sinal mais recorrente e pessoal (23.3% do total).
+
+Top 12 termos frequentes nas consultas de queixa:
+- reclamacoes: 6
+- denuncia: 5
+- atraso: 4
+- cuidado: 4
+- hospital: 3
+- reputacao: 3
+- alta: 3
+- protocolo: 3
+- atendimentos: 3
+- promover: 3
+- equipe: 3
+- pmec: 3
