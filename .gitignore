@@ -11,3 +11,4 @@ SIA_DATA/*.dbf
 .env
 .env.*
 *.env
+BACKUP_PARTES_3_E_5/

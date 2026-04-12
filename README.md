@@ -1,5 +1,7 @@
 # Analise de Atencao Domiciliar (Melhor em Casa)
 
+O Programa Melhor em Casa e uma politica publica do Ministerio da Saude para organizar a atencao domiciliar no SUS, com equipes multiprofissionais que acompanham pacientes em casa quando nao ha necessidade de internacao continua.
+
 Repositorio de Iniciacao Cientifica (IC/FAPESP) para analise de dados do programa Melhor em Casa, com foco em oferta de equipes, capacidade potencial, cobertura municipal e conformidade normativa.
 
 ## Projeto FAPESP
@@ -9,6 +11,13 @@ Repositorio de Iniciacao Cientifica (IC/FAPESP) para analise de dados do program
 - Aluno: Fernando Alee Suaiden
 - Orientadora: Maristela Oliveira dos Santos
 
+## Fontes de dados (links oficiais)
+
+- CNES/DATASUS (bases CNES): https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp
+- IBGE (Censo 2022 e dados demograficos): https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html
+- CBO (Classificacao Brasileira de Ocupacoes): http://www.mtecbo.gov.br/cbosite/pages/downloads.jsf
+- SerpAPI (coleta web para opiniao publica): https://serpapi.com/search-api
+
 ## Objetivo cientifico
 
 - Medir a distribuicao espacial e estadual das equipes AD.
@@ -16,17 +25,21 @@ Repositorio de Iniciacao Cientifica (IC/FAPESP) para analise de dados do program
 - Avaliar composicao profissional das equipes.
 - Quantificar cobertura municipal e densidade por populacao.
 - Verificar conformidade com a Portaria GM/MS no 3.005/2024.
+- Explorar sinais de percepcao publica e gargalos operacionais via analise textual.
 
 ## Estrutura principal
 
 ```text
 CNES_DATA/                         # Bases CNES (competencia 2025-08)
 CBO_DATA/                          # Dicionarios CBO
+IBGE_DATA/                         # Base municipal de apoio (ex.: municipios_ibge.csv)
 Outputs&Codigo/
 	OFERTA/                          # Oferta, mapas, distribuicoes e serie temporal
 	COMPOSICAO/                      # Capacidade potencial e composicao profissional
 	CONFORMIDADE/                    # Cobertura e conformidade legal
+	OPINIAO_PUBLICA/                 # Coleta SerpAPI + analise lexical de mencoes
 map_server/                        # Site estatico e publicacao via Docker
+RELATORIO_FAPESP_AJUSTADO.tex      # Relatorio semestral consolidado
 README.md
 requirements.txt
 ```
@@ -92,6 +105,31 @@ python "Outputs&Codigo/CONFORMIDADE/scripts/analise_nacional_brasil_v2.py"
 python "Outputs&Codigo/CONFORMIDADE/scripts/gerar_visualizacoes_estados_v2.py"
 ```
 
+### OPINIAO_PUBLICA - coleta web e inferencia lexical
+
+- `scripts/coleta_serpapi_opiniao.py`: coleta mencoes publicas por perfil.
+- `scripts/classificar_gemini_percepcao.py`: limpeza, TF-IDF, inferencia de sentimento/gargalo e visualizacoes.
+
+```bash
+# Coleta (perfil balanced)
+python "Outputs&Codigo/OPINIAO_PUBLICA/scripts/coleta_serpapi_opiniao.py" \
+	--perfil balanced
+
+# Coleta (perfil problem-oriented)
+python "Outputs&Codigo/OPINIAO_PUBLICA/scripts/coleta_serpapi_opiniao.py" \
+	--perfil problem-oriented
+
+# Analise lexical (executar para cada perfil)
+python "Outputs&Codigo/OPINIAO_PUBLICA/scripts/classificar_gemini_percepcao.py" \
+	--perfil balanced
+
+python "Outputs&Codigo/OPINIAO_PUBLICA/scripts/classificar_gemini_percepcao.py" \
+	--perfil problem-oriented
+```
+
+Documentacao detalhada (passo a passo e formulas):
+- `Outputs&Codigo/OPINIAO_PUBLICA/README.md`
+
 ## Publicacao local do site
 
 ```bash
@@ -105,4 +143,10 @@ Site em: `http://localhost:8080`
 
 - PNG/HTML em `Outputs&Codigo/OFERTA`, `Outputs&Codigo/COMPOSICAO` e `Outputs&Codigo/CONFORMIDADE/visualizacoes`.
 - CSV em `Outputs&Codigo/CONFORMIDADE/dados_csv`.
-- Bases atualmente utilizadas: CNES/DATASUS (competencia 2025-08) e CBO.
+- CSV/PNG da analise social em `Outputs&Codigo/OPINIAO_PUBLICA/<perfil>/`.
+- Bases atualmente utilizadas: CNES/DATASUS (competencia 2025-08), CBO e IBGE (apoio municipal/denominadores).
+
+## Materiais de apoio
+
+- Relatorio semestral: `RELATORIO_FAPESP_AJUSTADO.tex`
+- Video de explicacao (raiz): [Gravacao de ecra 7](Grava%C3%A7%C3%A3o%20de%20ecr%C3%A3%207%20(online-video-cutter.com)(4).mp4)
