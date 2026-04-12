@@ -8,7 +8,13 @@ Os resultados consolidados sao publicados no site do projeto: https://otimhomeca
 
 ## Apresentacao em video
 
-O player HTML de video nao e exibido no README do GitHub. Use o link abaixo para abrir a gravacao:
+Para ter player inline no README do GitHub, o video precisa estar em URL de GitHub Attachments (formato abaixo):
+
+https://github.com/user-attachments/assets/SEU-UUID
+
+Passo rapido: envie o MP4 em um comentario de Issue/PR no proprio repositorio e copie a URL gerada.
+
+Enquanto isso, use o arquivo local abaixo:
 
 - [Assistir apresentacao (MP4)](./Grava%C3%A7%C3%A3o%20de%20ecr%C3%A3%207%20(online-video-cutter.com)(4).mp4)
 
@@ -22,7 +28,8 @@ O player HTML de video nao e exibido no README do GitHub. Use o link abaixo para
 ## Fontes de dados (links oficiais)
 
 - CNES/DATASUS (bases CNES): https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp
-- IBGE (Censo 2022 e dados demograficos): https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html
+- IBGE (lista oficial de municipios usada em `IBGE_DATA/municipios_ibge.csv`): https://servicodados.ibge.gov.br/api/v1/localidades/municipios
+- IBGE (Censo 2022, usado para denominadores demograficos): https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html
 - CBO (Classificacao Brasileira de Ocupacoes): http://www.mtecbo.gov.br/cbosite/pages/downloads.jsf
 
 ## Objetivo cientifico
