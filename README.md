@@ -1,8 +1,14 @@
 # Analise de Atencao Domiciliar (Melhor em Casa)
 
-O Programa Melhor em Casa e uma politica publica do Ministerio da Saude para organizar a atencao domiciliar no SUS, com equipes multiprofissionais que acompanham pacientes em casa quando nao ha necessidade de internacao continua.
+O Programa Melhor em Casa e uma politica publica do Ministerio da Saude que organiza o cuidado domiciliar no SUS com equipes multiprofissionais, reduzindo deslocamentos desnecessarios e apoiando a continuidade do tratamento no territorio.
 
-Repositorio de Iniciacao Cientifica (IC/FAPESP) para analise de dados do programa Melhor em Casa, com foco em oferta de equipes, capacidade potencial, cobertura municipal e conformidade normativa.
+Este repositorio reune os scripts, bases processadas e visualizacoes da Iniciacao Cientifica (IC/FAPESP), com foco em oferta de equipes, capacidade potencial, cobertura municipal e conformidade normativa.
+
+Os resultados consolidados sao publicados no site do projeto: https://otimhomecare.icmc.usp.br/index.html. Essa publicacao aberta facilita a transparencia, amplia o acesso da sociedade aos indicadores e permite acompanhamento continuo da evolucao analitica do trabalho.
+
+## Apresentacao em video
+
+<video controls width="100%" src="Grava%C3%A7%C3%A3o%20de%20ecr%C3%A3%207%20(online-video-cutter.com)(4).mp4"></video>
 
 ## Projeto FAPESP
 
@@ -16,7 +22,6 @@ Repositorio de Iniciacao Cientifica (IC/FAPESP) para analise de dados do program
 - CNES/DATASUS (bases CNES): https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp
 - IBGE (Censo 2022 e dados demograficos): https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html
 - CBO (Classificacao Brasileira de Ocupacoes): http://www.mtecbo.gov.br/cbosite/pages/downloads.jsf
-- SerpAPI (coleta web para opiniao publica): https://serpapi.com/search-api
 
 ## Objetivo cientifico
 
@@ -43,8 +48,6 @@ RELATORIO_FAPESP_AJUSTADO.tex      # Relatorio semestral consolidado
 README.md
 requirements.txt
 ```
-
-Nota: o conteudo da antiga PARTE6 foi incorporado em `Outputs&Codigo/OFERTA/serie_temporal_cobertura/`.
 
 ## Requisitos
 
@@ -149,4 +152,3 @@ Site em: `http://localhost:8080`
 ## Materiais de apoio
 
 - Relatorio semestral: `RELATORIO_FAPESP_AJUSTADO.tex`
-- Video de explicacao (raiz): [Gravacao de ecra 7](Grava%C3%A7%C3%A3o%20de%20ecr%C3%A3%207%20(online-video-cutter.com)(4).mp4)

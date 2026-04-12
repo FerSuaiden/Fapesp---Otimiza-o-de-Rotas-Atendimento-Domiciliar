@@ -19,6 +19,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -36,8 +37,9 @@
 \titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
 
-% Comando para links textuais às referências bibliográficas
-\DeclareRobustCommand{\citelink}[2]{\hyperlink{cite.#1}{#2}}
+% Mantem o texto da citacao no corpo e adiciona a referencia numerica.
+\DeclareRobustCommand{\citelink}[2]{#2~\cite{#1}}
+\renewcommand{\refname}{Referências}
 
 \begin{document}
 
@@ -52,16 +54,16 @@
 \noindent
 Aluno: Fernando Alee Suaiden \\
 Orientadora: Maristela Oliveira dos Santos \\
-Relatório Semestral -- 19 de março de 2026 \\
+Relatório Semestral -- 12 de abril de 2026 \\
 Processo FAPESP: 2025/21835-0
 
 \vspace{0.5cm}
 \noindent
-\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, priorizando a humanização do atendimento e a desospitalização. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma análise de dados com informações públicas do CNES/DATASUS e da Classificação Brasileira de Ocupações. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e para a modelagem do problema. Os resultados e visualizações interativas também foram disponibilizados no site do projeto (\href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}), ampliando a transparência e permitindo o acesso contínuo e público dos resultados.
+\textbf{RESUMO:} O Programa Melhor em Casa, instituído pelo Ministério da Saúde em 2011, oferece atendimento domiciliar por meio de equipes multiprofissionais a pacientes que necessitam de cuidados contínuos, mas que podem ser tratados em casa, priorizando a humanização do atendimento e a desospitalização. Para caracterizar o cenário operacional desse programa no Brasil, foi realizada uma análise de dados com informações públicas do CNES/DATASUS, do IBGE e da Classificação Brasileira de Ocupações. A análise revelou 2.664 equipes ativas em apenas 21,9\% dos municípios brasileiros, com disparidades expressivas entre regiões, variações na composição por tipo de equipe e parcela significativa das equipes de atendimento direto operando abaixo dos requisitos legais vigentes. O estudo evidencia um cenário de cobertura insuficiente e desigual, cuja heterogeneidade se intensifica na escala estadual, fornecendo uma base concreta para a compreensão do programa e para a modelagem do problema. Os resultados e visualizações interativas também foram disponibilizados no site do projeto (\href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}), ampliando a transparência e permitindo o acesso contínuo e público dos resultados.
 
 \vspace{0.3cm}
 \noindent
-\textbf{Palavras-chave:} Ciência de dados; Atenção Domiciliar; Programa Melhor em Casa; Análise Exploratória de Dados; CNES/DATASUS; Conformidade Legal; SUS.
+\textbf{Palavras-chave:} Ciência de dados; Atenção Domiciliar; Programa Melhor em Casa; Análise Exploratória de Dados; CNES/DATASUS; IBGE; Conformidade Legal; SUS.
 
 \newpage
 \section{Introdução}
@@ -74,7 +76,7 @@ Nesse contexto, o \citelink{portaria825}{Programa Melhor em Casa}, instituído p
 
 Para entender como essa política se distribui no território nacional, este relatório reúne e organiza informações oficiais em indicadores comparáveis. O objetivo é transformar registros dispersos em uma leitura clara da cobertura e das condições operacionais do programa.
 
-Os dados do programa estão públicos, mas sua utilização analítica exige extração em múltiplas tabelas do CNES/DATASUS e tratamento posterior para integração consistente. Nos scripts do projeto, esse trabalho aparece em filtros de atividade e em cruzamentos entre equipes, profissionais e cargas horárias, com apoio da Classificação Brasileira de Ocupações (CBO) para padronizar as categorias profissionais. Essas etapas tornam a leitura direta das planilhas menos imediata para quem não acompanha o processamento.
+Os dados do programa estão públicos, mas sua utilização analítica exige extração em múltiplas tabelas do CNES/DATASUS, integração com bases demográficas e territoriais do IBGE e tratamento posterior para integração consistente. Nos scripts do projeto, esse trabalho aparece em filtros de atividade e em cruzamentos entre equipes, profissionais e cargas horárias, com apoio da Classificação Brasileira de Ocupações (CBO) para padronizar as categorias profissionais. Essas etapas tornam a leitura direta das planilhas menos imediata para quem não acompanha o processamento.
 
 Ao disponibilizar esse diagnóstico em tabelas, mapas e gráficos, o trabalho amplia a transparência sobre o Programa Melhor em Casa e oferece base prática para análises e decisões de planejamento.
 
@@ -119,7 +121,7 @@ Com base nessa revisão, este trabalho busca avançar em um ponto ainda pouco ex
 
 \section{Metodologia}
 
-A metodologia foi conduzida em etapas. Primeiro, foram coletados os dados públicos do \href{https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp}{CNES/DATASUS} e da \href{http://www.mtecbo.gov.br/cbosite/pages/downloads.jsf}{Classificação Brasileira de Ocupações (CBO)}. Em seguida, os dados passaram por organização e tratamento: filtragem de registros ativos, padronização de campos e datas, cruzamento entre tabelas e consolidação das variáveis necessárias para análise.
+A metodologia foi conduzida em etapas. Primeiro, foram coletados os dados públicos do \href{https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp}{CNES/DATASUS}, do \href{https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html}{IBGE} e da \href{http://www.mtecbo.gov.br/cbosite/pages/downloads.jsf}{Classificação Brasileira de Ocupações (CBO)}. Em seguida, os dados passaram por organização e tratamento: filtragem de registros ativos, padronização de campos e datas, cruzamento entre tabelas e consolidação das variáveis necessárias para análise.
 
 Na etapa seguinte, foram calculados os indicadores de cobertura, densidade de equipes, composição por tipo e conformidade legal. As análises e produtos foram implementados com scripts em Python, organizados em repositório versionado no \href{https://github.com/FerSuaiden/Fapesp---Otimiza-o-de-Rotas-Atendimento-Domiciliar}{GitHub}. Por fim, os resultados foram armazenados em saídas tabulares e visuais (CSV, gráficos e mapas) e publicados no site \href{https://otimhomecare.icmc.usp.br/index.html}{otimhomecare.icmc.usp.br}. Esse arranjo permite atualização contínua e rastreabilidade das etapas de processamento.
 
@@ -315,34 +317,49 @@ Essa leitura é coerente com os resultados de conformidade: a EMAD~I, tipo mais 
 Como se trata de uma leitura exploratória, com fontes heterogêneas e classificação automática, esses resultados devem ser entendidos como um retrato indicativo do que apareceu nas fontes consultadas no período, complementando o diagnóstico desta seção.
 \fi
 
-\subsubsection{Parte 5 -- Percepção Social Exploratória (SerpAPI + TF-IDF)}
+\subsubsection{Percepção Pública e Sinais Operacionais}
 
-Para complementar o diagnóstico estrutural com sinais de percepção pública, foi executada uma etapa exploratória de análise textual com coleta via SerpAPI e processamento lexical determinístico (sem LLM), combinando limpeza de texto, TF-IDF, regras heurísticas de sentimento e inferência de gargalos operacionais.
+Para complementar o diagnóstico estrutural com sinais de percepção pública, foi executada uma etapa exploratória de análise textual com coleta via SerpAPI.
 
-Foram avaliados dois perfis de coleta: \textit{balanced} (consultas informativas e de avaliação geral) e \textit{problem-oriented} (consultas orientadas a reclamações e falhas). A Tabela~\ref{tab:parte5_percepcao} resume os principais indicadores.
+A coleta combinou duas frentes de busca complementares. A primeira reuniu consultas informativas e avaliativas (por exemplo, funcionamento, critérios de acesso, cobertura e qualidade), para representar o discurso mais amplo sobre o programa. A segunda priorizou consultas associadas a reclamações e falhas (como atraso, desassistência e não atendimento), para destacar situações de maior tensão operacional.
 
-\begin{table}[H]
+Após a coleta, as menções foram padronizadas e limpas para reduzir ruído textual. Em seguida, aplicou-se classificação lexical com regras para sentimento (positivo, negativo, neutro ou misto) e para inferência de gargalo operacional (\textit{pessoal}, \textit{frota}, \textit{escala}, \textit{tempo de deslocamento} ou \textit{nenhum}).
+
+Nos resultados atualizados, o conjunto de consultas mais amplo apresentou 230 menções, com 8,7\% de consultas com foco em queixa e predominância de sentimento neutro (66,1\%), seguido de positivo (22,6\%), negativo (8,7\%) e misto (2,6\%). Já o conjunto com foco em problemas, com 60 menções, concentrou 66,7\% de consultas com foco em queixa, com predominância de sentimento negativo (51,7\%), seguido de neutro (21,7\%), positivo (21,7\%) e misto (5,0\%). Essa diferença confirma que a percepção observada é sensível ao tipo de consulta e deve ser interpretada como evidência exploratória.
+
+Em termos práticos, a utilidade da extração foi separar o ruído informativo geral dos sinais críticos de capacidade de equipe e continuidade do atendimento, permitindo priorizar hipóteses operacionais mais aderentes ao padrão observado nas fontes públicas.
+
+\begin{figure}[H]
 \centering
-\footnotesize
-\caption{Resumo comparativo da Parte 5 (percepção social exploratória).}
-\label{tab:parte5_percepcao}
-\begin{tabular}{|l|c|c|c|c|c|c|}
-\hline
-\textbf{Perfil} & \textbf{Menções} & \textbf{Foco em queixa} & \textbf{Neutro} & \textbf{Negativo} & \textbf{Positivo} & \textbf{Gargalo pessoal} \\
-\hline
-Balanced & 230 & 8,7\% (20) & 66,1\% (152) & 8,7\% (20) & 22,6\% (52) & 28,3\% (65) \\
-Problem-oriented & 60 & 66,7\% (40) & 21,7\% (13) & 51,7\% (31) & 21,7\% (13) & 23,3\% (14) \\
-\hline
-\end{tabular}
-\end{table}
+\caption{Comparação das nuvens de palavras para os dois conjuntos de consultas.}
+\label{fig:percepcao_nuvens}
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{nuvem_palavras_tfidf_balanced.png}
+\\
+\small (a) Nuvem de palavras do conjunto de consultas amplas.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{nuvem_palavras_tfidf_problem_oriented.png}
+\\
+\small (b) Nuvem de palavras do conjunto de consultas com foco em problemas.
+\end{minipage}
+\end{figure}
 
-No perfil \textit{balanced}, a leitura lexical indica debate público majoritariamente informativo/descritivo, com baixa proporção de queixa explícita (8,7\%). Já no perfil \textit{problem-oriented}, o tom negativo passa a predominar (51,7\%), como esperado para um conjunto de consultas orientado a falhas. Essa diferença é metodologicamente relevante: ela mostra que a percepção capturada é sensível ao desenho da coleta, reduzindo risco de conclusão enviesada por um único tipo de consulta.
+Em termos de conteúdo, a nuvem do conjunto de consultas amplas concentra termos como \textit{equipe}, \textit{cuidado}, \textit{assistência} e \textit{qualidade}, sugerindo discussão mais associada à organização da assistência e à experiência de cuidado do que a episódios críticos isolados.
 
-Em termos de conteúdo, os termos de maior peso no perfil \textit{balanced} (por TF-IDF) concentram-se em \textit{equipe}, \textit{cuidado}, \textit{assistência} e \textit{qualidade}, sugerindo que a discussão pública está mais associada à organização da assistência e à experiência de cuidado do que a episódios críticos isolados.
+Na inferência de gargalos, os padrões diferem entre os dois conjuntos. Para facilitar a comparação:
 
-Na inferência de gargalos, \textit{pessoal} é o sinal recorrente em ambos os perfis. No \textit{balanced}, 65 das 230 menções (28,3\%) foram classificadas em \textit{pessoal}; entre as menções com algum gargalo detectado (84), essa categoria representa 77,4\%. No \textit{problem-oriented}, \textit{pessoal} aparece em 14 de 60 menções (23,3\%), equivalendo a 58,3\% entre as menções com gargalo detectado (24). Esse padrão converge com o diagnóstico estrutural anterior de baixa conformidade das EMAD~I (48,95\%), reforçando que disponibilidade e composição de força de trabalho são pontos centrais para continuidade e regularidade do atendimento.
+\begin{itemize}[leftmargin=1.2cm]
+    \item \textbf{Consultas amplas (automático):} 65 de 230 menções (28,3\%) foram classificadas em \textit{pessoal}, 15 (6,5\%) em \textit{escala}, 3 (1,3\%) em \textit{frota} e 1 (0,4\%) em \textit{tempo de deslocamento}; nas demais 146 (63,5\%), não houve gargalo detectado.
+    \item \textbf{Consultas com foco em problemas (automático):} 14 de 60 menções (23,3\%) foram classificadas em \textit{pessoal}, 5 (8,3\%) em \textit{escala} e 5 (8,3\%) em \textit{frota}; nas demais 36 (60,0\%), não houve gargalo detectado.
+\end{itemize}
 
-Assim, a utilidade da Parte 5 para a pesquisa não está em "provar" avaliação positiva ou negativa, mas em identificar sinais operacionais acionáveis para a modelagem: priorização de cenários com restrição de equipe, análise de robustez sob variação de demanda/percepção e foco em métricas de continuidade do cuidado.
+Esse padrão converge com o diagnóstico estrutural anterior de baixa conformidade das EMAD~I (48,95\%) e com a heterogeneidade de cobertura observada, sugerindo que os sinais críticos captados nas menções públicas se concentram sobretudo em capacidade de equipe e disponibilidade do atendimento.
+
+Como a classificação combina regras lexicais, os resultados devem ser lidos como evidência exploratória para formulação de cenários, e não como medida exata da percepção pública. Ainda assim, os resultados são mais adequados para priorização de hipóteses (especialmente de pessoal/escala) do que para inferência causal sobre desempenho operacional.
 
 
 \subsection{Principais Conclusões}
@@ -359,16 +376,8 @@ Em linha com \citelink{albuquerque2025}{Albuquerque (2025)}, os resultados tamb�
 A pesquisa encontra-se na transição entre a fase de análise de dados e a fase de modelagem. Neste primeiro período, a Análise Exploratória de Dados dos registros públicos do CNES/DATASUS e da Classificação Brasileira de Ocupações (CBO) permitiu caracterizar as equipes de Atenção Domiciliar em termos de localização geográfica, capacidade e composição profissional, além de verificar a conformidade com a legislação vigente. Os resultados desta etapa, incluindo visualizações e bases processadas, já estão organizados no site do projeto e no repositório GitHub. A próxima etapa consiste na implementação do modelo de otimização e do algoritmo de solução, seguindo a abordagem de \citelink{kummer2024}{Kummer et al. (2024)}, e na comparação de desempenho entre os métodos.
 \fi
 
-\section*{Referências}
-
-\begin{enumerate}[label={[\arabic*]}]
-\item \hypertarget{cite.ibge2022}{}IBGE -- Instituto Brasileiro de Geografia e Estatística. \textit{Censo Demográfico 2022: População por idade e sexo}. Agência IBGE Notícias, 27 out. 2023. Disponível em: \url{https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/38186-censo-2022-numero-de-pessoas-com-65-anos-ou-mais-de-idade-cresceu-57-4-em-12-anos}. Acesso em: jan. 2026.
-\item \hypertarget{cite.kummer2024}{}KUMMER, A.F.; ARAÚJO, O.C.B. de; BURIOL, L.S.; RESENDE, M.G.C. \textit{A biased random-key genetic algorithm for the home health care problem}. International Transactions in Operational Research, v. 31, n. 3, p. 1859--1889, 2024. Disponível em: \url{https://doi.org/10.1111/itor.13221}.
-\item \hypertarget{cite.portaria825}{}BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 825, de 25 de abril de 2016}. Redefine a Atenção Domiciliar no âmbito do Sistema Único de Saúde (SUS) e atualiza as equipes habilitadas. Brasília, 2016. Disponível em: \url{https://bvsms.saude.gov.br/bvs/saudelegis/gm/2016/prt0825_25_04_2016.html}.
-\item \hypertarget{cite.portaria3005}{}BRASIL. Ministério da Saúde. \textit{Portaria GM/MS nº 3.005, de 2 de janeiro de 2024}. Altera as Portarias de Consolidação nºs 5 e 6, de 28 de setembro de 2017, para atualizar as regras do Serviço de Atenção Domiciliar (SAD) e do Programa Melhor em Casa (PMeC). Brasília, 2024. Disponível em: \url{https://www.gov.br/saude/pt-br/composicao/saes/melhor-em-casa/legislacao/portaria-gm-ms-no-3-005-de-2-de-janeiro-de-2024}.
-\item \hypertarget{cite.cnes}{}BRASIL. Ministério da Saúde. \textit{CNES -- Cadastro Nacional de Estabelecimentos de Saúde}. Disponível em: \url{https://cnes.datasus.gov.br/}. Acesso em: ago. 2025.
-\item \hypertarget{cite.albuquerque2025}{}ALBUQUERQUE, W. M. \textit{Política de atenção domiciliar no Brasil: análises espacial, de cobertura, focalização e impacto do Programa Melhor em Casa}. 2025. Tese (Doutorado em Economia Rural) -- Universidade Federal do Ceará, Fortaleza, 2025. Disponível em: \url{https://repositorio.ufc.br/bitstream/riufc/83280/3/2025_tese_wmalbuquerque.pdf}.
-\item \hypertarget{cite.castellani2022}{}CASTELLANI, L. J.; MAGNI, C. \textit{Perfil dos usuários do Programa Melhor em Casa em um município do centro-oeste do Paraná}. Multitemas, v. 26, n. 64, p. 161--176, 2022. Disponível em: \url{https://doi.org/10.20435/multi.v26i64.3223}.
-\end{enumerate}
+\nocite{*}
+\bibliographystyle{plainnat}
+\bibliography{referencias}
 
 \end{document}
