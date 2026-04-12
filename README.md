@@ -4,11 +4,13 @@ O Programa Melhor em Casa e uma politica publica do Ministerio da Saude que orga
 
 Este repositorio reune os scripts, bases processadas e visualizacoes da Iniciacao Cientifica (IC/FAPESP), com foco em oferta de equipes, capacidade potencial, cobertura municipal e conformidade normativa.
 
-Os resultados consolidados sao publicados no site do projeto: https://otimhomecare.icmc.usp.br/index.html. Essa publicacao aberta facilita a transparencia, amplia o acesso da sociedade aos indicadores e permite acompanhamento continuo da evolucao analitica do trabalho.
+Os resultados consolidados sao publicados no site do projeto: https://otimhomecare.icmc.usp.br/. Essa publicacao aberta facilita a transparencia, amplia o acesso da sociedade aos indicadores e permite acompanhamento continuo da evolucao analitica do trabalho.
 
 ## Apresentacao em video
 
-<video controls width="100%" src="Grava%C3%A7%C3%A3o%20de%20ecr%C3%A3%207%20(online-video-cutter.com)(4).mp4"></video>
+O player HTML de video nao e exibido no README do GitHub. Use o link abaixo para abrir a gravacao:
+
+- [Assistir apresentacao (MP4)](./Grava%C3%A7%C3%A3o%20de%20ecr%C3%A3%207%20(online-video-cutter.com)(4).mp4)
 
 ## Projeto FAPESP
 
