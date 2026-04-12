@@ -306,7 +306,7 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help=(
             "CSV de saida da coleta. Se omitido, usa "
-            "Outputs&Codigo/PARTE5/<perfil>/resultados/mencoes_serpapi_brutas.csv"
+            "Outputs&Codigo/OPINIAO_PUBLICA/<perfil>/mencoes_serpapi_brutas.csv"
         ),
     )
     return parser.parse_args()
@@ -321,7 +321,7 @@ def main() -> None:
     saida = args.saida
     if saida is None:
         saida = Path(
-            f"Outputs&Codigo/PARTE5/{args.perfil}/resultados/mencoes_serpapi_brutas.csv"
+            f"Outputs&Codigo/OPINIAO_PUBLICA/{args.perfil}/mencoes_serpapi_brutas.csv"
         )
 
     mencoes = coletar_mencoes(

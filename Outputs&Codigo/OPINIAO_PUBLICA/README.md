@@ -12,7 +12,6 @@ Este modulo consolida a etapa exploratoria de mencoes publicas sobre o programa.
 
 ## Fontes de dados (onde obter)
 
-- SerpAPI (Search API): https://serpapi.com/search-api
 - Portal oficial do programa Melhor em Casa: https://www.gov.br/saude/pt-br/composicao/saes/melhor-em-casa
 - CNES/DATASUS (contexto estrutural do projeto): https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp
 
