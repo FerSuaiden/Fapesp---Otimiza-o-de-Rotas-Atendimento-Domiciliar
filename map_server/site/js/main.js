@@ -272,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const LEGEND_HIDDEN_STYLE_ID = 'legend-visibility-toggle-style';
   const LEGEND_RESPONSIVE_STYLE_ID = 'legend-responsive-style';
+  const MOBILE_LEGEND_BREAKPOINT = 900;
   const LEGEND_CANDIDATE_ATTR = 'data-legend-candidate';
   const LEGEND_HIDDEN_CLASS = 'legend-hidden-by-toggle';
   const LEGEND_HIDDEN_SELECTORS = [
@@ -399,6 +400,15 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.setAttribute('aria-label', btn.title);
   }
 
+  function getDefaultLegendVisibility(wrapper) {
+    const explicit = wrapper.dataset.legendDefault;
+    if (explicit === 'show') return true;
+    if (explicit === 'hide') return false;
+
+    const isMobile = window.matchMedia(`(max-width: ${MOBILE_LEGEND_BREAKPOINT}px)`).matches;
+    return !isMobile;
+  }
+
   function applyLegendVisibility(wrapper, visible) {
     wrapper.dataset.legendVisible = visible ? '1' : '0';
     wrapper.querySelectorAll('iframe').forEach((iframe) => {
@@ -423,6 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!btn.dataset.legendBound) {
         btn.dataset.legendBound = '1';
         btn.addEventListener('click', () => {
+          wrapper.dataset.legendUserSet = '1';
           const visible = wrapper.dataset.legendVisible === '1';
           applyLegendVisibility(wrapper, !visible);
         });
@@ -437,7 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (!wrapper.dataset.legendVisible) {
-        wrapper.dataset.legendVisible = '1';
+        wrapper.dataset.legendVisible = getDefaultLegendVisibility(wrapper) ? '1' : '0';
       }
 
       const visible = wrapper.dataset.legendVisible === '1';
