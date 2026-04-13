@@ -1,10 +1,10 @@
 # Analise de Atencao Domiciliar (Melhor em Casa)
 
-Este repositorio reune dados, scripts e visualizacoes para analise da Atencao Domiciliar no SUS, com foco em organizacao territorial, cobertura e caracterizacao das equipes.
+Com o envelhecimento populacional e a maior demanda por cuidados continuos, a Atencao Domiciliar tornou-se um eixo relevante para a organizacao da rede assistencial no Brasil. No SUS, o Programa Melhor em Casa apoia o acompanhamento de pacientes com diferentes niveis de complexidade clinica por meio de equipes multiprofissionais, incluindo tratamento, reabilitacao e cuidados paliativos no domicilio.
 
-O material foi estruturado para facilitar reproducibilidade: as rotinas de processamento consolidam bases oficiais e geram tabelas e graficos para exploracao nacional, estadual e municipal.
+Este repositorio concentra a infraestrutura analitica do estudo, com rotinas de extracao, tratamento e integracao de dados publicos para gerar indicadores territoriais e operacionais do programa. O fluxo principal integra bases do CNES/DATASUS, da CBO e da DTB/IBGE para analises em escala nacional, estadual e municipal.
 
-Os resultados consolidados sao publicados no site do projeto: https://otimhomecare.icmc.usp.br/. Essa publicacao aberta facilita a transparencia, amplia o acesso da sociedade aos indicadores e permite acompanhamento continuo da evolucao analitica do trabalho.
+Os resultados consolidados sao publicados em https://otimhomecare.icmc.usp.br/, com tabelas, graficos e visualizacoes que apoiam transparencia, planejamento e acompanhamento continuo dos indicadores.
 
 ## Apresentacao em video
 
@@ -35,7 +35,6 @@ Outputs&Codigo/
 	CONFORMIDADE/                    # Cobertura e conformidade legal
 	OPINIAO_PUBLICA/                 # Coleta SerpAPI + analise lexical de mencoes
 map_server/                        # Site estatico e publicacao via Docker
-RELATORIO_FAPESP_AJUSTADO.tex      # Relatorio semestral consolidado
 README.md
 requirements.txt
 ```
@@ -132,14 +131,3 @@ docker compose up -d --build --force-recreate
 ```
 
 Site em: `http://localhost:8080`
-
-## Saidas esperadas
-
-- PNG/HTML em `Outputs&Codigo/OFERTA`, `Outputs&Codigo/COMPOSICAO` e `Outputs&Codigo/CONFORMIDADE/visualizacoes`.
-- CSV em `Outputs&Codigo/CONFORMIDADE/dados_csv`.
-- CSV/PNG da analise social em `Outputs&Codigo/OPINIAO_PUBLICA/<perfil>/`.
-- Bases atualmente utilizadas: CNES/DATASUS (competencia 2025-08), CBO e IBGE (apoio municipal/denominadores).
-
-## Materiais de apoio
-
-- Relatorio semestral: `RELATORIO_FAPESP_AJUSTADO.tex`
