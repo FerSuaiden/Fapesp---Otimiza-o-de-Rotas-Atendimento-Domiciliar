@@ -28,7 +28,8 @@ Enquanto isso, use o arquivo local abaixo:
 ## Fontes de dados (links oficiais)
 
 - CNES/DATASUS (bases CNES): https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp
-- IBGE (lista oficial de municipios usada em `IBGE_DATA/municipios_ibge.csv`): https://servicodados.ibge.gov.br/api/v1/localidades/municipios
+- IBGE (tabela oficial de codigos de municipios usada em `IBGE_DATA/municipios_ibge.csv`): https://www.ibge.gov.br/explica/codigos-dos-municipios.php
+- IBGE (download direto da DTB 2024; arquivo usado: `RELATORIO_DTB_BRASIL_2024_MUNICIPIOS.xls`): https://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/divisao_territorial/2024/DTB_2024.zip
 - IBGE (Censo 2022, usado para denominadores demograficos): https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html
 - CBO (Classificacao Brasileira de Ocupacoes): http://www.mtecbo.gov.br/cbosite/pages/downloads.jsf
 
