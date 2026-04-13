@@ -8,13 +8,15 @@ Os resultados consolidados sao publicados no site do projeto: https://otimhomeca
 
 ## Apresentacao em video
 
-Para ter player inline no README do GitHub, o video precisa estar em URL de GitHub Attachments (formato abaixo):
+No GitHub, o player inline da apresentacao pode ser acessado pela URL abaixo:
 
-https://github.com/user-attachments/assets/SEU-UUID
+https://github.com/user-attachments/assets/5812a9b7-c9b5-4732-9a7a-48a96754784b
 
-Passo rapido: envie o MP4 em um comentario de Issue/PR no proprio repositorio e copie a URL gerada.
+Link direto para abrir em nova aba:
 
-Enquanto isso, use o arquivo local abaixo:
+- [Assistir apresentacao (GitHub Attachments)](https://github.com/user-attachments/assets/5812a9b7-c9b5-4732-9a7a-48a96754784b)
+
+Fallback local:
 
 - [Assistir apresentacao (MP4)](./Grava%C3%A7%C3%A3o%20de%20ecr%C3%A3%207%20(online-video-cutter.com)(4).mp4)
 
