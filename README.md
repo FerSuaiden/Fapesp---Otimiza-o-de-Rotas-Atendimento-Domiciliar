@@ -1,6 +1,6 @@
 # Analise de Atencao Domiciliar (Melhor em Casa)
 
-Com o envelhecimento populacional e a maior demanda por cuidados continuos, a Atencao Domiciliar tornou-se um eixo relevante para a organizacao da rede assistencial no Brasil. No SUS, o Programa Melhor em Casa apoia o acompanhamento de pacientes com diferentes niveis de complexidade clinica por meio de equipes multiprofissionais, incluindo tratamento, reabilitacao e cuidados paliativos no domicilio.
+O Programa Melhor em Casa organiza a Atencao Domiciliar no SUS e apoia o acompanhamento de pacientes com diferentes niveis de complexidade clinica no domicilio. Sua atuacao envolve equipes multiprofissionais e combina acoes de tratamento, reabilitacao e cuidados paliativos para ampliar a continuidade do cuidado no territorio.
 
 Este repositorio concentra a infraestrutura analitica do estudo, com rotinas de extracao, tratamento e integracao de dados publicos para gerar indicadores territoriais e operacionais do programa. O fluxo principal integra bases do CNES/DATASUS, da CBO e da DTB/IBGE para analises em escala nacional, estadual e municipal.
 

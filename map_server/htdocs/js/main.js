@@ -271,6 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const LEGEND_HIDDEN_STYLE_ID = 'legend-visibility-toggle-style';
+  const LEGEND_RESPONSIVE_STYLE_ID = 'legend-responsive-style';
   const LEGEND_CANDIDATE_ATTR = 'data-legend-candidate';
   const LEGEND_HIDDEN_CLASS = 'legend-hidden-by-toggle';
   const LEGEND_HIDDEN_SELECTORS = [
@@ -302,6 +303,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function ensureLegendResponsiveStyles(doc) {
+    if (doc.getElementById(LEGEND_RESPONSIVE_STYLE_ID)) return;
+
+    const style = doc.createElement('style');
+    style.id = LEGEND_RESPONSIVE_STYLE_ID;
+    style.textContent = `
+      html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+
+      @media (max-width: 900px) {
+        ${LEGEND_HIDDEN_SELECTORS} {
+          max-width: min(72vw, 320px) !important;
+          width: min(72vw, 320px) !important;
+          max-height: 42vh !important;
+          height: auto !important;
+          overflow: auto !important;
+          box-sizing: border-box !important;
+          padding: 8px !important;
+          font-size: 11px !important;
+          line-height: 1.35 !important;
+        }
+
+        ${LEGEND_HIDDEN_SELECTORS} * {
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+        }
+
+        ${LEGEND_HIDDEN_SELECTORS} b {
+          font-size: 12px !important;
+          line-height: 1.35 !important;
+        }
+      }
+    `;
+
+    (doc.head || doc.documentElement).appendChild(style);
+  }
+
   function setPlotlyLegendVisibility(iframe, visible) {
     try {
       const plotDoc = iframe.contentDocument || iframe.contentWindow?.document;
@@ -324,6 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!doc) return;
 
       markLegendCandidates(doc);
+      ensureLegendResponsiveStyles(doc);
 
       const existing = doc.getElementById(LEGEND_HIDDEN_STYLE_ID);
       if (visible) {
@@ -396,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (!wrapper.dataset.legendVisible) {
-        wrapper.dataset.legendVisible = '0';
+        wrapper.dataset.legendVisible = '1';
       }
 
       const visible = wrapper.dataset.legendVisible === '1';
