@@ -21,9 +21,7 @@ https://github.com/user-attachments/assets/5812a9b7-c9b5-4732-9a7a-48a96754784b
 
 - CNES/DATASUS (CNES datasets): https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp
 - IBGE (DTB 2024): https://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/divisao_territorial/2024/DTB_2024.zip
-	- IBGE reference page for municipality codes: https://www.ibge.gov.br/explica/codigos-dos-municipios.php
-  - Exact source file used to build `IBGE_DATA/municipios_ibge.csv`: `RELATORIO_DTB_BRASIL_2024_MUNICIPIOS.ods` (or `.xls`) inside the ZIP.
-  - Field mapping used in this project: `CO_MUNICIPIO <- Codigo Municipio Completo`, `NO_MUNICIPIO <- Nome_Municipio`, `UF <- UF code converted to state acronym`.
+	- Use the file `RELATORIO_DTB_BRASIL_2024_MUNICIPIOS.xls` inside the ZIP.
 - CBO (Brazilian Classification of Occupations): http://www.mtecbo.gov.br/cbosite/pages/downloads.jsf
 
 ## Main Structure
@@ -31,7 +29,7 @@ https://github.com/user-attachments/assets/5812a9b7-c9b5-4732-9a7a-48a96754784b
 ```text
 CNES_DATA/                         # CNES datasets (2025-08 reference period)
 CBO_DATA/                          # CBO dictionaries
-IBGE_DATA/                         # Municipal support data (e.g., municipios_ibge.csv)
+IBGE_DATA/                         # Municipal support data (DTB 2024 .xls)
 Outputs&Codigo/
 	OFERTA/                          # Supply, maps, distributions, and time series
 	COMPOSICAO/                      # Potential capacity and workforce composition

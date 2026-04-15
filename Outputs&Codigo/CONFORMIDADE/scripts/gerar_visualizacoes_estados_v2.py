@@ -99,6 +99,7 @@ DTB_2024_URL = (
     'https://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/'
     'divisao_territorial/2024/DTB_2024.zip'
 )
+DTB_MUNICIPIOS_XLS = 'RELATORIO_DTB_BRASIL_2024_MUNICIPIOS.xls'
 DTB_MUNICIPIOS_ODS = 'RELATORIO_DTB_BRASIL_2024_MUNICIPIOS.ods'
 ODS_NS = {
     'table': 'urn:oasis:names:tc:opendocument:xmlns:table:1.0',
@@ -200,8 +201,87 @@ def _carregar_municipios_dtb_ods_bytes(ods_bytes):
     return df
 
 
+def _carregar_municipios_dtb_xls(origem_xls):
+    df_bruto = pd.read_excel(origem_xls, sheet_name=0, header=None, dtype=str)
+
+    idx_header = None
+    for i in range(min(len(df_bruto), 400)):
+        normalizadas = [_normalizar_coluna(c) for c in df_bruto.iloc[i].tolist()]
+        if (
+            'codigo municipio completo' in normalizadas
+            and 'nome municipio' in normalizadas
+            and 'uf' in normalizadas
+        ):
+            idx_header = i
+            break
+
+    if idx_header is None:
+        raise ValueError('Cabeçalho de municípios não encontrado no arquivo XLS da DTB 2024.')
+
+    if hasattr(origem_xls, 'seek'):
+        origem_xls.seek(0)
+
+    df_xls = pd.read_excel(origem_xls, sheet_name=0, header=idx_header, dtype=str)
+
+    colunas_norm = {
+        _normalizar_coluna(col): col
+        for col in df_xls.columns
+    }
+
+    if not {'codigo municipio completo', 'nome municipio', 'uf'}.issubset(colunas_norm.keys()):
+        raise ValueError('Colunas esperadas não encontradas no XLS da DTB 2024.')
+
+    col_codigo = colunas_norm['codigo municipio completo']
+    col_nome = colunas_norm['nome municipio']
+    col_uf = colunas_norm['uf']
+
+    serie_codigo = (
+        df_xls[col_codigo]
+        .astype(str)
+        .str.strip()
+        .str.replace(r'\.0$', '', regex=True)
+    )
+    serie_nome = (
+        df_xls[col_nome]
+        .astype(str)
+        .str.strip()
+        .map(lambda v: html.unescape(v))
+    )
+    serie_uf = (
+        df_xls[col_uf]
+        .astype(str)
+        .str.strip()
+        .str.replace(r'\.0$', '', regex=True)
+        .str.zfill(2)
+    )
+
+    registros = []
+    for codigo, nome, uf_codigo in zip(serie_codigo, serie_nome, serie_uf):
+        if len(codigo) == 7 and codigo.isdigit() and uf_codigo in IBGE_UF_MAP:
+            registros.append(
+                {
+                    'CO_MUNICIPIO': codigo,
+                    'NO_MUNICIPIO': nome,
+                    'UF': IBGE_UF_MAP[uf_codigo],
+                }
+            )
+
+    df = pd.DataFrame(registros).drop_duplicates(subset=['CO_MUNICIPIO', 'NO_MUNICIPIO', 'UF'])
+    if df.empty:
+        raise ValueError('Nenhum município válido foi extraído do arquivo XLS da DTB 2024.')
+
+    return df
+
+
 def carregar_tabela_municipios_ibge(ibge_dir):
     """Carrega municípios no formato CO_MUNICIPIO/NO_MUNICIPIO/UF sem exigir mapeamento manual."""
+    arquivo_xls = os.path.join(ibge_dir, DTB_MUNICIPIOS_XLS)
+    if os.path.exists(arquivo_xls):
+        try:
+            return _carregar_municipios_dtb_xls(arquivo_xls), f'XLS local: {arquivo_xls}'
+        except Exception:
+            pass
+
     arquivo_csv = os.path.join(ibge_dir, 'municipios_ibge.csv')
     if os.path.exists(arquivo_csv):
         df = pd.read_csv(arquivo_csv, sep=';', dtype=str, encoding='utf-8')
@@ -218,6 +298,9 @@ def carregar_tabela_municipios_ibge(ibge_dir):
     arquivo_zip = os.path.join(ibge_dir, 'DTB_2024.zip')
     if os.path.exists(arquivo_zip):
         with zipfile.ZipFile(arquivo_zip, 'r') as zf:
+            if DTB_MUNICIPIOS_XLS in zf.namelist():
+                df = _carregar_municipios_dtb_xls(io.BytesIO(zf.read(DTB_MUNICIPIOS_XLS)))
+                return df, f'ZIP local: {arquivo_zip} -> {DTB_MUNICIPIOS_XLS}'
             if DTB_MUNICIPIOS_ODS in zf.namelist():
                 df = _carregar_municipios_dtb_ods_bytes(zf.read(DTB_MUNICIPIOS_ODS))
                 return df, f'ZIP local: {arquivo_zip} -> {DTB_MUNICIPIOS_ODS}'
@@ -227,6 +310,9 @@ def carregar_tabela_municipios_ibge(ibge_dir):
         with urllib.request.urlopen(DTB_2024_URL, timeout=90) as resp:
             zip_bytes = resp.read()
         with zipfile.ZipFile(io.BytesIO(zip_bytes), 'r') as zf:
+            if DTB_MUNICIPIOS_XLS in zf.namelist():
+                df = _carregar_municipios_dtb_xls(io.BytesIO(zf.read(DTB_MUNICIPIOS_XLS)))
+                return df, f'Download oficial: {DTB_2024_URL} -> {DTB_MUNICIPIOS_XLS}'
             if DTB_MUNICIPIOS_ODS in zf.namelist():
                 df = _carregar_municipios_dtb_ods_bytes(zf.read(DTB_MUNICIPIOS_ODS))
                 return df, f'Download oficial: {DTB_2024_URL} -> {DTB_MUNICIPIOS_ODS}'
