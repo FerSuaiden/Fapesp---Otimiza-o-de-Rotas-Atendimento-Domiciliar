@@ -13,3 +13,5 @@ SIA_DATA/*.dbf
 *.env
 BACKUP_PARTES_3_E_5/
 RELATORIO_FAPESP_AJUSTADO.tex
+Outputs&Codigo/OPINIAO_PUBLICA/
+map_server/htdocs/Outputs&Codigo/OPINIAO_PUBLICA/

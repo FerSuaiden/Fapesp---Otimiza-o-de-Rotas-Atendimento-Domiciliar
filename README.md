@@ -36,7 +36,6 @@ Outputs&Codigo/
 	OFERTA/                          # Supply, maps, distributions, and time series
 	COMPOSICAO/                      # Potential capacity and workforce composition
 	CONFORMIDADE/                    # Coverage and legal compliance
-	OPINIAO_PUBLICA/                 # SerpAPI collection + lexical mention analysis
 map_server/                        # Static website and Docker publishing
 README.md
 requirements.txt
@@ -100,31 +99,6 @@ python "Outputs&Codigo/COMPOSICAO/6-sunburst.py"
 python "Outputs&Codigo/CONFORMIDADE/scripts/analise_nacional_brasil_v2.py"
 python "Outputs&Codigo/CONFORMIDADE/scripts/gerar_visualizacoes_estados_v2.py"
 ```
-
-### OPINIAO_PUBLICA - web collection and lexical inference
-
-- `scripts/coleta_serpapi_opiniao.py`: collects public mentions by profile.
-- `scripts/classificar_gemini_percepcao.py`: performs cleaning, TF-IDF, sentiment/bottleneck inference, and visualizations.
-
-```bash
-# Collection (balanced profile)
-python "Outputs&Codigo/OPINIAO_PUBLICA/scripts/coleta_serpapi_opiniao.py" \
-	--perfil balanced
-
-# Collection (problem-oriented profile)
-python "Outputs&Codigo/OPINIAO_PUBLICA/scripts/coleta_serpapi_opiniao.py" \
-	--perfil problem-oriented
-
-# Lexical analysis (run once per profile)
-python "Outputs&Codigo/OPINIAO_PUBLICA/scripts/classificar_gemini_percepcao.py" \
-	--perfil balanced
-
-python "Outputs&Codigo/OPINIAO_PUBLICA/scripts/classificar_gemini_percepcao.py" \
-	--perfil problem-oriented
-```
-
-Detailed documentation (step-by-step and formulas):
-- `Outputs&Codigo/OPINIAO_PUBLICA/README.md`
 
 ## Local Website Publishing
 
